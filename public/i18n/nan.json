@@ -1642,7 +1642,17 @@
   "Salin data": "複製資料",
   "Status bank": "銀行狀態",
   "Terminal reader": "讀卡機終端",
-  "Transaksi tidak valid": "交易無效"
+  "Transaksi tidak valid": "交易無效",
+  "SSID WiFi": "WiFi SSID",
+  "Password WiFi": "WiFi 密碼",
+  "Nama WiFi": "WiFi 名",
+  "Kosongkan bila tanpa password": "無密碼就留空",
+  "Disalin lewat tombol Config di kartu perangkat: ssid;password;url_server;id_gate.": "用設備卡片頂懸的 Config 鈕複製：ssid;password;url_server;id_gate。",
+  "Config": "Config",
+  "Salin config: ssid;password;url_server;id_gate": "複製 config：ssid;password;url_server;id_gate",
+  "Salin config (SSID WiFi belum diisi): ssid;password;url_server;id_gate": "複製 config（WiFi SSID 猶未填）：ssid;password;url_server;id_gate",
+  "Isi SSID WiFi untuk password tersebut": "請為這个密碼填 WiFi SSID",
+  "SSID dan password WiFi tidak boleh berisi tanda ';'": "WiFi SSID 佮密碼袂使有 ';'"
  },
  "patterns": {
   "· {0} terpotong": "· {0} 扣去矣",
@@ -1904,6 +1914,7 @@
   "Terakhir dicek {0}": "上尾檢查 {0}",
   "tunai dari {0}": "{0} 內底的現金",
   "Tiket {0}": "票 {0}",
-  "SDK Uang Elektronik menjawab {0} tanpa JSON (cek Link SDK Uang Elektronik di menu Perusahaan dan versi SDK)": "電子錢 SDK 回應 {0} 毋是 JSON（請檢查公司選單的電子錢 SDK 連結佮 SDK 版本）"
+  "SDK Uang Elektronik menjawab {0} tanpa JSON (cek Link SDK Uang Elektronik di menu Perusahaan dan versi SDK)": "電子錢 SDK 回應 {0} 毋是 JSON（請檢查公司選單的電子錢 SDK 連結佮 SDK 版本）",
+  "Salin config {0}": "複製 config {0}"
  }
 }

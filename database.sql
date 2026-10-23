@@ -111,6 +111,8 @@ CREATE TABLE IF NOT EXISTS tbl_pengaturan_perangkat (
   nama_perangkat VARCHAR(80) NOT NULL,
   api_key CHAR(32) NULL COMMENT 'Interface: id_gate untuk REST API gate',
   serial_number VARCHAR(64) NULL COMMENT 'Interface: serial number, dilaporkan perangkat lewat update-ip',
+  wifi_ssid VARCHAR(32) NULL COMMENT 'Interface: SSID WiFi untuk config perangkat',
+  wifi_password VARCHAR(63) NULL COMMENT 'Interface: password WiFi untuk config perangkat',
   jenis ENUM('Camera', 'Printer', 'Interface') NOT NULL,
   rtsp_url VARCHAR(500) NULL COMMENT 'Khusus Camera',
   ip_address VARCHAR(45) NULL COMMENT 'Printer & Interface',

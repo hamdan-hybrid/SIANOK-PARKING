@@ -32,6 +32,8 @@
 .tf-input:focus-within { border-color: var(--up-focus); background: #fff; box-shadow: 0 0 0 4px rgba(13, 79, 168,.12); }
 .tf-input em { flex: none; padding: 0 12px; color: var(--up-ink-3); font-size: 13px; font-style: normal; font-weight: 600; }
 .tf-input em:first-child { padding-right: 0; }
+.tf-eye { flex: none; display: grid; place-items: center; width: 34px; height: 34px; margin-right: 4px; border: 0; border-radius: 8px; background: transparent; color: #8a96a8; font-size: 17px; cursor: pointer; }
+.tf-eye:hover { background: #f2f7fd; color: #1468d6; }
 .user-modal .tf-input input:not([type=radio]):not([type=file]) { flex: 1; width: 100%; min-width: 0; height: 42px !important; min-height: 0; padding: 0 12px !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; font-variant-numeric: tabular-nums; }
 .user-modal .tf-input input:not([type=radio]):not([type=file]):focus { border: 0 !important; background: transparent !important; box-shadow: none !important; }
 .user-modal .tf-field > input { width: 100%; padding: 0 14px !important; }

@@ -1642,7 +1642,17 @@
   "Salin data": "Copy data",
   "Status bank": "Bank status",
   "Terminal reader": "Reader terminal",
-  "Transaksi tidak valid": "Invalid transaction"
+  "Transaksi tidak valid": "Invalid transaction",
+  "SSID WiFi": "WiFi SSID",
+  "Password WiFi": "WiFi password",
+  "Nama WiFi": "WiFi name",
+  "Kosongkan bila tanpa password": "Leave blank if no password",
+  "Disalin lewat tombol Config di kartu perangkat: ssid;password;url_server;id_gate.": "Copied with the Config button on the device card: ssid;password;url_server;id_gate.",
+  "Config": "Config",
+  "Salin config: ssid;password;url_server;id_gate": "Copy config: ssid;password;url_server;id_gate",
+  "Salin config (SSID WiFi belum diisi): ssid;password;url_server;id_gate": "Copy config (WiFi SSID not set): ssid;password;url_server;id_gate",
+  "Isi SSID WiFi untuk password tersebut": "Enter the WiFi SSID for that password",
+  "SSID dan password WiFi tidak boleh berisi tanda ';'": "WiFi SSID and password must not contain ';'"
  },
  "patterns": {
   "· {0} terpotong": "· {0} deducted",
@@ -1904,6 +1914,7 @@
   "Terakhir dicek {0}": "Last checked {0}",
   "tunai dari {0}": "cash of {0}",
   "Tiket {0}": "Ticket {0}",
-  "SDK Uang Elektronik menjawab {0} tanpa JSON (cek Link SDK Uang Elektronik di menu Perusahaan dan versi SDK)": "Electronic Money SDK responded {0} without JSON (check the Electronic Money SDK link in the Company menu and the SDK version)"
+  "SDK Uang Elektronik menjawab {0} tanpa JSON (cek Link SDK Uang Elektronik di menu Perusahaan dan versi SDK)": "Electronic Money SDK responded {0} without JSON (check the Electronic Money SDK link in the Company menu and the SDK version)",
+  "Salin config {0}": "Copy config {0}"
  }
 }

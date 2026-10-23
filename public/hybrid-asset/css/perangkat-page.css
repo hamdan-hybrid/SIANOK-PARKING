@@ -40,6 +40,9 @@
 .dv-modal .dv-section { display: grid; gap: 14px; padding: 14px; border-radius: 14px; background: #f7faff; border: 1px solid var(--up-cream-line); }
 .dv-modal .dv-section[hidden] { display: none; }
 .dv-row-ip { grid-template-columns: minmax(0, 1fr) 120px; }
+/* Interface: hanya SSID & Password WiFi (IP diisi alat sendiri lewat update-ip, port tetap 80). */
+.dv-row-ip:has([data-device-for="Interface"]:not([hidden])) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.dv-modal [data-device-for][hidden] { display: none; }
 .dv-modal .tf-input em .ti { font-size: 15px; vertical-align: -2px; }
 .user-modal.dv-modal .tf-input input[name=rtsp_url], .user-modal.dv-modal .tf-input input[name=ip_address] { font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important; font-size: 13px !important; }
 .dv-camera-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
@@ -53,6 +56,7 @@
 @media (max-width: 767px) {
   .dv-check-wrap { width: 100%; justify-content: space-between; }
   .dv-camera-list, .dv-row-ip { grid-template-columns: 1fr; }
+  .dv-row-ip:has([data-device-for="Interface"]:not([hidden])) { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
   .dv-status i:after, .dv-status.is-checking i, .up-btn.is-spinning i { animation: none; }
