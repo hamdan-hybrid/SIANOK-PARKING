@@ -1,0 +1,48 @@
+/* Kontrol bahasa & tema (kanan atas, sebelum menu User). Versi gelap dibuat otomatis oleh build-dark-theme.mjs. */
+.hp-prefs { display: flex; align-items: center; gap: 8px; }
+.pc-header .hp-prefs { margin-right: 4px; }
+
+.hp-lang-btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border: 1px solid #e3eaf2; border-radius: 12px; background: #fff; color: #132c4d; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: background .15s, border-color .15s; }
+.hp-lang-btn:hover, .hp-lang.show .hp-lang-btn { background: #f1f5fb; border-color: #cfd9e8; }
+.hp-icon { flex: none; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hp-lang-caret { width: 14px; height: 14px; color: #8a95a8; transition: transform .2s; }
+.hp-lang.show .hp-lang-caret { transform: rotate(180deg); }
+.hp-lang-flag { display: inline-flex; flex: none; width: 22px; height: 15px; overflow: hidden; border-radius: 3px; box-shadow: 0 0 0 1px rgba(16, 24, 40, .14); }
+.hp-lang-flag svg { display: block; width: 100%; height: 100%; }
+.hp-lang-name { min-width: 2.2em; white-space: nowrap; font-weight: 700; letter-spacing: .04em; }
+
+.hp-lang { position: relative; }
+.hp-lang-menu { display: none; position: absolute; top: calc(100% + 6px); right: 0; z-index: 1050; margin: 0; list-style: none; }
+.hp-lang-menu.show { display: block; }
+.pc-header .hp-lang .hp-lang-menu.show { display: grid; gap: 2px; }
+.hp-lang-menu { min-width: 228px; padding: 6px; border: 1px solid #e3eaf2; border-radius: 14px; background: #fff; box-shadow: 0 18px 40px -16px rgba(16, 24, 40, .28); }
+.hp-lang-item { display: flex; align-items: center; gap: 12px; width: 100%; padding: 9px 10px; border: 0; border-radius: 10px; background: transparent; color: #132c4d; text-align: left; cursor: pointer; }
+.hp-lang-item:hover { background: #f1f5fb; }
+.hp-lang-item.is-active { background: #eef5ff; }
+.hp-lang-text { display: grid; flex: 1; line-height: 1.25; }
+.hp-lang-text b { font-size: 13.5px; font-weight: 700; }
+.hp-lang-text small { color: #8a95a8; font-size: 11.5px; }
+.hp-lang-check { visibility: hidden; width: 17px; height: 17px; color: #0d4fa8; stroke-width: 2.4; }
+.hp-lang-item.is-active .hp-lang-check { visibility: visible; }
+
+.hp-theme-toggle { display: inline-grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid #e3eaf2; border-radius: 12px; background: #fff; color: #132c4d; cursor: pointer; transition: background .15s, border-color .15s, transform .15s; }
+.hp-theme-toggle:hover { background: #f1f5fb; border-color: #cfd9e8; }
+.hp-theme-toggle:active { transform: scale(.94); }
+.hp-theme-toggle .hp-icon { width: 18px; height: 18px; }
+.hp-theme-toggle span { display: inline-grid; }
+/* Ikon menunjukkan mode tujuan: bulan saat terang (klik → gelap), matahari saat gelap (klik → terang). */
+.hp-theme-ke-terang, html[data-theme="dark"] .hp-theme-ke-gelap { display: none !important; }
+html[data-theme="dark"] .hp-theme-ke-terang { display: inline-grid !important; color: #fbbf24; }
+
+.hp-lang-btn:focus-visible, .hp-lang-item:focus-visible, .hp-theme-toggle:focus-visible { outline: 2px solid #0d4fa8; outline-offset: 2px; }
+
+/* Halaman login: kontrol melayang di kanan atas. */
+.hp-prefs-login { position: fixed; top: 16px; right: 16px; z-index: 60; }
+
+/* Layar kecil: hanya ikon/bendera (semua pilihan tetap bisa diakses). */
+@media (max-width: 767px) {
+  .hp-prefs { gap: 6px; }
+  .hp-lang-btn { padding: 0 9px; gap: 6px; }
+  .hp-lang-btn, .hp-theme-toggle { height: 36px; }
+  .hp-theme-toggle { width: 36px; }
+}

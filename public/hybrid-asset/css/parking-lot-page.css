@@ -1,0 +1,40 @@
+/* Hybrid Parking — parking lot */
+.pl-icon { width: 42px; background: var(--up-accent-tint); border-color: #cfe2fa; color: var(--up-accent-deep); font-size: 21px; }
+.pl-table th.pl-num, .pl-table td.pl-num { text-align: right; }
+.pl-table td.pl-num strong { color: var(--up-ink); }
+.pl-hours { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: #f6f8fa; color: var(--up-ink-2); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.pl-hours i { color: var(--up-ink-3); font-size: 14px; }
+.pl-hours.is-24 { background: #eaf7f0; color: #2d7a13; }
+.pl-hours.is-24 i { color: #2d7a13; }
+
+.pl-occupancy { display: grid; gap: 5px; min-width: 110px; }
+.pl-occupancy span { color: var(--up-ink-2); font-size: 12.5px; }
+.pl-occupancy span strong { color: var(--up-ink); font-size: 14px; }
+.pl-occupancy b { display: block; height: 5px; border-radius: 4px; background: #eef1f5; overflow: hidden; }
+.pl-occupancy b i { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #1a72e6, #0d4fa8); }
+.pl-occupancy small { color: var(--up-ink-3); font-size: 11.5px; }
+.pl-occupancy.is-busy b i { background: #e0a43a; }
+.pl-occupancy.is-full b i { background: #d64545; }
+.pl-occupancy.is-full small { color: #b42f2f; font-weight: 600; }
+
+.pl-table td.pl-display-cell { max-width: 190px; }
+.pl-display { display: grid; justify-items: start; gap: 5px; min-width: 0; }
+.pl-display .dv-conn i { color: var(--up-accent-deep); }
+.pl-running { display: block; max-width: 100%; overflow: hidden; color: var(--up-ink-2); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.pl-running i { margin-right: 5px; color: var(--up-ink-3); font-size: 13px; vertical-align: -2px; }
+
+.pl-modal .dv-section { gap: 12px; }
+.user-modal.pl-modal .tf-label-row .pm-switch { display: inline-flex !important; align-items: center; gap: 8px; margin: 0; }
+.pl-modal .tf-label-row .pm-switch em { font-size: 12.5px; font-weight: 600; color: var(--up-ink-2); }
+.pl-live { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px 14px; border-radius: 12px; background: #f6f8fb; color: var(--up-ink-2); font-size: 12.5px; }
+.pl-live span { display: inline-flex; align-items: center; gap: 6px; }
+.pl-live i { color: var(--up-accent-deep); font-size: 15px; }
+.pl-live strong { color: var(--up-ink); }
+.pl-live small { margin-left: auto; color: var(--up-ink-3); font-size: 11.5px; }
+
+@media (max-width: 1279px) {
+  .pl-table td[data-label] { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 12px; max-width: none; text-align: right; }
+  .pl-table td[data-label]::before { content: attr(data-label); flex: none; color: var(--up-ink-3); font-size: 12px; font-weight: 600; text-align: left; }
+  .pl-table td[data-label] .pl-occupancy { flex: 1; max-width: 200px; min-width: 0; text-align: left; }
+  .pl-table td[data-label] .pl-display { justify-items: end; min-width: 0; }
+}

@@ -1,0 +1,242 @@
+/* Hybrid Parking — pusat laporan */
+.lp-page { display: grid; gap: 22px; }
+.lp-search { align-self: center; width: min(320px, 100%); }
+.lp-back { align-self: center; min-height: 42px; padding: 0 16px; border-radius: 12px; text-decoration: none; }
+
+.lp-tone-blue { --lp-c: #257beb; --lp-bg: #eef5ff; --lp-line: #cde1fb; }
+.lp-tone-amber { --lp-c: #c2600a; --lp-bg: #fff6ea; --lp-line: #f6dcb8; }
+.lp-tone-violet { --lp-c: #3a88ed; --lp-bg: #f0f6ff; --lp-line: #d2e4fb; }
+.lp-tone-slate { --lp-c: #64748b; --lp-bg: #f3f5f8; --lp-line: #dfe4eb; }
+
+/* Pusat laporan */
+.lx-hub { gap: 18px; }
+
+.lx-section, .lx-soon { padding: 8px; border: 1px solid var(--up-line); border-radius: 20px; background: #fff; box-shadow: 0 1px 2px rgba(20, 38, 61,.03); }
+.lx-section-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 14px 14px 10px; }
+.lx-section-head h3 { margin: 0; color: var(--up-navy-800); font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.lx-section-head span { color: var(--up-ink-3); font-size: 12.5px; }
+.lx-list { display: grid; grid-template-columns: minmax(0, 1fr); }
+.lx-section.is-wide .lx-list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 8px; }
+.lx-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 12px 14px; border-radius: 14px; color: var(--up-ink); text-decoration: none; transition: background .15s; }
+.lx-row:hover { background: #f5f9ff; color: var(--up-ink); text-decoration: none; }
+.lx-row:focus-visible { outline: 2px solid var(--up-focus); outline-offset: -2px; }
+.lx-row-icon { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid #e3ebf5; border-radius: 11px; background: #f8fbff; color: var(--up-navy-700); font-size: 18px; transition: background .15s, color .15s, border-color .15s; }
+.lx-row:hover .lx-row-icon { border-color: var(--up-navy-700); background: var(--up-navy-700); color: #fff; }
+.lx-row-text { display: grid; gap: 2px; min-width: 0; }
+.lx-row-text strong { font-size: 14px; font-weight: 600; }
+.lx-row-text small { overflow: hidden; color: var(--up-ink-3); font-size: 12.5px; text-overflow: ellipsis; white-space: nowrap; }
+.lx-row-go { color: var(--up-ink-3); font-size: 16px; opacity: 0; transform: translateX(-4px); transition: opacity .15s, transform .15s; }
+.lx-row:hover .lx-row-go, .lx-row:focus-visible .lx-row-go { opacity: 1; transform: none; }
+/* Keuangan: ringkasan di atas, pendapatan kiri, pengeluaran kanan */
+.lx-section.is-wide .lx-ringkas { padding-bottom: 6px; border-bottom: 1px solid var(--up-line); }
+.lx-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding-top: 6px; }
+.lx-section.is-wide .lx-split .lx-list { grid-template-columns: minmax(0, 1fr); }
+.lx-col h4 { display: flex; align-items: center; gap: 7px; margin: 0; padding: 12px 14px 6px; color: var(--up-ink-2); font-size: 11.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.lx-col h4 i { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; font-size: 13px; }
+.lx-col-masuk h4 i { background: #eaf7f0; color: #368a1a; }
+.lx-col-keluar h4 i { background: #fdeeee; color: #c0392b; }
+.lx-col-keluar { border-left: 1px dashed var(--up-line); padding-left: 8px; }
+.lx-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
+
+.lx-soon { background: #fbfcfe; box-shadow: none; }
+.lx-soon-list { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 14px 14px; }
+.lx-chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 13px; border: 1px dashed #d5dde8; border-radius: 999px; color: var(--up-ink-2); font-size: 12.5px; font-weight: 500; text-decoration: none; transition: border-color .15s, color .15s; }
+.lx-chip i { color: var(--up-ink-3); font-size: 15px; }
+.lx-chip:hover { border-color: var(--up-navy-700); color: var(--up-navy-700); text-decoration: none; }
+
+@media (max-width: 1199px) {
+  .lx-section.is-wide .lx-list, .lx-pair { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 991px) {
+  .lx-split { grid-template-columns: minmax(0, 1fr); }
+  .lx-col-keluar { border-left: 0; border-top: 1px dashed var(--up-line); padding-left: 0; }
+}
+@media (max-width: 767px) {
+        .lx-row-text small { white-space: normal; }
+  .lx-row-go { opacity: 1; transform: none; }
+}
+.lp-empty { margin: 0; padding: 24px; border: 1px dashed var(--up-line); border-radius: 14px; color: var(--up-ink-3); text-align: center; }
+
+.lp-pending { display: grid; justify-items: center; gap: 10px; padding: 48px 24px; text-align: center; }
+.lp-pending-preview { display: block; width: min(260px, 100%); height: 104px; padding: 14px 18px; border: 1px solid var(--lp-line); border-radius: 16px; background: var(--lp-bg); color: var(--lp-c); }
+.lp-pending-preview svg { width: 100%; height: 100%; }
+.lp-pending-icon { display: grid; place-items: center; width: 56px; height: 56px; margin-top: -38px; border-radius: 16px; background: #fff; color: var(--lp-c); font-size: 27px; box-shadow: 0 6px 16px -8px var(--lp-c); }
+.lp-pending-icon.is-wait { color: var(--up-ink-3); }
+.lp-pending h3 { margin: 4px 0 0; color: var(--up-ink); font-size: 18px; font-weight: 700; }
+.lp-pending p { max-width: 520px; margin: 0; color: var(--up-ink-2); font-size: 13.5px; line-height: 1.6; }
+.lp-pending small { display: inline-flex; align-items: center; gap: 5px; color: var(--up-ink-3); font-size: 12px; }
+
+@media (max-width: 767px) {
+  .lp-search, .lp-back { width: 100%; justify-content: center; }
+  .lp-grid { grid-template-columns: 1fr; }
+}
+
+/* Laporan Laba Rugi */
+.lr-actions .up-btn, .lr-actions .up-primary { display: inline-flex; align-items: center; gap: 6px; min-height: 42px; padding: 0 16px; border-radius: 12px; text-decoration: none; }
+.lr-page .pd-period .pd-book { margin-left: auto; align-self: center; }
+.lr-statement { padding: 0; overflow: hidden; }
+.lr-statement-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 18px 20px; border-bottom: 1px solid var(--up-line); }
+.lr-statement-head h3 { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--up-ink); font-size: 15px; font-weight: 700; }
+.lr-statement-head h3 i { color: var(--up-accent-deep); font-size: 18px; }
+.lr-statement-head span { color: var(--up-ink-3); font-size: 12px; }
+.lr-compare { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 999px; background: #f6f8fb; }
+.lr-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.lr-table thead th { padding: 10px 20px; background: #f8fafd; color: var(--up-ink-3); font-size: 11.5px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; }
+.lr-table td { padding: 11px 20px; border-top: 1px solid var(--up-line); vertical-align: top; }
+.lr-amount { text-align: right; white-space: nowrap; }
+.lr-prev { color: var(--up-ink-3); }
+.lr-section-title th { padding: 16px 20px 8px; border-top: 1px solid var(--up-line); color: var(--up-ink); font-size: 12px; font-weight: 700; letter-spacing: .4px; text-align: left; text-transform: uppercase; }
+.lr-section-title i { margin-right: 6px; font-size: 15px; vertical-align: -2px; }
+.lr-section-in .lr-section-title i { color: #368a1a; }
+.lr-section-out .lr-section-title i { color: #c0392b; }
+.lr-name strong { display: block; color: var(--up-ink); font-weight: 600; }
+.lr-name small { display: block; margin-top: 2px; color: var(--up-ink-3); font-size: 11.5px; }
+.lr-share { display: block; width: min(220px, 100%); height: 4px; margin-top: 6px; border-radius: 999px; background: #eef1f6; overflow: hidden; }
+.lr-share span { display: block; height: 100%; border-radius: inherit; }
+.lr-section-in .lr-share span { background: #5cb23f; }
+.lr-section-out .lr-share span { background: #e07a6e; }
+.lr-empty td { color: var(--up-ink-3); font-style: italic; }
+.lr-total td { background: #fafbfd; border-top: 1px solid #cfd7e2; }
+.lr-total .lr-name strong { font-weight: 700; }
+.lr-net td { padding-top: 16px; padding-bottom: 16px; border-top: 2px solid var(--up-ink); font-size: 15px; }
+.lr-net.is-profit td { background: #eef9f3; }
+.lr-net.is-loss td { background: #fdf0ef; }
+.lr-net.is-profit td:nth-child(2) strong { color: #2d7a13; }
+.lr-net.is-loss td:nth-child(2) strong { color: #b42f2f; }
+.lr-delta { display: inline-grid; justify-items: end; color: var(--up-ink-3); font-size: 12.5px; font-weight: 700; }
+.lr-delta i { margin-right: 2px; font-size: 13px; }
+.lr-delta small { color: var(--up-ink-3); font-size: 11px; font-weight: 500; }
+.lr-delta.is-up { color: #2d7a13; }
+.lr-delta.is-down { color: #b42f2f; }
+
+@media (max-width: 767px) {
+  .lr-page .pd-period .pd-book { margin-left: 0; }
+  .lr-table thead { display: none; }
+  .lr-table tr:not(.lr-section-title) { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; padding: 12px 16px; border-top: 1px solid var(--up-line); }
+  .lr-table tr.lr-total { background: #fafbfd; }
+  .lr-table tr.lr-net.is-profit { background: #eef9f3; }
+  .lr-table tr.lr-net.is-loss { background: #fdf0ef; }
+  .lr-table tr.lr-net { border-top: 2px solid var(--up-ink); }
+  .lr-table td { padding: 0; border: 0; background: none !important; }
+  .lr-table .lr-name { grid-column: 1; }
+  .lr-table td[data-label="Periode ini"] { grid-column: 2; grid-row: 1; }
+  .lr-table td.lr-prev, .lr-table td[data-label="Perubahan"] { display: flex; justify-content: space-between; gap: 12px; grid-column: 1 / -1; font-size: 12px; }
+  .lr-table td.lr-prev::before, .lr-table td[data-label="Perubahan"]::before { content: attr(data-label); color: var(--up-ink-3); }
+  .lr-table .lr-delta { display: inline-flex; align-items: baseline; gap: 6px; }
+  .lr-section-title th { padding: 16px 16px 4px; }
+  .lr-empty td { grid-column: 1 / -1; }
+  .lr-statement-head { padding: 16px; }
+}
+
+/* Laporan generik */
+.rp-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 18px 20px 14px; }
+.rp-card-head h3 { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--up-ink); font-size: 15px; font-weight: 700; }
+.rp-card-head h3 i { color: var(--up-accent-deep); font-size: 18px; }
+.rp-card-head > span { color: var(--up-ink-3); font-size: 12px; }
+.rp-filter-label { align-self: center; color: var(--up-ink-3); font-size: 11.5px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; }
+.rp-nopol { max-width: 420px; }
+.rp-nopol input { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .5px; text-transform: uppercase; }
+.rp-note { display: flex; align-items: center; gap: 6px; margin: 0; color: var(--up-ink-3); font-size: 12px; }
+.rp-empty { display: grid; justify-items: center; gap: 8px; padding: 48px 24px; color: var(--up-ink-3); text-align: center; }
+.rp-empty i { font-size: 30px; color: var(--up-accent-deep); }
+.rp-empty p { max-width: 420px; margin: 0; font-size: 13.5px; }
+
+/* Grafik batang */
+.rp-chart-card { padding-bottom: 14px; }
+.rp-chart-max { color: var(--up-ink-3); font-size: 12px; }
+.rp-legend { display: inline-flex; gap: 14px; color: var(--up-ink-2); font-size: 12px; }
+.rp-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.rp-swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: #2f76d3; }
+.rp-swatch.is-neg { background: #d4573f; }
+.rp-chart { position: relative; height: 200px; margin: 0 20px; }
+.rp-chart::after { content: ''; position: absolute; left: 0; right: 0; top: var(--rp-zero); height: 1px; background: #c3ccd8; }
+.rp-bars { display: flex; height: 100%; }
+.rp-slot { position: relative; flex: 1 1 0; min-width: 0; height: 100%; padding: 0 1px; border-radius: 4px; outline: none; cursor: default; }
+.rp-slot:hover, .rp-slot:focus-visible { background: #f3f7fc; }
+.rp-bar { position: absolute; left: 50%; width: min(64%, 44px); min-width: 1px; min-height: 1px; transform: translateX(-50%); border-radius: 4px 4px 0 0; background: #2f76d3; }
+.rp-bar.is-neg { border-radius: 0 0 4px 4px; background: #d4573f; }
+.rp-slot:hover .rp-bar, .rp-slot:focus-visible .rp-bar { filter: brightness(.88); }
+.rp-slot::after { content: attr(data-tip); position: absolute; z-index: 5; bottom: calc(100% + 6px); left: 50%; padding: 6px 10px; border-radius: 8px; background: var(--up-ink); color: #fff; font-size: 12px; font-weight: 600; white-space: nowrap; opacity: 0; pointer-events: none; transform: translateX(-50%); transition: opacity .1s; }
+.rp-slot:first-child::after, .rp-slot:nth-child(2)::after { left: 0; transform: none; }
+.rp-slot:last-child::after, .rp-slot:nth-last-child(2)::after { left: auto; right: 0; transform: none; }
+.rp-slot:hover::after, .rp-slot:focus-visible::after { opacity: 1; }
+.rp-axis { display: flex; margin: 6px 20px 0; color: var(--up-ink-3); font-size: 11px; }
+.rp-axis span { display: flex; justify-content: center; flex: 1 1 0; min-width: 0; overflow: visible; white-space: nowrap; }
+
+/* Tabel */
+.rp-table-card { padding: 0; overflow: hidden; }
+.rp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.rp-table thead th { padding: 10px 16px; background: #f8fafd; border-top: 1px solid var(--up-line); color: var(--up-ink-3); font-size: 11.5px; font-weight: 700; letter-spacing: .3px; text-align: left; text-transform: uppercase; white-space: nowrap; }
+.rp-table td { padding: 10px 16px; border-top: 1px solid var(--up-line); color: var(--up-ink); vertical-align: middle; }
+.rp-table tbody tr:hover td { background: #fafcfe; }
+.rp-table .rp-num { text-align: right; white-space: nowrap; }
+.rp-table tfoot td { background: #f5f8fb; border-top: 1px solid #cfd7e2; font-weight: 700; }
+.rp-empty-row td { padding: 28px 16px; color: var(--up-ink-3); font-style: italic; text-align: center; }
+.rp-code { font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--up-ink-2); }
+.rp-neg { color: #b42f2f; }
+.rp-pos { color: #2d7a13; }
+.rp-share { display: inline-flex; align-items: center; justify-content: flex-end; gap: 8px; }
+.rp-share-bar { display: inline-block; width: 64px; height: 5px; border-radius: 999px; background: #eef1f6; overflow: hidden; }
+.rp-share-bar span { display: block; height: 100%; border-radius: inherit; background: #2f76d3; }
+.rp-table-card .mb-pager { border-top: 1px solid var(--up-line); }
+
+@media (max-width: 1279px) {
+  .rp-table thead { display: none; }
+  .rp-table, .rp-table tbody, .rp-table tfoot { display: block; }
+  .rp-table tr { display: grid; gap: 6px; padding: 12px 16px; border-top: 1px solid var(--up-line); }
+  .rp-table td { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0; border: 0; text-align: right; }
+  .rp-table td::before { content: attr(data-label); flex: none; color: var(--up-ink-3); font-size: 12px; font-weight: 600; text-align: left; }
+  .rp-table td.rp-first { font-weight: 700; }
+  .rp-table tfoot tr { background: #f5f8fb; }
+  .rp-table tfoot td { background: none; border: 0; }
+  .rp-table td:empty { display: none; }
+  .rp-table .rp-empty-row td { justify-content: center; }
+  .rp-table .rp-empty-row td::before { content: none; }
+  .rp-table .pd-plates { justify-content: flex-end; }
+}
+@media (max-width: 767px) {
+  .rp-chart { height: 160px; margin: 0 12px; }
+  .rp-axis { margin: 6px 12px 0; font-size: 10px; }
+  .rp-card-head { padding: 16px 16px 12px; }
+}
+.rp-page .pd-stats .up-stat strong { font-size: 17px; }
+.rp-nopol input::placeholder { font-family: inherit; letter-spacing: 0; text-transform: none; }
+@media (max-width: 1279px) {
+  .rp-table tfoot td.rp-first { justify-content: flex-start; }
+  .rp-table tfoot td.rp-first::before { content: none; }
+}
+/* Nilai rupiah besar: kotak ringkasan laporan jadi satu kolom di layar sempit. */
+.lr-page .pd-stats .up-stat > div { min-width: 0; }
+.lr-page .pd-stats .up-stat strong { overflow-wrap: anywhere; }
+@media (max-width: 575px) {
+  .lr-page .pd-stats { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Baris kelompok (mis. jenis transaksi) dan rinciannya (metode bayar) */
+.rp-table tr.rp-row-group td { background: #f5f8fb; font-weight: 700; }
+.rp-table tr.rp-row-sub td.rp-first { padding-left: 34px; color: var(--up-ink-2); }
+.rp-table tr.rp-row-sub td.rp-first::after { content: none; }
+@media (max-width: 1279px) {
+  .rp-table tr.rp-row-group { background: #f5f8fb; }
+  .rp-table tr.rp-row-group td { background: none; }
+  .rp-table tr.rp-row-sub { padding-left: 32px; }
+  .rp-table tr.rp-row-sub td.rp-first { padding-left: 0; }
+}
+
+/* Pilihan kasir di dalam kotak ringkasan */
+.rp-stat-control { border-color: #cde1fb; }
+.rp-stat-picker { position: relative; display: block; margin: 0; }
+.rp-stat-picker select { width: 100%; max-width: 100%; padding: 2px 24px 2px 0; border: 0; border-bottom: 1px dashed #b7cdea; background: transparent; color: var(--up-ink); font-size: 17px; font-weight: 700; text-overflow: ellipsis; cursor: pointer; appearance: none; -webkit-appearance: none; }
+.rp-stat-picker select:focus { outline: none; border-bottom-color: var(--up-accent-deep); }
+.rp-stat-picker i { position: absolute; right: 2px; top: 50%; color: var(--up-accent-deep); font-size: 15px; pointer-events: none; transform: translateY(-50%); }
+.rp-stat-control:hover .rp-stat-picker select { border-bottom-color: var(--up-accent-deep); }
+.rp-stat-control > div { flex: 1; }
+
+/* Ceklis jenis pendapatan */
+.rp-checks { display: flex; flex-wrap: wrap; gap: 6px; }
+.rp-checks button { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 13px; border: 1px solid var(--up-line); border-radius: 999px; background: #fff; color: var(--up-ink-2); font-size: 12.5px; font-weight: 600; cursor: pointer; transition: border-color .15s, background .15s, color .15s; }
+.rp-checks button i { display: grid; place-items: center; width: 16px; height: 16px; border: 1.5px solid #c3ccd8; border-radius: 5px; color: transparent; font-size: 11px; transition: inherit; }
+.rp-checks button:hover { border-color: var(--up-accent-deep); color: var(--up-accent-deep); }
+.rp-checks button.is-active { border-color: var(--up-accent-deep); background: var(--up-accent-tint); color: var(--up-accent-deep); }
+.rp-checks button.is-active i { border-color: var(--up-accent-deep); background: var(--up-accent-deep); color: #fff; }
+.rp-checks button:focus-visible { outline: 2px solid var(--up-focus); outline-offset: 2px; }

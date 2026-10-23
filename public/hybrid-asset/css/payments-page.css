@@ -1,0 +1,83 @@
+/* Hybrid Parking — metode bayar */
+.pm-card {
+  overflow: hidden; border-radius: 20px; background: #fff; border: 1px solid var(--up-line);
+  box-shadow: 0 1px 2px rgba(20, 38, 61,.04), 0 16px 32px -26px rgba(20, 38, 61,.3);
+}
+.pm-card-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 24px; }
+.pm-card-head h3 { margin: 0; color: var(--up-ink); font-size: 15.5px; font-weight: 700; }
+.pm-card-head p { margin: 3px 0 0; color: var(--up-ink-3); font-size: 12.5px; }
+.pm-table-wrap { overflow-x: auto; }
+.pm-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.pm-table th {
+  padding: 11px 24px; background: #f6f9fd; border-block: 1px solid var(--up-cream-line);
+  color: var(--up-ink-3); font-size: 11px; font-weight: 700; letter-spacing: .9px; text-transform: uppercase; text-align: left; white-space: nowrap;
+}
+.pm-table td { padding: 14px 24px; border-bottom: 1px solid var(--up-line); color: var(--up-ink-2); vertical-align: middle; white-space: normal; }
+/* Ruang kolom lebih rapat; teks boleh turun baris supaya tabel muat tanpa scroll ke samping. */
+.pm-table th, .pm-table td { padding-left: 16px; padding-right: 16px; }
+@media (min-width: 1280px) {
+  .pm-table th:first-child, .pm-table td:first-child { padding-left: 24px; }
+  .pm-table th:last-child, .pm-table td:last-child { padding-right: 24px; }
+}
+.pm-name strong { overflow-wrap: anywhere; }
+.pm-code, .pm-balance, .pm-switch em, .up-status, .dv-status, .tf-price { white-space: nowrap; }
+.pm-table tbody tr:last-child td { border-bottom: 0; }
+.pm-table tbody tr { transition: background .15s; }
+.pm-table tbody tr:hover { background: #f7faff; }
+.pm-name { display: flex; align-items: center; gap: 14px; }
+.pm-name strong { display: block; color: var(--up-ink); font-size: 14.5px; font-weight: 700; }
+.pm-logo {
+  display: grid; place-items: center; flex: none; width: 52px; height: 38px; padding: 5px;
+  border-radius: 10px; background: #fff; border: 1px solid var(--up-line); color: var(--up-navy-700); font-size: 20px;
+}
+.pm-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.pm-logo-cash { background: #eaf7f0; border-color: #cfeadb; color: #368a1a; }
+.pm-code {
+  display: inline-block; margin-top: 3px; padding: 1px 7px; border-radius: 6px;
+  background: #f2f4f7; color: var(--up-ink-2); font: 600 11px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .6px;
+}
+.pm-balance { display: inline-block; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; }
+.pm-balance-debit { background: #e7f6ec; color: #15803d; }
+.pm-balance-kredit { background: #fdecec; color: #b91c1c; }
+
+/* Switch */
+.pm-switch { position: relative; display: inline-flex; align-items: center; gap: 10px; margin: 0; cursor: pointer; }
+.pm-switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pm-switch span { position: relative; flex: none; width: 40px; height: 23px; border-radius: 999px; background: #d9e0e8; transition: background .2s; }
+.pm-switch span:after { content: ''; position: absolute; top: 3px; left: 3px; width: 17px; height: 17px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(20, 38, 61,.3); transition: transform .2s; }
+.pm-switch input:checked + span { background: linear-gradient(135deg, #1a72e6, #0d4fa8); }
+.pm-switch input:checked + span:after { transform: translateX(17px); }
+.pm-switch input:focus-visible + span { outline: 3px solid rgba(13, 79, 168,.35); outline-offset: 2px; }
+.pm-switch input:disabled + span { opacity: .6; }
+.pm-switch em { color: var(--up-ink-2); font-size: 13px; font-style: normal; font-weight: 500; }
+.pm-switch input:not(:checked) ~ em { color: var(--up-ink-3); }
+.pm-switch-field { padding: 12px 14px; border-radius: 12px; border: 1px solid var(--up-line); background: var(--up-field); }
+
+.pm-actions, .pm-table td.pm-actions { width: 1%; text-align: right; white-space: nowrap; }
+.pm-actions .up-btn-icon { width: 38px; padding: 0; justify-content: center; color: var(--up-accent-deep); }
+.pm-actions .up-btn { display: inline-flex; }
+.pm-actions .up-btn + .up-btn { margin-left: 8px; }
+.pm-actions .up-btn:first-child { flex: none; }
+.pm-table td .up-empty { border: 0; }
+.pm-modal { max-width: 560px; }
+
+/* Tablet & HP: tabel di halaman master jadi kartu (Langganan punya aturan sendiri di member-page.css).
+   :where() membuat bobot selektor tetap rendah agar aturan khusus tiap halaman bisa menimpanya. */
+@media (max-width: 1279px) {
+  :where(.pm-page:not(.mb-page)) .pm-table thead { display: none; }
+  :where(.pm-page:not(.mb-page)) :where(.pm-table, .pm-table tbody, .pm-table tr, .pm-table td) { display: block; width: 100%; }
+  :where(.pm-page:not(.mb-page)) .pm-table tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 12px; padding: 16px; border-bottom: 1px solid var(--up-line); }
+  :where(.pm-page:not(.mb-page)) .pm-table tbody tr:last-child { border-bottom: 0; }
+  :where(.pm-page:not(.mb-page)) .pm-table td { padding: 0; border: 0; }
+  :where(.pm-page:not(.mb-page)) .pm-table td:nth-child(1) { grid-column: 1 / -1; }
+  :where(.pm-page:not(.mb-page)) .pm-table td.pm-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; width: 100%; }
+  :where(.pm-page:not(.mb-page)) .pm-actions .up-btn:first-child:not(.up-btn-icon) { flex: 1; }
+}
+@media (max-width: 767px) {
+  .pm-card-head { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pm-switch span, .pm-switch span:after { transition: none; }
+}
+.user-modal .pm-switch-field { display: flex !important; flex-direction: row; align-items: center; gap: 12px; }
+.user-modal .pm-switch-field em { color: var(--up-ink) !important; font-size: 14px; font-weight: 600; }

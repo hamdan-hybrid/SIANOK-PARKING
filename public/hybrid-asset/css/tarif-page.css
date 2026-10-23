@@ -1,0 +1,297 @@
+/* Hybrid Parking — tarif */
+.tf-vehicle { width: 42px; color: var(--up-navy-700); background: #eef4fb; border-color: #e1eaf5; }
+.tf-type { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.tf-type-normal { background: #eef4fb; color: var(--up-navy-700); }
+.tf-type-tiket-hilang { background: #fdf0ec; color: #b4472a; }
+.tf-type-manual-ticket { background: var(--up-accent-tint); color: #0a4ea8; }
+.tf-table td.tf-rule { white-space: normal; min-width: 200px; }
+.tf-rule { display: table-cell; }
+.tf-rule span { display: inline-block; margin: 2px 4px 2px 0; padding: 2px 8px; border-radius: 6px; background: #f6f8fa; color: var(--up-ink-2); font-size: 12px; }
+.tf-rule .tf-mode { background: transparent; padding-left: 0; color: var(--up-ink-3); font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; }
+.tf-price { color: var(--up-ink) !important; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* Modal */
+.user-modal.tf-modal { width: min(1040px, calc(100vw - 32px)) !important; max-width: none !important; max-height: calc(100vh - 40px); overflow-y: auto; }
+.tf-body { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; }
+.tf-fields { display: grid; gap: 18px; align-content: start; min-width: 0; }
+.tf-row { display: grid; gap: 16px; }
+.tf-row-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tf-field, .user-modal label.tf-field { display: grid; gap: 8px; align-content: start; margin: 0; }
+.tf-label, .tf-field > span:first-child { color: var(--up-ink-2); font-size: 12.5px; font-weight: 600; }
+.tf-label small { margin-left: 4px; color: var(--up-ink-3); font-weight: 500; }
+.tf-label-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tf-hint { color: var(--up-ink-3); font-size: 11.5px; }
+.tf-progresif { display: grid; gap: 18px; padding: 18px; border-radius: 16px; background: #f7faff; border: 1px solid var(--up-cream-line); }
+.tf-progresif[hidden], .tf-field[hidden] { display: none !important; }
+
+.tf-input {
+  display: flex; align-items: center; min-height: 44px; overflow: hidden;
+  border-radius: 12px; border: 1px solid var(--up-line); background: var(--up-field);
+  transition: border-color .15s, box-shadow .15s, background .15s;
+}
+.tf-input:focus-within { border-color: var(--up-focus); background: #fff; box-shadow: 0 0 0 4px rgba(13, 79, 168,.12); }
+.tf-input em { flex: none; padding: 0 12px; color: var(--up-ink-3); font-size: 13px; font-style: normal; font-weight: 600; }
+.tf-input em:first-child { padding-right: 0; }
+.user-modal .tf-input input:not([type=radio]):not([type=file]) { flex: 1; width: 100%; min-width: 0; height: 42px !important; min-height: 0; padding: 0 12px !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; font-variant-numeric: tabular-nums; }
+.user-modal .tf-input input:not([type=radio]):not([type=file]):focus { border: 0 !important; background: transparent !important; box-shadow: none !important; }
+.user-modal .tf-field > input { width: 100%; padding: 0 14px !important; }
+.tf-sim, .tf-sim > * { min-width: 0; }
+.tf-sim-input { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+
+.tf-choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.tf-choices-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.user-modal .tf-choice {
+  position: relative; display: flex !important; align-items: center; gap: 10px; margin: 0;
+  padding: 12px 14px; border-radius: 12px; border: 1px solid var(--up-line); background: var(--up-field);
+  color: var(--up-ink) !important; font-size: 13.5px !important; font-weight: 600 !important; cursor: pointer; transition: all .15s;
+}
+.tf-choice input { position: absolute; opacity: 0; pointer-events: none; }
+.tf-choice i { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 9px; background: #fff; color: var(--up-ink-2); font-size: 17px; box-shadow: inset 0 0 0 1px var(--up-line); }
+.tf-choice span { display: grid; line-height: 1.25; }
+.tf-choice small { color: var(--up-ink-3); font-size: 11.5px; font-weight: 500; }
+.tf-choice:hover { border-color: #d6dee8; background: #fff; }
+.tf-choice:has(input:checked) { border-color: var(--up-accent); background: var(--up-accent-tint); box-shadow: 0 0 0 3px rgba(0, 96, 221,.14); }
+.tf-choice:has(input:checked) i { background: linear-gradient(135deg, #3f8ef5, #0d4fa8); color: #fff; box-shadow: none; }
+.tf-choice:has(input:focus-visible) { outline: 3px solid rgba(13, 79, 168,.35); outline-offset: 2px; }
+
+.tf-tiers { display: grid; gap: 10px; }
+.tf-tiers:empty:before { content: 'Belum ada tingkat. Setelah blok awal, tarif langsung ditambah per jam.'; color: var(--up-ink-3); font-size: 12.5px; }
+.tf-tier { display: grid; grid-template-columns: 150px minmax(0, 1fr) 44px; gap: 10px; }
+.tf-tier .up-btn-danger { width: 44px; height: 44px; }
+
+/* Simulasi */
+.tf-sim {
+  position: sticky; top: 0; align-self: start; display: grid; gap: 14px;
+  padding: 18px; border-radius: 18px;
+  background: linear-gradient(180deg, #fbfdff, #eaf3ff); border: 1px solid var(--up-cream-line);
+}
+.tf-sim-head { display: flex; gap: 12px; align-items: center; }
+.tf-sim-head > i { display: grid; place-items: center; flex: none; width: 38px; height: 38px; border-radius: 11px; background: #fff; color: var(--up-accent-deep); font-size: 19px; box-shadow: inset 0 0 0 1px #c7dcf7; }
+.tf-sim-head strong { display: block; color: var(--up-navy-800); font-size: 14.5px; }
+.tf-sim-head span { color: var(--up-ink-3); font-size: 12px; }
+.tf-sim-input { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tf-sim-input label { margin: 0; }
+.tf-sim-input .tf-input { background: #fff; }
+.tf-sim-total { padding: 14px 16px; border-radius: 14px; background: #fff; border: 1px solid #c7dcf7; }
+.tf-sim-total span { display: block; color: var(--up-accent-deep); font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+.tf-sim-total strong { color: var(--up-navy-800); font-size: 28px; font-weight: 700; letter-spacing: -.5px; font-variant-numeric: tabular-nums; }
+.tf-sim-steps { display: grid; gap: 6px; margin: 0; padding: 0 0 0 18px; color: var(--up-ink-2); font-size: 12.5px; line-height: 1.45; }
+.tf-sim-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.tf-sim-table th { padding: 6px 0; color: var(--up-ink-3); font-size: 10.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; text-align: left; border-bottom: 1px solid #c7dcf7; }
+.tf-sim-table th:last-child, .tf-sim-table td:last-child { text-align: right; }
+.tf-sim-table td { padding: 6px 0; color: var(--up-ink-2); border-bottom: 1px dashed #e1e9f3; font-variant-numeric: tabular-nums; }
+.tf-sim-table td:last-child { color: var(--up-ink); font-weight: 700; }
+.tf-sim-table tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 900px) {
+  .tf-body { grid-template-columns: 1fr; }
+  .tf-sim { position: static; }
+}
+@media (max-width: 1279px) {
+  .tf-table td:nth-child(2), .tf-table td.tf-rule { grid-column: 1 / -1; }
+  .tf-table td.tf-rule { min-width: 0; }
+}
+@media (max-width: 575px) {
+  .tf-row-2, .tf-choices, .tf-choices-2 { grid-template-columns: 1fr; }
+  .tf-tier { grid-template-columns: 1fr 1fr 44px; }
+}
+
+/* Tipe ceklis multi-pilih */
+.tf-table td.tf-types { white-space: normal; }
+.tf-types .tf-type { margin: 2px 4px 2px 0; }
+.tf-check { padding-right: 40px !important; }
+.tf-check-box {
+  position: absolute; top: 50%; right: 12px; transform: translateY(-50%);
+  display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px;
+  border: 1.5px solid #cfd9e6; background: #fff; transition: all .15s;
+}
+.tf-check-box i { width: auto !important; height: auto !important; background: none !important; box-shadow: none !important; color: transparent !important; font-size: 13px !important; }
+.tf-check:has(input:checked) .tf-check-box { border-color: var(--up-accent); background: var(--up-accent); }
+.tf-check:has(input:checked) .tf-check-box i { color: #fff !important; }
+
+/* Tingkat awal + validasi */
+.tf-tier { align-items: start; }
+.tf-tier-tag {
+  display: grid; place-items: center; height: 44px; border-radius: 12px;
+  background: var(--up-accent-tint); color: #0a4ea8; font-size: 11.5px; font-weight: 700; letter-spacing: .4px;
+  box-shadow: inset 0 0 0 1px #cfe2fa;
+}
+.tf-tier-msg { grid-column: 1 / -1; margin-top: -4px; font-size: 12px; font-weight: 500; }
+.tf-tier-msg:empty { display: none; }
+.tf-tier.is-invalid .tf-input { border-color: #e06363; background: #fff7f7; }
+.tf-tier.is-invalid .tf-tier-msg { color: #c0392b; }
+.tf-tier.is-warn .tf-tier-msg { color: #0d4fa8; }
+.tf-flat-field[hidden] { display: none !important; }
+.tf-sim-steps li.is-warn { color: #c0392b; font-weight: 600; }
+
+/* Form edit ringkas (tanpa panel simulasi) */
+.user-modal.tf-modal { width: min(680px, calc(100vw - 32px)) !important; }
+.tf-modal .tf-body { grid-template-columns: 1fr; }
+.tf-modal .tf-fields { gap: 14px; }
+.tf-modal .tf-label, .tf-modal .tf-field > span:first-child, .user-modal.tf-modal label.tf-field { font-size: 12px !important; }
+.tf-modal .tf-label small { font-size: 11px; }
+.tf-modal .tf-field { gap: 6px; }
+.user-modal.tf-modal input:not([type=radio]):not([type=file]):not([type=checkbox]) { height: 38px !important; min-height: 0 !important; font-size: 13.5px !important; }
+.tf-modal .tf-input { min-height: 38px; border-radius: 10px; }
+.user-modal.tf-modal .tf-input input:not([type=radio]):not([type=file]) { height: 36px !important; padding: 0 10px !important; }
+.tf-modal .tf-input em { padding: 0 10px; font-size: 12px; }
+.tf-modal .tf-field > input { border-radius: 10px !important; padding: 0 12px !important; }
+.user-modal.tf-modal .tf-choice { padding: 8px 10px; gap: 8px; border-radius: 10px; font-size: 13px !important; }
+.tf-modal .tf-choice i { width: 26px; height: 26px; border-radius: 7px; font-size: 14px; }
+.tf-modal .tf-choice small { font-size: 11px; }
+.tf-modal .tf-choices { gap: 8px; }
+.tf-modal .tf-check { padding-right: 36px !important; }
+.tf-modal .tf-check-box { width: 18px; height: 18px; right: 10px; border-radius: 5px; }
+.tf-modal .tf-progresif { gap: 14px; padding: 14px; border-radius: 14px; }
+.tf-modal .tf-row { gap: 12px; }
+.tf-modal .tf-tiers { gap: 8px; }
+.tf-modal .tf-tier { grid-template-columns: 120px minmax(0, 1fr) 38px; gap: 8px; }
+.tf-modal .tf-tier .up-btn-danger, .tf-modal .tf-tier-tag { width: 38px; height: 38px; border-radius: 10px; }
+.tf-modal .tf-tier-tag { font-size: 10px; }
+.tf-modal .tf-label-row .up-btn { min-height: 32px; padding: 0 12px; font-size: 12.5px; }
+.tf-modal .pm-switch-field { padding: 10px 12px; }
+.tf-modal .pm-switch-field em { font-size: 13px !important; }
+.tf-modal .tf-hint { font-size: 11px; }
+
+/* Modal simulasi */
+.user-modal.tf-sim-modal { width: min(460px, calc(100vw - 32px)) !important; max-width: none !important; max-height: calc(100vh - 40px); overflow-y: auto; }
+.tf-sim-modal h3 { display: flex; align-items: center; gap: 8px; }
+.tf-sim-modal h3 i { color: var(--up-accent-deep); font-size: 22px; }
+.tf-sim-types { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.tf-sim-body { display: grid; gap: 14px; padding-top: 4px; }
+.tf-sim-rule { display: flex; flex-wrap: wrap; gap: 4px; }
+.tf-sim-rule span { padding: 3px 8px; border-radius: 6px; background: #f6f8fa; color: var(--up-ink-2); font-size: 11.5px; }
+.tf-sim-field { display: grid; gap: 6px; }
+.tf-sim-modal .tf-input { min-height: 38px; border-radius: 10px; background: #fff; }
+.user-modal.tf-sim-modal .tf-input input:not([type=radio]):not([type=file]) { height: 36px !important; padding: 0 10px !important; font-size: 14px !important; }
+.tf-sim-modal .tf-input em { padding: 0 10px; font-size: 12px; }
+.tf-sim-presets { display: flex; flex-wrap: wrap; gap: 6px; }
+.tf-sim-presets button {
+  padding: 4px 10px; border-radius: 999px; border: 1px solid var(--up-line); background: #fff;
+  color: var(--up-ink-2); font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s;
+}
+.tf-sim-presets button:hover { border-color: var(--up-accent); color: var(--up-accent-deep); }
+.tf-sim-presets button.is-active { border-color: var(--up-accent); background: var(--up-accent-tint); color: #0a4ea8; }
+.tf-sim-modal .tf-sim-total { background: linear-gradient(135deg, #fbfdff, #eaf3ff); }
+.pm-actions .up-btn[data-tarif-sim] { color: var(--up-accent-deep); }
+.tf-modal .user-cancel, .tf-modal .module-primary { min-height: 40px !important; height: 40px; padding: 0 18px !important; font-size: 13.5px !important; border-radius: 10px !important; }
+
+/* Tarif menginap */
+.tf-inap { display: grid; gap: 12px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--up-line); background: #fff; }
+.tf-inap > .pm-switch em { display: grid; color: var(--up-ink) !important; font-size: 13px; font-weight: 600; line-height: 1.3; }
+.tf-inap > .pm-switch em small { color: var(--up-ink-3); font-size: 11.5px; font-weight: 500; }
+.tf-inap [data-inap][hidden] { display: none !important; }
+.tf-modal .tf-inap .tf-row { gap: 12px; }
+.tf-select { position: relative; }
+.user-modal .tf-select select {
+  flex: 1; height: 36px !important; min-height: 0 !important; padding: 0 10px !important;
+  border: 0 !important; background: transparent !important; box-shadow: none !important; font-size: 13.5px !important;
+}
+
+/* Simulasi: tanggal masuk / keluar */
+.tf-sim-times { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.tf-sim-times .tf-field > span:first-child { display: inline-flex; align-items: center; gap: 5px; color: var(--up-ink-2); font-size: 12px; font-weight: 600; }
+.tf-sim-times .tf-field > span:first-child i { color: var(--up-accent-deep); font-size: 14px; }
+.user-modal.tf-sim-modal .tf-sim-times input[type=datetime-local] { font-size: 13px !important; font-variant-numeric: tabular-nums; }
+.user-modal.tf-sim-modal { width: min(500px, calc(100vw - 32px)) !important; }
+.tf-sim-total small { display: block; margin-top: 2px; color: var(--up-ink-2); font-size: 12.5px; font-weight: 500; }
+.tf-sim-table td small { display: block; color: var(--up-ink-3); font-size: 11px; font-weight: 500; }
+.tf-sim-steps li.is-warn { color: #c0392b; font-weight: 600; }
+@media (max-width: 480px) { .tf-sim-times { grid-template-columns: 1fr; } }
+.tf-sim-total small.is-warn { color: #c0392b; font-weight: 600; }
+.tf-sim-modal .tf-sim-total { text-align: center; padding: 20px 16px; }
+.tf-sim-modal .tf-sim-total strong { font-size: 34px; }
+
+/* Pustaka ikon kendaraan */
+.vh-svg { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tf-vehicle { font-size: 21px; }
+.tf-sim-icon { display: inline-grid; place-items: center; color: var(--up-accent-deep); font-size: 24px; }
+.tf-icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 6px; }
+.user-modal .tf-icon-option {
+  position: relative; display: grid !important; justify-items: center; gap: 4px; margin: 0;
+  padding: 9px 4px 7px; border-radius: 10px; border: 1px solid var(--up-line); background: var(--up-field);
+  color: var(--up-ink-2) !important; font-size: 20px !important; cursor: pointer; transition: all .15s;
+}
+.tf-icon-option input { position: absolute; opacity: 0; pointer-events: none; }
+.tf-icon-option > i, .tf-icon-option > .vh-svg { font-size: 20px; line-height: 1; }
+.tf-icon-option span { max-width: 100%; overflow: hidden; color: var(--up-ink-3); font-size: 10.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.tf-icon-option:hover { border-color: #d6dee8; background: #fff; color: var(--up-ink) !important; }
+.tf-icon-option:has(input:checked) { border-color: var(--up-accent); background: var(--up-accent-tint); color: var(--up-accent-deep) !important; box-shadow: 0 0 0 3px rgba(0, 96, 221,.14); }
+.tf-icon-option:has(input:checked) span { color: #0a4ea8; }
+.tf-icon-option:has(input:focus-visible) { outline: 3px solid rgba(13, 79, 168,.35); outline-offset: 2px; }
+.user-modal .tf-icon-option > i, .user-modal .tf-icon-option > .vh-svg { font-size: 22px !important; width: 22px; height: 22px; }
+.pm-actions .up-btn-icon { width: 38px; padding: 0; color: var(--up-accent-deep); }
+.pm-actions .up-btn-icon:hover { background: var(--up-accent-tint); }
+
+/* Dropdown ikon, sebaris dengan jenis kendaraan */
+.tf-row-vehicle { grid-template-columns: minmax(0, 1fr) 190px; align-items: start; }
+.tf-dd { position: relative; }
+.tf-dd-btn {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%; height: 38px; padding: 0 12px;
+  border-radius: 10px; border: 1px solid var(--up-line); background: var(--up-field); color: var(--up-ink); cursor: pointer;
+  transition: border-color .15s, box-shadow .15s, background .15s;
+}
+.tf-dd-btn:hover { border-color: #d6dee8; background: #fff; }
+.tf-dd-btn[aria-expanded="true"], .tf-dd-btn:focus-visible { outline: none; border-color: var(--up-focus); background: #fff; box-shadow: 0 0 0 4px rgba(13, 79, 168,.12); }
+.tf-dd-btn > .ti { color: var(--up-ink-3); font-size: 15px; transition: transform .15s; }
+.tf-dd-btn[aria-expanded="true"] > .ti { transform: rotate(180deg); }
+.tf-dd-current { display: inline-flex; align-items: center; gap: 9px; min-width: 0; font-size: 13.5px; font-weight: 500; }
+.tf-dd-icon { display: grid; place-items: center; flex: none; width: 19px; height: 19px; font-size: 19px; line-height: 1; }
+.tf-dd-current .tf-dd-icon { color: var(--up-accent-deep); }
+.tf-dd-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
+.tf-dd-menu {
+  position: absolute; z-index: 20; top: calc(100% + 6px); right: 0; width: 220px; max-height: 300px; overflow-y: auto;
+  padding: 6px; border-radius: 12px; border: 1px solid var(--up-cream-line); background: #fff;
+  box-shadow: 0 18px 40px -16px rgba(7, 24, 46,.35);
+}
+.tf-dd-menu[hidden] { display: none; }
+.user-modal .tf-dd-option {
+  position: relative; display: flex !important; align-items: center; gap: 10px; margin: 0; padding: 7px 10px; border-radius: 8px;
+  color: var(--up-ink) !important; font-size: 13px !important; font-weight: 500 !important; cursor: pointer;
+}
+.tf-dd-option input { position: absolute; opacity: 0; pointer-events: none; }
+.tf-dd-option .tf-dd-icon { color: var(--up-ink-2); }
+.tf-dd-check { color: transparent; font-size: 14px; }
+.tf-dd-option:hover, .tf-dd-option:has(input:focus-visible) { background: #f6f8fa; }
+.tf-dd-option:has(input:checked) { background: var(--up-accent-tint); color: #0a4ea8 !important; }
+.tf-dd-option:has(input:checked) .tf-dd-icon, .tf-dd-option:has(input:checked) .tf-dd-check { color: var(--up-accent-deep); }
+@media (max-width: 575px) { .tf-row-vehicle { grid-template-columns: 1fr; } .tf-dd-menu { left: 0; right: auto; width: 100%; } }
+.tf-row[data-denda][hidden] { display: none !important; }
+
+/* Daftar tarif rapi (2026-10-12): nama tidak terpotong, badge sebaris, kartu HP ringkas, modal pas di layar */
+.tf-table .pm-name strong { white-space: nowrap; overflow-wrap: normal; }
+.tf-types { display: flex; flex-wrap: wrap; gap: 4px; }
+.tf-types .tf-type { margin: 0; }
+.tf-rule span { margin: 2px 2px 2px 0; }
+.tf-table td.tf-price, .tf-table td:nth-child(5) { white-space: nowrap; }
+@media (min-width: 1280px) {
+  .tf-table td.tf-types { display: table-cell; max-width: 230px; }
+  .tf-table td.tf-types > .tf-type { margin: 2px 2px 2px 0; }
+  .tf-table td.tf-rule { min-width: 260px; }
+}
+@media (max-width: 1279px) {
+  .tf-page .up-filters { flex-wrap: wrap; overflow: visible; width: 100%; }
+  .tf-page .up-toolbar { width: 100%; }
+  .tf-table tr { grid-template-columns: minmax(0, 1fr) auto !important; column-gap: 0 !important; align-items: center; }
+  .tf-table td:nth-child(1) { grid-column: 1 !important; grid-row: 1; }
+  .tf-table td.pm-actions { grid-column: 2 !important; grid-row: 1; width: auto !important; gap: 6px; padding-left: 12px !important; }
+  .tf-table td.tf-types { grid-column: 1 / -1 !important; display: flex !important; }
+  .tf-table td.tf-rule { grid-column: 1 / -1 !important; }
+  .tf-table td.tf-price, .tf-table td:nth-child(5) { align-self: stretch; padding: 10px 14px !important; background: #f6f9fc; }
+  .tf-table td.tf-price { grid-column: 1; display: grid !important; gap: 2px; border-radius: 12px 0 0 12px; font-size: 15px; }
+  .tf-table td.tf-price::before { content: 'Tarif dasar'; color: var(--up-ink-3); font-size: 11px; font-weight: 600; }
+  .tf-table td:nth-child(5) { grid-column: 2; display: flex !important; align-items: center; justify-content: flex-end; border-radius: 0 12px 12px 0; }
+}
+@media (max-width: 575px) {
+  .tf-table .pm-actions .up-btn { width: 34px; min-width: 34px; height: 34px; min-height: 34px; }
+  .tf-page .up-filter { flex: 1 1 auto; justify-content: center; }
+  /* Modal: latar memberi jarak 24px/sisi, jadi lebar modal ikut ruang yang tersedia (sebelumnya 100vw-32px → terpotong kanan) */
+  .user-modal-backdrop:has(.tf-modal, .tf-sim-modal) { padding: 12px; }
+  .user-modal.tf-modal, .user-modal.tf-sim-modal { width: 100% !important; max-height: calc(100dvh - 24px); padding-left: 16px !important; padding-right: 16px !important; }
+  .tf-modal .tf-choices { grid-template-columns: 1fr; }
+  .tf-modal .tf-tier { grid-template-columns: 112px minmax(0, 1fr) 38px; }
+  .tf-modal .tf-tier .tf-input em { padding: 0 8px; }
+  .user-modal.tf-modal .tf-tier .tf-input:first-child input:not([type=radio]):not([type=file]) { padding: 0 4px !important; text-align: center; }
+  .tf-modal .tf-label-row { align-items: flex-start; }
+  .tf-modal .tf-label-row .tf-label small { display: block; margin: 2px 0 0; }
+}

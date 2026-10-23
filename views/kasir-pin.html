@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0d4fa8">
+<meta name="robots" content="noindex, nofollow">
+<title>Login Kasir | Sianok Parking</title>
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/assets/kasir.webmanifest">
+<link rel="apple-touch-icon" href="/assets/kasir-icon-192.png">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#17365f;background:#f4f9ff;user-select:none;touch-action:manipulation;overflow:hidden}
+button{font:inherit;cursor:pointer}
+.shell{display:grid;grid-template-columns:1fr 1fr;width:100%;height:100vh;height:100dvh}
+
+/* kiri: panel biru */
+.side{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center;padding:64px 48px 0;color:#fff;
+background:radial-gradient(600px 460px at 15% 10%,rgba(77, 154, 255,.55),transparent 65%),radial-gradient(520px 420px at 95% 75%,rgba(131, 193, 111,.22),transparent 65%),linear-gradient(155deg,#0f2e57,#0d4fa8)}
+.side::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:48px 48px;-webkit-mask-image:linear-gradient(180deg,#000,transparent 75%);mask-image:linear-gradient(180deg,#000,transparent 75%)}
+.side>*{position:relative}
+.kicker{display:inline-flex;align-items:center;gap:12px;font-size:12px;font-weight:600;letter-spacing:.34em;text-transform:uppercase;color:#b6eca4}
+.kicker::before,.kicker::after{content:"";width:28px;height:1px;background:linear-gradient(90deg,transparent,#b6eca4)}
+.kicker::after{transform:scaleX(-1)}
+.side h2{margin:18px 0 0;font-size:46px;font-weight:600;letter-spacing:.01em;line-height:1.1}
+.side h2::after{content:"";display:block;width:60px;height:3px;margin:20px auto 0;border-radius:3px;background:linear-gradient(90deg,#83c16f,#c9f3bb,#83c16f)}
+.side p{margin:20px auto 0;max-width:360px;font-size:16px;line-height:1.6;color:#d4e7ff}
+.scene{display:block;width:calc(100% + 96px);margin:0 -48px;height:auto;max-height:34%}
+.car{animation:drive 7s ease-in-out infinite alternate}
+@keyframes drive{from{transform:translateX(-8px)}to{transform:translateX(16px)}}
+@media (prefers-reduced-motion:reduce){.car{animation:none}}
+
+/* kanan: form PIN */
+.main{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 32px 56px;text-align:center;
+background:radial-gradient(500px 400px at 100% 0,rgba(66, 200, 21,.1),transparent 65%),linear-gradient(180deg,#f9fcff,#eef4fd)}
+.box{width:100%;max-width:380px}
+.logo{display:block;width:min(260px,70%);height:auto;margin:0 auto 22px}
+.hello{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#0d4fa8}
+h1{margin:8px 0 4px;font-size:30px;font-weight:700;color:#10294a}
+.sub{margin:0;font-size:14px;color:#738099}
+.display{display:flex;align-items:center;justify-content:center;gap:14px;height:58px;margin:22px 0 6px;border-radius:16px;background:#fff;border:1px solid #dbe6f4;box-shadow:inset 0 2px 6px rgba(23, 54, 95,.05)}
+.display i{width:14px;height:14px;border-radius:50%;background:#0d4fa8;box-shadow:0 0 0 4px rgba(13, 79, 168,.14);animation:pop .12s ease-out}
+.display .ph{width:12px;height:12px;border-radius:50%;background:#d5dfec;animation:none;box-shadow:none}
+@keyframes pop{from{transform:scale(.4)}to{transform:scale(1)}}
+.msg{min-height:22px;margin-bottom:10px;font-size:14px;font-weight:500;color:#e04b3c}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.pad button{height:64px;border:1px solid #e1eaf5;border-radius:18px;background:#fff;color:#10294a;font-size:26px;font-weight:600;box-shadow:0 4px 10px rgba(23, 54, 95,.06);transition:background .1s,transform .08s}
+.pad button:active{background:#0d4fa8;color:#fff;transform:scale(.95)}
+.pad .fn{background:#eef4fb;color:#5d708a;font-size:16px;box-shadow:none}
+.pad .go{grid-column:1/-1;height:60px;margin-top:4px;border:0;border-radius:18px;color:#fff;font-size:17px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:linear-gradient(135deg,#1268d8,#4d9aff);box-shadow:0 14px 28px rgba(18,104,216,.32)}
+.pad .go:active{background:#0f56b3}
+.pad button:disabled{opacity:.5}
+.shake{animation:shake .35s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.foot{position:absolute;left:0;right:0;bottom:0;padding:14px 24px;font-size:12px;color:#8a97ad;border-top:1px solid #e1eaf5;background:rgba(255,255,255,.6)}
+
+@media (max-height:760px) and (min-width:761px){.side h2{font-size:38px}.logo{width:200px;margin-bottom:12px}.display{height:50px;margin-top:14px}.pad button{height:54px}.pad .go{height:54px}.pad{gap:10px}.side{padding-top:44px}}
+
+/* HP: hero biru + lembar putih menumpuk */
+@media (max-width:760px){
+  .shell{display:flex;flex-direction:column}
+  .side{flex:none;padding:calc(22px + env(safe-area-inset-top)) 20px 0}
+  .side>div{padding-bottom:6px}
+  .side h2{display:block;margin:8px 0 0;font-size:26px}
+  .side h2::after{margin-top:12px;width:44px;height:2px}
+  .side p{display:none}
+  .scene{width:calc(100% + 40px);margin:8px -20px 0;max-height:min(150px,15vh)}
+  .main{flex:1;min-height:0;margin-top:-12px;padding:18px 22px calc(16px + env(safe-area-inset-bottom));justify-content:space-between;border-radius:28px 28px 0 0;background:#fff;box-shadow:0 -12px 30px rgba(10, 36, 70,.25);position:relative;z-index:1}
+  .box{max-width:360px;display:flex;flex-direction:column;flex:1;justify-content:flex-start}
+  .logo,.hello{display:none}
+  h1{margin:0;font-size:22px}
+  .sub{margin-bottom:2px}
+  .display{height:clamp(44px,6.5vh,52px);margin:10px 0 2px;background:#f4f9ff}
+  .msg{flex:1;min-height:18px;display:flex;align-items:center;justify-content:center;margin:0}
+  .pad{gap:10px}
+  .pad button{height:clamp(40px,7.4vh,72px);border-radius:50px;font-size:25px}
+  .pad .go{height:clamp(46px,7.8vh,66px);border-radius:50px}
+  .foot{display:none}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div>
+      <span class="kicker">Sianok Parking</span>
+      <h2>Kasir Parkir</h2>
+      <p>Masuk dengan PIN pribadi Anda untuk mulai melayani pelanggan.</p>
+    </div>
+    <svg class="scene" viewBox="0 0 480 190" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <defs><linearGradient id="road" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f2c52"/><stop offset="1" stop-color="#0a203d"/></linearGradient></defs>
+  <g fill="#ffffff" opacity=".1"><rect x="10" y="70" width="46" height="100"/><rect x="62" y="40" width="58" height="130"/><rect x="126" y="86" width="40" height="84"/><rect x="330" y="56" width="52" height="114"/><rect x="388" y="82" width="42" height="88"/><rect x="436" y="50" width="44" height="120"/></g>
+  <g fill="#b6eca4" opacity=".55"><rect x="72" y="56" width="6" height="8"/><rect x="88" y="56" width="6" height="8"/><rect x="72" y="76" width="6" height="8"/><rect x="104" y="96" width="6" height="8"/><rect x="342" y="72" width="6" height="8"/><rect x="358" y="92" width="6" height="8"/><rect x="448" y="68" width="6" height="8"/><rect x="462" y="88" width="6" height="8"/></g>
+  <rect x="0" y="158" width="480" height="32" fill="url(#road)"/>
+  <g stroke="#fff" stroke-width="3" stroke-dasharray="22 16" opacity=".5"><line x1="0" y1="176" x2="480" y2="176"/></g>
+  <g>
+    <rect x="236" y="96" width="14" height="62" rx="3" fill="#e9f3ff"/>
+    <rect x="232" y="88" width="22" height="14" rx="4" fill="#2da604"/>
+    <rect x="250" y="94" width="150" height="8" rx="4" fill="#fff"/>
+    <g fill="#e04b3c"><rect x="276" y="94" width="18" height="8"/><rect x="314" y="94" width="18" height="8"/><rect x="352" y="94" width="18" height="8"/></g>
+    <circle cx="243" cy="92" r="3" fill="#42c815"/>
+  </g>
+  <g>
+    <rect x="428" y="84" width="6" height="74" fill="#cfe4ff"/>
+    <rect x="410" y="52" width="42" height="42" rx="9" fill="#1268d8" stroke="#fff" stroke-width="3"/>
+    <text x="431" y="84" text-anchor="middle" font-size="30" font-weight="800" fill="#fff" font-family="system-ui,sans-serif">P</text>
+  </g>
+  <g class="car">
+    <path d="M40 160 q2-22 22-26 l28-4 q10-14 26-14 h30 q18 0 28 16 l14 6 q10 4 10 16 v6 z" fill="#4d9aff"/>
+    <path d="M100 132 q8-10 20-10 h26 q12 0 20 12 z" fill="#d4e7ff"/>
+    <circle cx="82" cy="162" r="13" fill="#0a203d"/><circle cx="82" cy="162" r="5.5" fill="#cfe4ff"/>
+    <circle cx="170" cy="162" r="13" fill="#0a203d"/><circle cx="170" cy="162" r="5.5" fill="#cfe4ff"/>
+    <rect x="203" y="142" width="9" height="6" rx="2" fill="#b6eca4"/>
+  </g>
+</svg>
+  </aside>
+  <main class="main" id="card">
+    <div class="box">
+      <img class="logo" src="/assets/logo.png" alt="Sianok Parking">
+      <div class="hello">Selamat datang</div>
+      <h1>Login Kasir</h1>
+      <p class="sub">Masukkan PIN Anda</p>
+      <div class="display" id="dots" aria-live="polite"></div>
+      <div class="msg" id="msg" role="alert"></div>
+      <div class="pad" id="pad">
+        <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+        <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+        <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+        <button class="fn" data-k="clear">Hapus</button><button data-k="0">0</button><button class="fn" data-k="back" aria-label="Hapus satu digit">&#9003;</button>
+        <button class="go" data-k="go">Masuk</button>
+      </div>
+    </div>
+    <div class="foot">&copy; PT Azka Maju Bersama</div>
+  </main>
+</div>
+<script>function v8_0x54be(_0x3b7cff,_0x288d9c){_0x3b7cff=_0x3b7cff-0x134;var _0x5f0b79=v8_0x5f0b();var _0x54be6b=_0x5f0b79[_0x3b7cff];if(v8_0x54be['YRHcQA']===undefined){var _0x347802=function(_0x364c5a){var _0x23c168='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x4fcee7='',_0x566899='';for(var _0x39c728=0x0,_0x5cadb6,_0x4a27da,_0x3528ef=0x0;_0x4a27da=_0x364c5a['charAt'](_0x3528ef++);~_0x4a27da&&(_0x5cadb6=_0x39c728%0x4?_0x5cadb6*0x40+_0x4a27da:_0x4a27da,_0x39c728++%0x4)?_0x4fcee7+=String['fromCharCode'](0xff&_0x5cadb6>>(-0x2*_0x39c728&0x6)):0x0){_0x4a27da=_0x23c168['indexOf'](_0x4a27da);}for(var _0xdb3d05=0x0,_0x41addf=_0x4fcee7['length'];_0xdb3d05<_0x41addf;_0xdb3d05++){_0x566899+='%'+('00'+_0x4fcee7['charCodeAt'](_0xdb3d05)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x566899);};v8_0x54be['WgtvRa']=_0x347802,v8_0x54be['LqwbBO']={},v8_0x54be['YRHcQA']=!![];}var _0x47ec46=_0x5f0b79[0x0],_0x6b48c1=_0x3b7cff+_0x47ec46,_0x1fdc4c=v8_0x54be['LqwbBO'][_0x6b48c1];return!_0x1fdc4c?(_0x54be6b=v8_0x54be['WgtvRa'](_0x54be6b),v8_0x54be['LqwbBO'][_0x6b48c1]=_0x54be6b):_0x54be6b=_0x1fdc4c,_0x54be6b;}(function(_0x14023a,_0x40a05e){var _0x25d188=v8_0x54be,_0x28bb67=_0x14023a();while(!![]){try{var _0x15acb1=-parseInt(_0x25d188(0x137))/0x1*(-parseInt(_0x25d188(0x145))/0x2)+parseInt(_0x25d188(0x157))/0x3*(-parseInt(_0x25d188(0x14c))/0x4)+parseInt(_0x25d188(0x135))/0x5+-parseInt(_0x25d188(0x13a))/0x6*(parseInt(_0x25d188(0x14b))/0x7)+-parseInt(_0x25d188(0x153))/0x8+parseInt(_0x25d188(0x13c))/0x9+parseInt(_0x25d188(0x14a))/0xa;if(_0x15acb1===_0x40a05e)break;else _0x28bb67['push'](_0x28bb67['shift']());}catch(_0x21516b){_0x28bb67['push'](_0x28bb67['shift']());}}}(v8_0x5f0b,0x2c0d8),(function(){var _0x54f729=v8_0x54be,_0x4fcee7='',_0x566899=![],_0x39c728=0x8,_0x5cadb6=0x4,_0x4a27da=document['getElementById']('dots'),_0x3528ef=document['getElementById'](_0x54f729(0x140)),_0xdb3d05=document['getElementById'](_0x54f729(0x13b)),_0x41addf=document['getElementById']('pad');function _0x23d27a(){var _0x277b9b=_0x54f729,_0x351c75=Math['max'](0x4,_0x4fcee7['length']),_0x1a5ac6='';for(var _0x29178b=0x0;_0x29178b<_0x351c75;_0x29178b++)_0x1a5ac6+=_0x29178b<_0x4fcee7[_0x277b9b(0x136)]?'<i></i>':'<i\x20class=\x22ph\x22></i>';_0x4a27da[_0x277b9b(0x138)]=_0x1a5ac6;}function _0x2b1f9e(_0x33d13b){var _0x534ce3=_0x54f729;_0x3528ef['textContent']=_0x33d13b,_0xdb3d05[_0x534ce3(0x144)]['remove']('shake'),void _0xdb3d05['offsetWidth'],_0xdb3d05['classList']['add']('shake'),_0x4fcee7='',_0x23d27a();}async function _0x191908(){var _0x4dae01=_0x54f729;if(_0x566899)return;if(_0x4fcee7[_0x4dae01(0x136)]<_0x5cadb6){_0x3528ef[_0x4dae01(0x13e)]='PIN\x20minimal\x20'+_0x5cadb6+'\x20digit';return;}_0x566899=!![],_0x41addf[_0x4dae01(0x150)]('button')[_0x4dae01(0x155)](function(_0x5861d0){_0x5861d0['disabled']=!![];}),_0x3528ef['textContent']='';try{var _0x17be6f=await fetch(_0x4dae01(0x146),{'method':'POST','headers':{'Content-Type':_0x4dae01(0x143)},'credentials':'same-origin','body':JSON['stringify']({'pin':_0x4fcee7})}),_0x48e316=await _0x17be6f[_0x4dae01(0x142)]()['catch'](function(){return{};});if(_0x17be6f['ok']){location[_0x4dae01(0x151)]('/kasir');return;}_0x2b1f9e(_0x48e316['error']||_0x4dae01(0x134));}catch(_0x274fc4){_0x2b1f9e(_0x4dae01(0x13d));}_0x566899=![],_0x41addf[_0x4dae01(0x150)]('button')['forEach'](function(_0x5a05cd){var _0x3e16f3=_0x4dae01;_0x5a05cd[_0x3e16f3(0x148)]=![];});}function _0x1cc7c4(_0x26f560){var _0x8327c0=_0x54f729;if(_0x566899)return;if(_0x26f560==='clear')_0x4fcee7='';else{if(_0x26f560===_0x8327c0(0x14e))_0x4fcee7=_0x4fcee7['slice'](0x0,-0x1);else{if(_0x26f560==='go')return _0x191908();else _0x4fcee7[_0x8327c0(0x136)]<_0x39c728&&(_0x4fcee7+=_0x26f560);}}_0x3528ef['textContent']='',_0x23d27a();}var _0x44d8a1=0x0;_0x41addf['addEventListener'](_0x54f729(0x152),function(_0x19a73f){var _0x10a43f=_0x54f729,_0x3afc11=_0x19a73f[_0x10a43f(0x154)][_0x10a43f(0x147)]('button');if(!_0x3afc11||_0x3afc11[_0x10a43f(0x148)])return;_0x44d8a1=Date[_0x10a43f(0x13f)](),_0x19a73f[_0x10a43f(0x149)](),_0x1cc7c4(_0x3afc11[_0x10a43f(0x139)]['k']);}),_0x41addf['addEventListener']('click',function(_0xd84b2f){var _0x457171=_0x54f729,_0x4f4e6f=_0xd84b2f[_0x457171(0x154)][_0x457171(0x147)]('button');if(_0x4f4e6f&&Date['now']()-_0x44d8a1>0x258)_0x1cc7c4(_0x4f4e6f[_0x457171(0x139)]['k']);}),document['addEventListener'](_0x54f729(0x14d),function(_0x59ca8b){var _0x314d8b=_0x54f729;if(/^[0-9]$/['test'](_0x59ca8b['key']))_0x1cc7c4(_0x59ca8b['key']);else{if(_0x59ca8b['key']===_0x314d8b(0x14f))_0x1cc7c4(_0x314d8b(0x14e));else{if(_0x59ca8b['key']===_0x314d8b(0x141))_0x1cc7c4('go');else{if(_0x59ca8b['key']===_0x314d8b(0x156))_0x1cc7c4('clear');}}}}),_0x23d27a();}()));function v8_0x5f0b(){var _0x26bf75=['BgvUz3rO','mtK3qKXZuLHu','Aw5Uzxjive1m','zgf0yxnLDa','odC2uMPbExbv','y2fYza','nteXoti5sMnyDKXc','vgLKywSGzgfWyxqGDgvYAhvIDw5NigTLihnLCNzLCG','Dgv4DenVBNrLBNq','BM93','BxnN','rw50zxi','ANnVBG','yxbWBgLJyxrPB24VANnVBG','y2XHC3nmAxn0','odu0suPhqw1U','l2THC2LYl2XVz2LU','y2XVC2vZDa','zgLZywjSzwq','ChjLDMvUDerLzMf1Bhq','ndq1oty5mg1KywL6wG','otCXnKPqAKHqzG','mJrMt1ndzMK','A2v5zg93BG','yMfJAW','qMfJA3nWywnL','CxvLCNLtzwXLy3rVCKfSBa','CMvWBgfJzq','Cg9PBNrLCMrVD24','mJqWndy1nMXTuvLdAq','DgfYz2v0','zM9YrwfJAa','rxnJyxbL','mZu5mdDhuNjKAM0','tg9NAw4Gz2fNywW','odqYntC1EunyB1nI'];v8_0x5f0b=function(){return _0x26bf75;};return v8_0x5f0b();}</script>
+<script>function v9_0x3836(_0xc5b9db,_0x66c74b){_0xc5b9db=_0xc5b9db-0x76;var _0x2b2ec5=v9_0x2b2e();var _0x3836f2=_0x2b2ec5[_0xc5b9db];if(v9_0x3836['NyxFoq']===undefined){var _0x2595b2=function(_0x37ce00){var _0x24a40e='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0xb167ec='',_0x211fea='';for(var _0x43a638=0x0,_0x4840f3,_0x4f674c,_0x20bf4d=0x0;_0x4f674c=_0x37ce00['charAt'](_0x20bf4d++);~_0x4f674c&&(_0x4840f3=_0x43a638%0x4?_0x4840f3*0x40+_0x4f674c:_0x4f674c,_0x43a638++%0x4)?_0xb167ec+=String['fromCharCode'](0xff&_0x4840f3>>(-0x2*_0x43a638&0x6)):0x0){_0x4f674c=_0x24a40e['indexOf'](_0x4f674c);}for(var _0x39ac51=0x0,_0x5f5def=_0xb167ec['length'];_0x39ac51<_0x5f5def;_0x39ac51++){_0x211fea+='%'+('00'+_0xb167ec['charCodeAt'](_0x39ac51)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x211fea);};v9_0x3836['NwQUdv']=_0x2595b2,v9_0x3836['mgtZDp']={},v9_0x3836['NyxFoq']=!![];}var _0x19ed2b=_0x2b2ec5[0x0],_0x282ba8=_0xc5b9db+_0x19ed2b,_0x4792b6=v9_0x3836['mgtZDp'][_0x282ba8];return!_0x4792b6?(_0x3836f2=v9_0x3836['NwQUdv'](_0x3836f2),v9_0x3836['mgtZDp'][_0x282ba8]=_0x3836f2):_0x3836f2=_0x4792b6,_0x3836f2;}(function(_0x4f0bb3,_0x35edd4){var _0x168c55=v9_0x3836,_0xaef8fb=_0x4f0bb3();while(!![]){try{var _0x495dc2=parseInt(_0x168c55(0x88))/0x1+parseInt(_0x168c55(0x84))/0x2+-parseInt(_0x168c55(0x78))/0x3+parseInt(_0x168c55(0x83))/0x4*(parseInt(_0x168c55(0x76))/0x5)+parseInt(_0x168c55(0x7c))/0x6*(parseInt(_0x168c55(0x81))/0x7)+parseInt(_0x168c55(0x85))/0x8+-parseInt(_0x168c55(0x77))/0x9;if(_0x495dc2===_0x35edd4)break;else _0xaef8fb['push'](_0xaef8fb['shift']());}catch(_0x5c6497){_0xaef8fb['push'](_0xaef8fb['shift']());}}}(v9_0x2b2e,0x63d97),(function(){var _0x197fd3=v9_0x3836,_0xb167ec=document[_0x197fd3(0x79)],_0x211fea=_0xb167ec[_0x197fd3(0x86)]||_0xb167ec[_0x197fd3(0x7a)];if(!_0x211fea||!matchMedia('(pointer:coarse)')[_0x197fd3(0x7f)]||matchMedia(_0x197fd3(0x82))['matches'])return;function _0x43a638(){var _0x3eceed=_0x197fd3;if(document['fullscreenElement']||document[_0x3eceed(0x7b)])return;try{var _0x4840f3=_0x211fea['call'](_0xb167ec,{'navigationUI':_0x3eceed(0x7e)});if(_0x4840f3&&_0x4840f3[_0x3eceed(0x7d)])_0x4840f3['catch'](function(){});}catch(_0x4f674c){}}document[_0x197fd3(0x80)]('click',_0x43a638,!![]),document['addEventListener'](_0x197fd3(0x87),_0x43a638,!![]);}()));function v9_0x2b2e(){var _0x4bc06a=['mtCXmJKZrxzuu2rY','nunTBhHwua','mtyWotuZndHyswTuu0q','mtyWotG2zM9xwK9Z','zg9JDw1LBNrfBgvTzw50','D2vIA2L0uMvXDwvZDez1BgXZy3jLzw4','D2vIA2L0rNvSBhnJCMvLBKvSzw1LBNq','mJuWmZe0zhzNwuHP','y2f0y2G','AgLKzq','Bwf0y2HLCW','ywrKrxzLBNrmAxn0zw5LCG','mJfdsvbLyNa','kgrPC3bSyxKTBw9KztOGzNvSBhnJCMvLBIK','mtmZnde2nhHuwgDRwG','mtyZntKXnNr3DvntAq','nJqYndu0neTxEu9vAq','CMvXDwvZDez1BgXZy3jLzw4','Dg91y2HLBMq'];v9_0x2b2e=function(){return _0x4bc06a;};return v9_0x2b2e();}</script>
+</body>
+</html>

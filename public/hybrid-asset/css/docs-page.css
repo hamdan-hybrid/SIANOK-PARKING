@@ -1,0 +1,97 @@
+/* Hybrid Parking — Dokumentasi (khusus Owner) */
+[data-owner-only][hidden] { display: none !important; }
+
+.doc-page {
+  --doc-ink: #0b1420;
+  --doc-ink-2: #5a6780;
+  --doc-ink-3: #8a95a8;
+  --doc-line: #e8edf4;
+  --doc-soft: #f6f9fc;
+  --doc-accent: #0d4fa8;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  color: var(--doc-ink);
+}
+.doc-hero {
+  padding: 28px 32px;
+  border-radius: 22px;
+  border: 1px solid #e1e9f3;
+  background:
+    radial-gradient(circle at 96% -15%, rgba(0, 96, 221,.18), transparent 40%),
+    linear-gradient(135deg, #ffffff 0%, #f7faff 55%, #eaf3ff 100%);
+}
+.doc-eyebrow { display: inline-flex; align-items: center; gap: 6px; margin: 0 0 8px; color: var(--doc-accent); font-size: 12px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; }
+.doc-hero h2 { margin: 0; color: #0a2a5e; font-size: clamp(22px, 2.2vw, 28px); font-weight: 700; letter-spacing: -.4px; }
+.doc-hero p { margin: 8px 0 0; color: var(--doc-ink-2); font-size: 14px; }
+
+
+.doc-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; min-width: 0; }
+.doc-section {
+  padding: 24px 26px; border-radius: 20px; scroll-margin-top: 90px;
+  background: #fff; border: 1px solid var(--doc-line);
+  box-shadow: 0 1px 2px rgba(20, 38, 61,.04), 0 16px 32px -24px rgba(20, 38, 61,.22);
+}
+.doc-section h3 { margin: 0 0 14px; color: var(--doc-ink); font-size: 18px; font-weight: 700; letter-spacing: -.2px; }
+.doc-section h4 { margin: 18px 0 8px; color: var(--doc-accent); font-size: 13px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; }
+.doc-section p { margin: 0 0 12px; color: var(--doc-ink-2); font-size: 14px; line-height: 1.6; }
+.doc-section a { color: var(--doc-accent); font-weight: 600; text-decoration: none; }
+.doc-section a:hover { text-decoration: underline; }
+.doc-section code { padding: 1px 6px; border-radius: 5px; background: var(--doc-soft); border: 1px solid var(--doc-line); color: #0a2a5e; font-size: 12.5px; overflow-wrap: anywhere; }
+.doc-section pre { margin: 10px 0; padding: 12px 14px; border-radius: 10px; background: #0b1420; color: #dbebff; font-size: 12.5px; white-space: pre-wrap; word-break: break-all; }
+
+.doc-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.doc-card { display: grid; gap: 4px; padding: 14px 16px; border-radius: 14px; background: var(--doc-soft); border: 1px solid var(--doc-line); }
+.doc-card i { color: var(--doc-accent); font-size: 22px; }
+.doc-card strong { font-size: 14px; }
+.doc-card span { color: var(--doc-ink-2); font-size: 12.5px; line-height: 1.5; }
+
+.doc-steps { display: grid; gap: 10px; margin: 0 0 12px; padding-left: 20px; color: var(--doc-ink-2); font-size: 14px; line-height: 1.6; }
+.doc-steps strong { color: var(--doc-ink); }
+.doc-bullets { display: grid; gap: 6px; margin: 0; padding-left: 20px; color: var(--doc-ink-2); font-size: 14px; line-height: 1.6; }
+.doc-bullets ul { margin-top: 6px; display: grid; gap: 4px; }
+.doc-bullets b { color: var(--doc-ink); }
+.doc-note { display: flex; gap: 8px; padding: 10px 14px; border-radius: 12px; background: #eef5ff; color: #0a4ea8 !important; font-size: 13px !important; }
+.doc-note i { flex: none; margin-top: 3px; }
+
+.doc-list { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 8px 18px; margin: 0; font-size: 14px; }
+.doc-list dt { font-weight: 600; }
+.doc-list dd { margin: 0; color: var(--doc-ink-2); line-height: 1.55; }
+.doc-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+.doc-grid-2 h4 { margin-top: 6px; }
+
+.doc-table-wrap { margin: 0 0 12px; border: 1px solid var(--doc-line); border-radius: 14px; overflow: hidden; }
+.doc-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.doc-table th { padding: 10px 14px; background: var(--doc-soft); color: var(--doc-ink-3); font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; text-align: left; border-bottom: 1px solid var(--doc-line); }
+.doc-table td { padding: 10px 14px; color: var(--doc-ink-2); border-bottom: 1px solid var(--doc-line); vertical-align: top; line-height: 1.5; }
+.doc-table tr:last-child td { border-bottom: 0; }
+.doc-table td b { color: var(--doc-ink); }
+.doc-table td:first-child { white-space: nowrap; }
+.doc-table td:first-child code { overflow-wrap: normal; }
+
+.doc-api { min-width: 0; margin-bottom: 14px; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--doc-line); }
+.doc-api-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.doc-api-head code { min-width: 0; }
+.doc-api-head code { font-size: 13.5px; font-weight: 600; }
+.doc-method { display: inline-block; padding: 2px 7px; border-radius: 6px; font-size: 10.5px; font-weight: 700; letter-spacing: .4px; }
+.doc-method.get { background: #e8f6ee; color: #2d7a13; }
+.doc-method.post { background: #eef5ff; color: #0a4ea8; }
+.doc-method.put { background: #fff6e5; color: #8a5a00; }
+.doc-method.del { background: #fdecec; color: #b42f2f; }
+
+@media (max-width: 1199px) {
+  .doc-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  .doc-hero { padding: 22px 18px; }
+  .doc-section { padding: 18px 16px; }
+  .doc-cards, .doc-grid-2 { grid-template-columns: 1fr; }
+  .doc-list { grid-template-columns: 1fr; gap: 2px; }
+  .doc-list dd { margin-bottom: 10px; }
+  /* Tabel menjadi baris kartu agar tidak ada geser samping */
+  .doc-table thead { display: none; }
+  .doc-table, .doc-table tbody, .doc-table tr, .doc-table td { display: block; }
+  .doc-table tr { padding: 10px 14px; border-bottom: 1px solid var(--doc-line); }
+  .doc-table td { padding: 2px 0; border: 0; }
+  .doc-table td:first-child { color: var(--doc-ink); font-weight: 600; }
+}
