@@ -1,8 +1,8 @@
-SIANOK PARKING 1.0.0 (20261023)
+SIANOK PARKING 1.1.0 (20261024)
 
 Kebutuhan: Linux x64, Node.js 26 (v26.12.1 atau lebih baru), MariaDB 10.6+ (atau MySQL 8), ffmpeg (foto kamera gate).
 
-1. Ekstrak paket:      tar -xzf sianok-parking-1.0.0-20261023.tar.gz && cd sianok-parking
+1. Ekstrak paket:      tar -xzf sianok-parking-1.1.0-20261024.tar.gz && cd sianok-parking
 2. Pasang otomatis:    sudo bash setup.sh   (Ubuntu Server 22.04 / 24.04: Node.js, PM2, MariaDB, FFmpeg, database,
                        .env, startup saat boot, health check). Panduan lengkap & pemulihan: INSTALL.md
 

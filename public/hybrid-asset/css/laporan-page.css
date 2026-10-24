@@ -132,7 +132,13 @@
 .rp-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; padding: 18px 20px 14px; }
 .rp-card-head h3 { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--up-ink); font-size: 15px; font-weight: 700; }
 .rp-card-head h3 i { color: var(--up-accent-deep); font-size: 18px; }
-.rp-card-head > span { color: var(--up-ink-3); font-size: 12px; }
+.rp-card-head > span, .rp-card-meta > span { color: var(--up-ink-3); font-size: 12px; }
+/* Aksi tabel (mis. "Unduh semua (.zip)") dan tautan unduh per baris. */
+.rp-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.rp-card-meta .rp-aksi { flex: none; min-height: 34px; font-size: 12.5px; }
+.rp-unduh { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border: 1px solid var(--up-line); border-radius: 8px; background: #fff; color: var(--up-accent-deep); font-size: 12px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.rp-unduh:hover { border-color: var(--up-accent); background: var(--up-accent-tint); color: var(--up-accent-deep); }
+.rp-unduh i { font-size: 14px; }
 .rp-filter-label { align-self: center; color: var(--up-ink-3); font-size: 11.5px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; }
 .rp-nopol { max-width: 420px; }
 .rp-nopol input { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .5px; text-transform: uppercase; }
@@ -173,6 +179,8 @@
 .rp-table tfoot td { background: #f5f8fb; border-top: 1px solid #cfd7e2; font-weight: 700; }
 .rp-empty-row td { padding: 28px 16px; color: var(--up-ink-3); font-style: italic; text-align: center; }
 .rp-code { font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--up-ink-2); }
+/* Nama file settlement (47 karakter tanpa spasi) boleh dipenggal agar tabel tidak melebar; kode lain tetap utuh. */
+.rp-table td[data-label="Nama file"] .rp-code { overflow-wrap: anywhere; }
 .rp-neg { color: #b42f2f; }
 .rp-pos { color: #2d7a13; }
 .rp-share { display: inline-flex; align-items: center; justify-content: flex-end; gap: 8px; }
