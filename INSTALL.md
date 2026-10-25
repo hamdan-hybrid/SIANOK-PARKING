@@ -71,9 +71,26 @@ sudo -u <user> pm2 logs sianok-parking
 sudo bash scripts/health-check.sh             # cek kesehatan lengkap
 sudo bash scripts/check-dependencies.sh       # cek server (hanya membaca)
 sudo bash scripts/backup-database.sh          # backup ke _backup/database/
+sudo bash scripts/kunci-kode.sh status        # kode terkunci? catatan akses aktif?
+sudo bash scripts/kunci-kode.sh log           # siapa membaca / menyalin / mengubah kode (7 hari)
+sudo bash scripts/update.sh <paket.tar.gz>    # update ke versi baru
 ```
 
 Login awal pada database baru: `admin` / `admin123`. Segera ganti di menu Pengguna.
+
+## Kunci kode & catatan akses
+
+Langkah terakhir `setup.sh` mengunci file kode di folder rilis dengan atribut *immutable* (`chattr +i`): `server.js`, `start.js`, `laporan-worker.js`, `views.pak`, file konfigurasi & dokumentasi, serta folder `public/` (kecuali `public/uploads` dan `public/img`), `fonts/`, dan `scripts/`. File yang terkunci tidak bisa diedit, ditimpa, dihapus, atau di-rename oleh siapa pun, termasuk root, sebelum kuncinya dibuka.
+
+Yang tetap bisa ditulis: `storage/` (foto, backup database, SSL), `public/uploads`, `public/img`, `_backup/`, `.env`, dan `node_modules/`.
+
+`auditd` mencatat setiap perubahan kode, setiap pemakaian `chattr` (membuka kunci), dan setiap pembacaan atau penyalinan kode inti (`server.js`, `start.js`, `laporan-worker.js`, `views.pak`): user, waktu, dan program yang dipakai. Lihat dengan `sudo bash scripts/kunci-kode.sh log`. Pembacaan oleh aplikasi sendiri (saat start dan ekspor laporan) disembunyikan; tambahkan `--semua` untuk menampilkannya.
+
+Keduanya tidak memperlambat aplikasi: kunci hanya diperiksa saat ada yang mencoba mengubah file, dan yang dicatat hanya akses ke file kode, bukan foto atau database.
+
+- Buka kunci (mis. untuk update manual): `sudo bash scripts/kunci-kode.sh buka`. Kunci lagi: `sudo bash scripts/kunci-kode.sh kunci`, atau jalankan `sudo bash setup.sh --yes`.
+- Tanpa kunci & catatan akses: `sudo bash setup.sh --tanpa-kunci`.
+- Folder source (tanpa `views.pak`) tidak pernah dikunci.
 
 ## Health check
 
@@ -123,7 +140,7 @@ sudo mariadb -e "GRANT ALL PRIVILEGES ON \`db_sianok_pulih\`.* TO 'sianok_parkin
 
 - **`.env`:** kembalikan dengan `cp _backup/.env.bak-<waktu> .env && chmod 600 .env`.
 - **Database:** pulihkan dari `_backup/database/` (lihat langkah di atas).
-- **Versi aplikasi:** ekstrak paket versi sebelumnya ke folder yang sama (file `.env`, `storage/`, dan `_backup/` tidak ada di paket, jadi tetap). Setelah itu jalankan `sudo bash setup.sh --yes`.
+- **Update / versi aplikasi:** `sudo bash scripts/update.sh <paket-rilis.tar.gz>` (versi baru, atau versi sebelumnya untuk rollback). Skrip ini membuka kunci kode, mengekstrak paket ke folder yang sama tanpa menyentuh `storage/`, `public/uploads`, `public/img`, `_backup/`, dan `.env`, lalu menjalankan `sudo bash setup.sh --yes`, yang mengunci kode lagi.
 - **Node.js:** versi lain tetap tersimpan di `/usr/local/lib/nodejs/`. Node bawaan server tidak pernah ditimpa.
 
 ## Jaringan & HTTPS

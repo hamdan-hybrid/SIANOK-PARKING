@@ -73,6 +73,22 @@ CREATE TABLE IF NOT EXISTS hp_sessions (
   CONSTRAINT fk_hp_sessions_user FOREIGN KEY (id_user) REFERENCES tbl_pengguna (id_user) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+-- Sesi Customer Display (layar pelanggan yang dipasangkan dari kasir); hanya hash token yang disimpan.
+CREATE TABLE IF NOT EXISTS hp_display_sesi (
+  token_hash CHAR(64) NOT NULL,
+  terminal VARCHAR(40) NOT NULL,
+  orientasi VARCHAR(10) NOT NULL DEFAULT 'portrait',
+  suara TINYINT(1) NOT NULL DEFAULT 1,
+  nama VARCHAR(80) NOT NULL DEFAULT '',
+  id_kasir BIGINT UNSIGNED NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_seen DATETIME NULL,
+  expires_at DATETIME NOT NULL,
+  PRIMARY KEY (token_hash),
+  KEY idx_display_terminal (terminal),
+  KEY idx_display_expiry (expires_at)
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS tbl_metode_bayar (
   id_metode BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   id_perusahaan BIGINT UNSIGNED NOT NULL,

@@ -8,6 +8,9 @@
 #       --db-admin-defaults FILE  (file [client] user/password admin MariaDB bila root tidak bisa lewat socket)
 #       --reset-db-password       (izinkan ganti password user database yang sudah ada tetapi tidak tercatat di .env)
 #       --izinkan-restart-server  (aturan sudoers agar tombol Restart/Shutdown di Monitor Server aktif)
+#       --tanpa-kunci             (file kode tidak dikunci & akses kode tidak dicatat, lihat scripts/kunci-kode.sh)
+#
+# Update ke versi baru: sudo bash scripts/update.sh <paket-rilis.tar.gz>
 #
 # Aman dijalankan ulang: yang sudah benar dilewati; data, database, dan konfigurasi lama tidak dihapus;
 # file yang diubah dibackup dulu. Exit 0 = berhasil, 1 = gagal, 2 = berhasil dengan hal yang perlu diperhatikan.
@@ -23,7 +26,7 @@ SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ---------- Argumen ----------
 APP_DIR="$SELF_DIR"; OPT_PORT=""; OPT_HTTPS=""; OPT_DB=""; OPT_DOMAIN=""; OPT_USER=""; ADMIN_DEFAULTS=""
-YES=0; RESET_DB_PW=0; POWER_RULE=""
+YES=0; RESET_DB_PW=0; POWER_RULE=""; KUNCI=1; KUNCI_DIBUKA=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --yes|-y) YES=1 ;;
@@ -36,7 +39,8 @@ while [ $# -gt 0 ]; do
     --db-admin-defaults) ADMIN_DEFAULTS="$2"; shift ;;
     --reset-db-password) RESET_DB_PW=1 ;;
     --izinkan-restart-server) POWER_RULE=yes ;;
-    -h|--help) sed -n '2,15p' "$0"; exit 0 ;;
+    --tanpa-kunci) KUNCI=0 ;;
+    -h|--help) sed -n '2,16p' "$0"; exit 0 ;;
     *) echo "Opsi tidak dikenal: $1 (lihat --help)"; exit 1 ;;
   esac
   shift
@@ -70,6 +74,8 @@ printf '  %sLog: %s%s\n' "$C_DIM" "$HP_LOG_FILE" "$C_0"
 
 summary() {
   local i failed=0 attention=0
+  # Instalasi berhenti setelah kunci kode dibuka sementara: kunci lagi.
+  if [ "$KUNCI_DIBUKA" = 1 ]; then bash "$APP_DIR/scripts/kunci-kode.sh" kunci >>"$HP_LOG_FILE" 2>&1; KUNCI_DIBUKA=0; fi
   printf '\n%s══════════════════ RINGKASAN ══════════════════%s\n' "$C_B" "$C_0"
   for i in "${!HP_STEPS[@]}"; do
     case "${HP_STATUS[$i]}" in FAILED) failed=1 ;; "NEEDS ATTENTION") attention=1 ;; esac
@@ -89,6 +95,8 @@ summary() {
     printf '    Log      : sudo -u %s pm2 logs %s\n' "$APP_USER" "$HP_PM2_NAME"
     printf '    Cek      : sudo bash %s/scripts/health-check.sh\n' "$APP_DIR"
     printf '    Backup   : sudo bash %s/scripts/backup-database.sh\n' "$APP_DIR"
+    printf '    Kunci    : sudo bash %s/scripts/kunci-kode.sh status | log\n' "$APP_DIR"
+    printf '    Update   : sudo bash %s/scripts/update.sh <paket-rilis.tar.gz>\n' "$APP_DIR"
   fi
   if [ "$failed" -eq 1 ] || [ "$attention" -eq 1 ]; then
     printf '\n  %sPerlu tindakan:%s\n' "$C_WARN" "$C_0"
@@ -149,6 +157,8 @@ step_begin "System Libraries"
 # libatomic1 (dibutuhkan biner resmi Node.js 26; tidak ada di image Ubuntu Server minimal).
 # Tidak perlu build-essential/python: modul native (@napi-rs/canvas, esbuild) berupa biner jadi.
 PKGS=(ca-certificates curl xz-utils openssl iproute2 procps libatomic1 ffmpeg)
+# chattr (e2fsprogs) & auditd: kunci kode + catatan akses kode (langkah terakhir).
+[ "$KUNCI" -eq 1 ] && PKGS+=(e2fsprogs auditd)
 DB_SERVER_PRESENT=0
 if dpkg-query -W -f='${Status}' mariadb-server 2>/dev/null | grep 'install ok installed' >/dev/null \
    || dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep 'install ok installed' >/dev/null \
@@ -393,6 +403,10 @@ if [ -z "$ENV_BACKUP" ]; then step_end SKIPPED ".env sudah sesuai (tidak diubah)
 else step_end SUCCESS "$env_note; diisi/diperbarui: ${CHANGED[*]:-DB_*} (nilai rahasia tidak ditampilkan)"; fi
 
 # ---------- 11. Folder & permission ----------
+# Kode terkunci dari instalasi sebelumnya: dibuka sementara (chown/mkdir di bawah), dikunci lagi di langkah terakhir.
+if lsattr -d "$APP_DIR/server.js" 2>/dev/null | cut -d' ' -f1 | grep i >/dev/null; then
+  run_logged bash "$APP_DIR/scripts/kunci-kode.sh" buka && KUNCI_DIBUKA=1
+fi
 step_begin "Folder data"
 dir_owner="$(stat -c %U "$APP_DIR")"
 if [ "$dir_owner" != "$APP_USER" ]; then
@@ -528,6 +542,20 @@ ips="$(hostname -I 2>/dev/null | tr ' ' '\n' | grep -E '^[0-9]+\.' | head -n3)"
 ACCESS_URLS="$(for ip in $ips; do printf 'http://%s:%s  ' "$ip" "$APP_PORT"; done)"
 [ "$HTTPS_PORT" != off ] && ACCESS_URLS="$ACCESS_URLS| HTTPS: https://<ip>:$HTTPS_PORT (sertifikat sendiri)"
 [ -n "$SITE_URL" ] && ACCESS_URLS="$ACCESS_URLS| publik: $SITE_URL (arahkan reverse proxy / tunnel ke http://127.0.0.1:$APP_PORT)"
+
+# ---------- 18. Kunci kode & catatan akses ----------
+step_begin "Kunci kode"
+if [ "$KUNCI" -eq 0 ]; then
+  [ "$KUNCI_DIBUKA" = 1 ] && step_end "NEEDS ATTENTION" "kunci dibuka & tidak dikunci lagi (--tanpa-kunci)" || step_end SKIPPED "tidak dikunci (--tanpa-kunci)"
+  KUNCI_DIBUKA=0
+elif [ ! -f "$APP_DIR/views.pak" ]; then step_end SKIPPED "bukan folder rilis (tidak ada views.pak)"
+else
+  out="$(bash "$APP_DIR/scripts/kunci-kode.sh" kunci 2>&1)"; rc=$?; log "$out"; KUNCI_DIBUKA=0
+  case "$rc" in
+    0) step_end SUCCESS "$(printf '%s' "$out" | tr '\n' ' ')" ;;
+    *) step_end "NEEDS ATTENTION" "$(printf '%s' "$out" | tr '\n' ' ')" ;;
+  esac
+fi
 
 summary
 for s in "${HP_STATUS[@]}"; do [ "$s" = FAILED ] && exit 1; done

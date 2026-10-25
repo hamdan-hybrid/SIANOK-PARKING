@@ -100,3 +100,13 @@ The two totals must match. Then set `DB_NAME=db_sianok_pulih` in `.env` and rest
 
 On 2026-10-23 this was tested on a 365,000-transaction test database: a 14 MB backup took about 5 s, and the restore took about 46 s.
 
+
+## Pages in a release (views.pak)
+
+A release build has no `views/` folder. All pages (login, dashboard, kasir, payment, audit, installer, API docs, Manual Book) are packed into one compressed file, `views.pak`, so they cannot be opened or edited on the server. The SHA-256 fingerprint of the pack is built into `server.js` and `start.js`.
+
+- A `views/` folder created by hand is ignored.
+- If `views.pak` is changed or damaged, every page answers `500` with "Paket tampilan aplikasi rusak atau diubah", and the log shows `Paket tampilan views.pak tidak dapat dipakai`. The gate, payment and other APIs keep working. To fix it, extract `views.pak` (or the whole release) again from the official release archive and restart the app.
+- To change a page, edit `views/` in the source and make a new build (`npm run build`).
+
+When the app runs from source (`npm start`), pages are read from `views/` as usual.
