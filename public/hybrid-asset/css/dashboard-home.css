@@ -382,3 +382,9 @@
   .hp-trend-stats div { padding-left: 14px; padding-right: 14px; }
   .hp-table tr { padding: 12px 14px; }
 }
+
+/* HP sangat sempit (≤380px): baris kasir tidak melebihi kartu */
+@media (max-width: 380px) {
+  .hp-cashier { gap: 10px; }
+  .hp-cashier-cash strong { font-size: 12.5px; }
+}

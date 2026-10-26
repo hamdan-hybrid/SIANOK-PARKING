@@ -3,6 +3,10 @@
   "version": "1.1.0",
   "private": true,
   "description": "Sianok Parking management dashboard",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hamdan-hybrid/SIANOK-PARKING.git"
+  },
   "type": "module",
   "scripts": {
     "start": "node start.js",

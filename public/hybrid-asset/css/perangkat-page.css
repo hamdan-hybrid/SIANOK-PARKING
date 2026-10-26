@@ -158,3 +158,15 @@
 .dv-anpr-plate { max-width: 100%; padding: 3px 8px; overflow: hidden; border-radius: 6px; background: var(--up-ink); color: #fff; font: 700 11.5px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .8px; text-overflow: ellipsis; white-space: nowrap; }
 .dv-anpr-plate.is-empty { background: #eef2f9; color: var(--up-ink-3); }
 @media (max-width: 575px) { .dv-anpr, .dv-anpr-img { width: 88px; } .dv-anpr-img { height: 54px; } }
+
+/* Footer kartu: Config, SN, Edit & Hapus selalu satu baris; tombol tes di baris sendiri.
+   SN dihitung 0 saat pemecahan baris (flex-basis 0) lalu melebar lebih dulu dari spacer sampai lebar teksnya, jadi tombol Hapus tidak turun.
+   Bila ruang benar-benar kurang (HP sangat sempit), SN dipotong "…" dan teks utuh ada di title. */
+.dv-card-actions .dv-sn { flex: 1000 1 0; min-width: 0; max-width: max-content; overflow: hidden; text-overflow: ellipsis; }
+.dv-card-actions [data-device-edit], .dv-card-actions [data-device-delete] { flex: none; }
+@media (max-width: 575px) {
+  .dv-card-actions { gap: 6px; }
+  .dv-card-actions [data-device-key] { padding: 0 11px; }
+  .dv-card-actions [data-device-edit], .dv-card-actions [data-device-delete] { width: 36px; padding: 0; }
+  .dv-card-actions .dv-sn { padding: 4px 7px; font-size: 10.5px; }
+}

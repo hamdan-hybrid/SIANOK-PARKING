@@ -15,7 +15,9 @@
 set -uo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 
-APP="$HP_APP_ROOT"
+# HP_KODE_APP: folder rilis lain yang dikunci/dibuka (dipakai setup.sh yang berjalan dari salinan privat root saat
+# "Perbarui sistem"); bawaan folder skrip ini.
+APP="${HP_KODE_APP:-$HP_APP_ROOT}"
 KEY_UBAH="$HP_PM2_NAME-kode"
 KEY_BACA="$HP_PM2_NAME-baca"
 RULES="/etc/audit/rules.d/$HP_PM2_NAME.rules"

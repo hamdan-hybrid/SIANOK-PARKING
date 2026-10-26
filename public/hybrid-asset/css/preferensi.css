@@ -46,3 +46,22 @@ html[data-theme="dark"] .hp-theme-ke-terang { display: inline-grid !important; c
   .hp-lang-btn, .hp-theme-toggle { height: 36px; }
   .hp-theme-toggle { width: 36px; }
 }
+
+/* Login di HP: kontrol lebih kecil dan ikut tergulung bersama hero (tidak menutupi kartu login). */
+@media (max-width: 599px) {
+  .hp-prefs-login { position: absolute; top: 12px; right: 12px; gap: 6px; }
+  .hp-prefs-login .hp-lang-btn { height: 30px; padding: 0 8px; gap: 5px; border-radius: 9px; font-size: 11.5px; }
+  .hp-prefs-login .hp-lang-flag { width: 17px; height: 12px; border-radius: 2px; }
+  .hp-prefs-login .hp-lang-name { min-width: 0; }
+  .hp-prefs-login .hp-lang-caret { width: 11px; height: 11px; }
+  .hp-prefs-login .hp-theme-toggle { width: 30px; height: 30px; border-radius: 9px; }
+  .hp-prefs-login .hp-theme-toggle .hp-icon { width: 15px; height: 15px; }
+}
+
+/* Header dashboard di HP: bahasa cukup bendera, tombol 34px (nama bahasa tetap ada di menu). */
+@media (max-width: 575.98px) {
+  .pc-header .hp-prefs { gap: 6px; }
+  .pc-header .hp-lang-btn { justify-content: center; width: 34px; height: 34px; padding: 0; }
+  .pc-header .hp-lang-name, .pc-header .hp-lang-caret { display: none; }
+  .pc-header .hp-theme-toggle { width: 34px; height: 34px; }
+}

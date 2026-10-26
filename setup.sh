@@ -9,8 +9,10 @@
 #       --reset-db-password       (izinkan ganti password user database yang sudah ada tetapi tidak tercatat di .env)
 #       --izinkan-restart-server  (aturan sudoers agar tombol Restart/Shutdown di Monitor Server aktif)
 #       --tanpa-kunci             (file kode tidak dikunci & akses kode tidak dicatat, lihat scripts/kunci-kode.sh)
+#       --tanpa-perbarui-web      (tombol "Perbarui sistem" di Monitor Server tidak dipasang)
 #
-# Update ke versi baru: sudo bash scripts/update.sh <paket-rilis.tar.gz>
+# Update ke versi baru: tombol "Perbarui sistem" di Monitor Server, sudo bash scripts/perbarui-sistem.sh (dari GitHub),
+# atau sudo bash scripts/update.sh <paket-rilis.tar.gz>
 #
 # Aman dijalankan ulang: yang sudah benar dilewati; data, database, dan konfigurasi lama tidak dihapus;
 # file yang diubah dibackup dulu. Exit 0 = berhasil, 1 = gagal, 2 = berhasil dengan hal yang perlu diperhatikan.
@@ -26,7 +28,7 @@ SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ---------- Argumen ----------
 APP_DIR="$SELF_DIR"; OPT_PORT=""; OPT_HTTPS=""; OPT_DB=""; OPT_DOMAIN=""; OPT_USER=""; ADMIN_DEFAULTS=""
-YES=0; RESET_DB_PW=0; POWER_RULE=""; KUNCI=1; KUNCI_DIBUKA=0
+YES=0; RESET_DB_PW=0; POWER_RULE=""; KUNCI=1; KUNCI_DIBUKA=0; PERBARUI=1
 while [ $# -gt 0 ]; do
   case "$1" in
     --yes|-y) YES=1 ;;
@@ -40,7 +42,8 @@ while [ $# -gt 0 ]; do
     --reset-db-password) RESET_DB_PW=1 ;;
     --izinkan-restart-server) POWER_RULE=yes ;;
     --tanpa-kunci) KUNCI=0 ;;
-    -h|--help) sed -n '2,16p' "$0"; exit 0 ;;
+    --tanpa-perbarui-web) PERBARUI=0 ;;
+    -h|--help) sed -n '2,18p' "$0"; exit 0 ;;
     *) echo "Opsi tidak dikenal: $1 (lihat --help)"; exit 1 ;;
   esac
   shift
@@ -75,7 +78,7 @@ printf '  %sLog: %s%s\n' "$C_DIM" "$HP_LOG_FILE" "$C_0"
 summary() {
   local i failed=0 attention=0
   # Instalasi berhenti setelah kunci kode dibuka sementara: kunci lagi.
-  if [ "$KUNCI_DIBUKA" = 1 ]; then bash "$APP_DIR/scripts/kunci-kode.sh" kunci >>"$HP_LOG_FILE" 2>&1; KUNCI_DIBUKA=0; fi
+  if [ "$KUNCI_DIBUKA" = 1 ]; then HP_KODE_APP="$APP_DIR" bash "$SELF_DIR/scripts/kunci-kode.sh" kunci >>"$HP_LOG_FILE" 2>&1; KUNCI_DIBUKA=0; fi
   printf '\n%s══════════════════ RINGKASAN ══════════════════%s\n' "$C_B" "$C_0"
   for i in "${!HP_STEPS[@]}"; do
     case "${HP_STATUS[$i]}" in FAILED) failed=1 ;; "NEEDS ATTENTION") attention=1 ;; esac
@@ -96,6 +99,7 @@ summary() {
     printf '    Cek      : sudo bash %s/scripts/health-check.sh\n' "$APP_DIR"
     printf '    Backup   : sudo bash %s/scripts/backup-database.sh\n' "$APP_DIR"
     printf '    Kunci    : sudo bash %s/scripts/kunci-kode.sh status | log\n' "$APP_DIR"
+    printf '    Perbarui : sudo bash %s/scripts/perbarui-sistem.sh   (dari GitHub; atau tombol di Monitor Server)\n' "$APP_DIR"
     printf '    Update   : sudo bash %s/scripts/update.sh <paket-rilis.tar.gz>\n' "$APP_DIR"
   fi
   if [ "$failed" -eq 1 ] || [ "$attention" -eq 1 ]; then
@@ -145,6 +149,8 @@ SITE_URL="$(ask "Alamat publik (kosongkan bila hanya jaringan lokal), mis. https
 [[ "${HTTPS_PORT,,}" = off ]] && HTTPS_PORT=off
 [ "$HTTPS_PORT" = off ] || { [[ "$HTTPS_PORT" =~ ^[0-9]{2,5}$ ]] && [ "$HTTPS_PORT" -le 65535 ] && [ "$HTTPS_PORT" != "$APP_PORT" ]; } || abort "Port HTTPS tidak valid: $HTTPS_PORT"
 [[ "$DB_NAME" =~ ^[A-Za-z0-9_-]{1,64}$ ]] || abort "Nama database hanya huruf, angka, _ dan - (maks 64)"
+# Database sistem MariaDB tidak boleh dipakai: user aplikasi akan mendapat hak penuh atasnya (GRANT ALL di bawah).
+case "${DB_NAME,,}" in mysql|information_schema|performance_schema|sys) abort "Nama database '$DB_NAME' adalah database sistem MariaDB" ;; esac
 [ -z "$SITE_URL" ] || [[ "$SITE_URL" =~ ^https?://[^[:space:]\"\'\`]+$ ]] || abort "Alamat publik harus diawali http:// atau https://"
 SITE_URL="${SITE_URL%/}"
 if [ -n "$OLD_PORT" ] && [ "$APP_PORT" != "$OLD_PORT" ] && ! confirm "Port di .env ($OLD_PORT) akan diganti $APP_PORT. Lanjutkan?" n; then APP_PORT="$OLD_PORT"; fi
@@ -405,7 +411,7 @@ else step_end SUCCESS "$env_note; diisi/diperbarui: ${CHANGED[*]:-DB_*} (nilai r
 # ---------- 11. Folder & permission ----------
 # Kode terkunci dari instalasi sebelumnya: dibuka sementara (chown/mkdir di bawah), dikunci lagi di langkah terakhir.
 if lsattr -d "$APP_DIR/server.js" 2>/dev/null | cut -d' ' -f1 | grep i >/dev/null; then
-  run_logged bash "$APP_DIR/scripts/kunci-kode.sh" buka && KUNCI_DIBUKA=1
+  run_logged env HP_KODE_APP="$APP_DIR" bash "$SELF_DIR/scripts/kunci-kode.sh" buka && KUNCI_DIBUKA=1
 fi
 step_begin "Folder data"
 dir_owner="$(stat -c %U "$APP_DIR")"
@@ -417,7 +423,10 @@ fi
 for d in storage storage/parkir storage/pengeluaran public/uploads public/img _backup; do
   [ -d "$APP_DIR/$d" ] || { mkdir -p "$APP_DIR/$d"; chown "$APP_USER:" "$APP_DIR/$d"; }
 done
-chown -R "$APP_USER:" "$APP_DIR/_backup" "$APP_DIR/.env"; chmod 750 "$APP_DIR/storage"; chmod 700 "$APP_DIR/_backup"
+chown -R "$APP_USER:" "$APP_DIR/_backup" "$APP_DIR/.env"
+# chmod mengikuti symlink: lewati bila folder data berupa symlink (mis. storage dipindah ke disk lain) agar root tidak
+# mengubah izin folder lain yang ditunjuk symlink buatan user aplikasi.
+[ -L "$APP_DIR/storage" ] || chmod 750 "$APP_DIR/storage"; [ -L "$APP_DIR/_backup" ] || chmod 700 "$APP_DIR/_backup"
 files="$(find "$APP_DIR/storage" -type f 2>/dev/null | wc -l)"
 step_end SUCCESS "${owner_note:+$owner_note; }storage ($files file foto/data, tidak dipindah), public/uploads, public/img, _backup; sisa disk $(df -Ph "$APP_DIR" | awk 'NR==2 {print $4}')"
 
@@ -463,14 +472,16 @@ FRESH_DB=0; [ "$EXISTING_TABLES" = 0 ] && FRESH_DB=1
 backup_note=""
 if [ "$FRESH_DB" -eq 0 ]; then
   info "Database berisi $EXISTING_TABLES tabel: backup dulu sebelum migrasi..."
-  if out="$(bash "$APP_DIR/scripts/backup-database.sh" "$APP_DIR" 2>&1)"; then backup_note="; backup: $(printf '%s' "$out" | tail -n1)"; log "$out"
+  # Sebagai user aplikasi: folder _backup miliknya (root tidak menulis ke folder yang bisa diisi symlink oleh user itu)
+  # dan kredensial database di .env juga miliknya.
+  if out="$(as_user "$APP_USER" bash "$APP_DIR/scripts/backup-database.sh" "$APP_DIR" 2>&1)"; then backup_note="; backup: $(printf '%s' "$out" | tail -n1)"; log "$out"
   else step_end FAILED "backup sebelum migrasi gagal, migrasi tidak dijalankan: $out"; summary; exit 1; fi
 fi
 # Binary log aktif tanpa log_bin_trust_function_creators: membuat trigger butuh SUPER → impor lewat admin,
 # user aplikasi tetap tanpa hak global. Selain itu impor memakai kode aplikasi (start.js --pasang-database).
 binlog="$(sql_admin -e "SELECT @@log_bin AND NOT @@log_bin_trust_function_creators")"
 if [ "$binlog" = 1 ]; then
-  if awk 'BEGIN{skip=0} /^CREATE DATABASE/{skip=1} skip{ if ($0 ~ /;[[:space:]]*$/) skip=0; next } /^USE /{next} {print}' "$APP_DIR/database.sql" \
+  if awk 'BEGIN{skip=0} /^CREATE DATABASE/{skip=1} skip{ if ($0 ~ /;[[:space:]]*$/) skip=0; next } /^USE /{next} {print}' "$SELF_DIR/database.sql" \
        | sql_admin "$DB_NAME" >>"$HP_LOG_FILE" 2>&1; then
     code="$(random_hex 2 | tr a-f A-F)-$(random_hex 2 | tr a-f A-F)"
     sql_admin "$DB_NAME" -e "UPDATE tbl_perusahaan SET serial_number = '$code' WHERE serial_number IN ('HSS-001', '')" >>"$HP_LOG_FILE" 2>&1
@@ -533,7 +544,7 @@ fi
 
 # ---------- 17. Health check ----------
 step_begin "Health Check"
-if HP_HEALTH_WAIT=15 bash "$APP_DIR/scripts/health-check.sh" "$APP_DIR"; then
+if HP_HEALTH_WAIT=15 bash "$SELF_DIR/scripts/health-check.sh" "$APP_DIR"; then
   HEALTH_STATUS=LULUS; step_end SUCCESS "semua pemeriksaan wajib lulus"
 else HEALTH_STATUS=GAGAL; step_end FAILED "ada pemeriksaan yang gagal (lihat di atas)"; fi
 PM2_STATUS="$(as_user "$APP_USER" pm2 jlist 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const p=JSON.parse(s.slice(s.indexOf("["))).find(x=>x.name===process.argv[1]);console.log(p?`${p.pm2_env.status} (pid ${p.pid}, restart ${p.pm2_env.restart_time})`:"tidak ada")})' "$HP_PM2_NAME")"
@@ -550,11 +561,42 @@ if [ "$KUNCI" -eq 0 ]; then
   KUNCI_DIBUKA=0
 elif [ ! -f "$APP_DIR/views.pak" ]; then step_end SKIPPED "bukan folder rilis (tidak ada views.pak)"
 else
-  out="$(bash "$APP_DIR/scripts/kunci-kode.sh" kunci 2>&1)"; rc=$?; log "$out"; KUNCI_DIBUKA=0
+  out="$(HP_KODE_APP="$APP_DIR" bash "$SELF_DIR/scripts/kunci-kode.sh" kunci 2>&1)"; rc=$?; log "$out"; KUNCI_DIBUKA=0
   case "$rc" in
     0) step_end SUCCESS "$(printf '%s' "$out" | tr '\n' ' ')" ;;
     *) step_end "NEEDS ATTENTION" "$(printf '%s' "$out" | tr '\n' ' ')" ;;
   esac
+fi
+
+# ---------- 19. Tombol "Perbarui sistem" di Monitor Server ----------
+# Updater milik root di /usr/local/sbin dengan folder aplikasi & alamat GitHub ditanam di dalamnya, dan aturan sudoers
+# yang hanya mengizinkan file itu tanpa argumen. Lihat scripts/perbarui-sistem.sh.
+step_begin "Perbarui dari web"
+PERBARUI_BIN="/usr/local/sbin/$HP_PM2_NAME-perbarui"
+PERBARUI_RULE="/etc/sudoers.d/$HP_PM2_NAME-perbarui"
+PERBARUI_REPO="$(sed -n 's#.*"url": *"\(https://github\.com/[^"]*\)".*#\1#p' "$SELF_DIR/package.json" 2>/dev/null | head -n1)"
+if [ "$PERBARUI" -eq 0 ]; then
+  rm -f "$PERBARUI_RULE" "$PERBARUI_BIN"; step_end SKIPPED "tidak dipasang (--tanpa-perbarui-web)"
+elif [ ! -f "$APP_DIR/views.pak" ]; then step_end SKIPPED "bukan folder rilis (tidak ada views.pak)"
+elif ! [[ "$PERBARUI_REPO" =~ ^https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]]; then
+  step_end "NEEDS ATTENTION" "alamat GitHub (repository.url) tidak ada di package.json"
+elif ! [[ "$APP_DIR" =~ ^/[A-Za-z0-9._/-]+$ ]]; then
+  step_end "NEEDS ATTENTION" "path folder aplikasi berisi karakter khusus, updater tidak dipasang: $APP_DIR"
+else
+  # File sementara di folder yang sama lalu rename: proses perbarui yang sedang memakai file lama tidak terganggu.
+  tmp="$(mktemp "/usr/local/sbin/.$HP_PM2_NAME-perbarui.XXXXXX")"
+  sed -e "s#^APP='@@APP@@'#APP='$APP_DIR'#" -e "s#^NAMA='@@NAMA@@'#NAMA='$HP_PM2_NAME'#" \
+      -e "s#^REPO='@@REPO@@'#REPO='$PERBARUI_REPO'#" -e "s#^CABANG='@@CABANG@@'#CABANG='main'#" \
+      "$SELF_DIR/scripts/perbarui-sistem.sh" >"$tmp"
+  chown root:root "$tmp"; chmod 755 "$tmp"
+  if cmp -s "$tmp" "$PERBARUI_BIN"; then rm -f "$tmp"; perbarui_note="updater sudah terpasang"
+  else mv -f "$tmp" "$PERBARUI_BIN"; perbarui_note="updater $PERBARUI_BIN dipasang"; fi
+  tmp="$(mktemp)"; printf '%s ALL=(root) NOPASSWD: %s ""\n' "$APP_USER" "$PERBARUI_BIN" >"$tmp"
+  if visudo -cf "$tmp" >>"$HP_LOG_FILE" 2>&1; then
+    cmp -s "$tmp" "$PERBARUI_RULE" || install -m 440 "$tmp" "$PERBARUI_RULE"
+    step_end SUCCESS "$perbarui_note; tombol Perbarui sistem aktif (sumber $PERBARUI_REPO)"
+  else step_end FAILED "aturan sudoers tidak valid"; fi
+  rm -f "$tmp"
 fi
 
 summary

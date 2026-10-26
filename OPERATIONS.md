@@ -69,6 +69,18 @@ sudo visudo -c
 
 Without this rule the buttons stay disabled. Set `SERVER_POWER=local` in `.env` to allow restart/shutdown only from the local network through the server IP, or `SERVER_POWER=off` to turn them off. Backup uses `mariadb-dump` (or `mysqldump`; override with `DB_DUMP_BIN`) and the database credentials in `.env`.
 
+### System update (Perbarui sistem)
+
+The **Perbarui sistem** card installs the latest release from GitHub (`package.json` → `repository.url`, branch `main`) after the Owner types `PERBARUI` and the password again. The UI never shows the source address ("latest version" only); `/api/server-monitor/perbarui*` do not return it and log lines are masked.
+
+- `setup.sh` installs a root-owned updater `/usr/local/sbin/<name>-perbarui` (from `scripts/perbarui-sistem.sh`, with the app folder and repo URL baked in) and `/etc/sudoers.d/<name>-perbarui`: `<user> ALL=(root) NOPASSWD: /usr/local/sbin/<name>-perbarui ""` — that file only, no arguments. Skip with `setup.sh --tanpa-perbarui-web`. Release installs only (views.pak); source folders show the button disabled.
+- The app runs `sudo -n <updater>`; it starts a transient systemd unit and returns, so the update survives the PM2 reload. Progress: `/var/lib/<name>-perbarui/status.json` (root-written, world-readable). Log: `/var/log/<name>/perbarui-sistem.log`.
+- Steps: `git clone --depth 1` (or the codeload tarball when git is missing) into a root-only folder → verify release files and app name → stop if `build-info.json` is identical → snapshot old code (last 2 kept) → unlock → copy files (never `storage/`, `.env`, `_backup/`, `public/uploads`, `public/img`) → run **the downloaded** `setup.sh --yes --app-dir <app>` (pre-migration DB backup as the app user, migration, PM2 reload, health check, relock).
+- Hardening: nothing the app user can write is executed as root (setup scripts, kunci-kode, and `database.sql` are read from the private download; backup runs as the app user), `DB_NAME` may not be a MariaDB system schema, and `chmod` skips symlinked data folders.
+- WhatsApp is sent when an update starts and when it finishes or fails (`storage/perbarui-sistem-wa.json` prevents duplicates).
+- `SERVER_UPDATE=local` limits the button to the local network through the server IP, `SERVER_UPDATE=off` disables it.
+- Installs from before this feature need one manual `sudo bash scripts/update.sh <package.tar.gz>`; afterwards the button works.
+
 ## Backup & restore
 
 Monitor Server → **Backup database** downloads `backup-<db>-<YYYYMMDD-HHMMSS>.sql.gz`. It contains every table, all data, triggers and routines, in one consistent snapshot (`--single-transaction`). Since 2026-10-23 the file has no `CREATE DATABASE` / `USE` line, so a restore always goes into the database you name. Older files still contain `USE <original db>` and will overwrite that database.

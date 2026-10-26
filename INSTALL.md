@@ -55,6 +55,7 @@ Selebihnya otomatis. Setiap tahap tampil dengan status **SUCCESS / FAILED / SKIP
     - Tidak pernah memakai `pm2 delete all` atau `restart all`.
 14. **Opsional**: izin tombol Restart/Shutdown server di Monitor Server (`--izinkan-restart-server`).
 15. **Health check**, lalu ringkasan akhir.
+16. **Kunci kode** (lihat di bawah) dan **tombol Perbarui sistem** di Monitor Server (lihat "Perbarui sistem"; matikan dengan `--tanpa-perbarui-web`).
 
 Installer aman dijalankan ulang. Tahap yang sudah benar ditandai SKIPPED.
 
@@ -73,7 +74,8 @@ sudo bash scripts/check-dependencies.sh       # cek server (hanya membaca)
 sudo bash scripts/backup-database.sh          # backup ke _backup/database/
 sudo bash scripts/kunci-kode.sh status        # kode terkunci? catatan akses aktif?
 sudo bash scripts/kunci-kode.sh log           # siapa membaca / menyalin / mengubah kode (7 hari)
-sudo bash scripts/update.sh <paket.tar.gz>    # update ke versi baru
+sudo bash scripts/perbarui-sistem.sh         # update ke versi terbaru dari GitHub (sama dengan tombol di Monitor Server)
+sudo bash scripts/update.sh <paket.tar.gz>    # update dari file paket rilis
 ```
 
 Login awal pada database baru: `admin` / `admin123`. Segera ganti di menu Pengguna.
@@ -136,10 +138,25 @@ Kedua total harus sama. Setelah itu ada dua pilihan:
 sudo mariadb -e "GRANT ALL PRIVILEGES ON \`db_sianok_pulih\`.* TO 'sianok_parking'@'localhost', 'sianok_parking'@'127.0.0.1'"
 ```
 
+## Perbarui sistem (tombol di Monitor Server)
+
+Owner bisa memperbarui aplikasi dari menu profil → **Monitor Server** → **Perbarui sistem**: ketik `PERBARUI`, masukkan password, lalu progres tampil sampai selesai (±1–2 menit). Tampilan hanya menyebut "versi terbaru"; alamat sumber tidak ditampilkan.
+
+Cara kerja:
+- `setup.sh` memasang updater milik root `/usr/local/sbin/sianok-parking-perbarui` (salinan `scripts/perbarui-sistem.sh` dengan folder aplikasi dan alamat GitHub dari `package.json` → `repository.url` ditanam di dalamnya) dan aturan sudoers `/etc/sudoers.d/sianok-parking-perbarui` yang hanya mengizinkan file itu **tanpa argumen** untuk user layanan.
+- Aplikasi memanggil updater lewat `sudo -n`; updater berjalan di unit systemd tersendiri (tidak ikut berhenti saat PM2 me-reload aplikasi).
+- Alur: `git clone --depth 1` cabang `main` ke folder privat root → cek isi paket → bila `build-info.json` sama dengan yang terpasang, berhenti ("sudah versi terbaru") → snapshot kode lama → buka kunci → salin file (`storage/`, `.env`, `_backup/`, `public/uploads`, `public/img` tidak disentuh) → `setup.sh --yes` **dari hasil unduhan** (backup + migrasi database, reload PM2, health check, kunci lagi).
+- Status: `/var/lib/sianok-parking-perbarui/status.json` · log: `/var/log/sianok-parking/perbarui-sistem.log` · snapshot kode lama (2 terakhir): `/var/lib/sianok-parking-perbarui/sebelum-<waktu>.tar.gz`.
+- Notifikasi WA dikirim saat mulai dan saat selesai/gagal.
+- `.env`: `SERVER_UPDATE=local` (hanya dari jaringan lokal lewat IP server) atau `SERVER_UPDATE=off` (tombol mati).
+
+Server yang dipasang sebelum fitur ini ada: update sekali secara manual (`sudo bash scripts/update.sh <paket-rilis.tar.gz>`), setelah itu tombolnya aktif.
+
 ## Rollback instalasi / update
 
 - **`.env`:** kembalikan dengan `cp _backup/.env.bak-<waktu> .env && chmod 600 .env`.
 - **Database:** pulihkan dari `_backup/database/` (lihat langkah di atas).
+- **Setelah "Perbarui sistem":** `sudo bash scripts/kunci-kode.sh buka && sudo tar -xzf /var/lib/sianok-parking-perbarui/sebelum-<waktu>.tar.gz -C <folder aplikasi> && sudo bash setup.sh --yes`.
 - **Update / versi aplikasi:** `sudo bash scripts/update.sh <paket-rilis.tar.gz>` (versi baru, atau versi sebelumnya untuk rollback). Skrip ini membuka kunci kode, mengekstrak paket ke folder yang sama tanpa menyentuh `storage/`, `public/uploads`, `public/img`, `_backup/`, dan `.env`, lalu menjalankan `sudo bash setup.sh --yes`, yang mengunci kode lagi.
 - **Node.js:** versi lain tetap tersimpan di `/usr/local/lib/nodejs/`. Node bawaan server tidak pernah ditimpa.
 
