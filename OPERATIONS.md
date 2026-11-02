@@ -112,6 +112,36 @@ The two totals must match. Then set `DB_NAME=db_sianok_pulih` in `.env` and rest
 
 On 2026-10-23 this was tested on a 365,000-transaction test database: a 14 MB backup took about 5 s, and the restore took about 46 s.
 
+### Import database (Monitor Server)
+
+Monitor Server → **Import database** restores a backup from the browser, without a terminal. It is Owner-only and asks for the word `IMPORT` plus the account password. **All current data is replaced by the file.**
+
+- **Source:** either upload a `.sql.gz` / `.sql` file (maximum 2 GB, change with `IMPORT_DB_MAX_MB` in `.env`), or pick a backup already in `storage/backup-database`.
+- **Checked first:** the whole file is read before anything changes. A truncated or damaged file, a dump of another application, or any statement a backup would not contain (GRANT, DROP DATABASE, functions or subqueries in INSERT, CREATE TABLE … SELECT, procedures, views, another database's tables) rejects the file, and the database is untouched.
+- **During the import:** the app is in maintenance mode. The kasir, gates, REST API and dashboard answer `503`, and pages reload themselves. Allow about 1–2 minutes per 365,000 transactions.
+- **Safety copy:** before the import, the current database is dumped to `storage/backup-database/sebelum-impor-<db>-<YYYYMMDD-HHMMSS>.sql.gz`. The 3 newest are kept, separately from the daily backups. To undo an import, choose that file in the same card and press **Pulihkan**.
+- **If the import fails midway:** the safety copy is restored automatically, and the card says so.
+- **What is not replaced:**
+  - Login sessions (`hp_sessions`) stay, so people stay logged in. Sessions whose user no longer exists or now has a different username are deleted.
+  - Tables that exist in the database but not in the file are left as they are.
+  - Photos and other files under `storage/` are not in the backup. A photo that no transaction refers to any more stays on disk, and a restored transaction whose photo was deleted shows no photo.
+- **Afterwards:** table migrations run, so an older backup is brought up to the current structure. Triggers from the file are never run; the app creates its own. Summary tables are rebuilt when they differ.
+- **Notification:** success or failure goes to the PM2 log and the WhatsApp contacts of the imported database.
+
+**If the card reports that the automatic restore also failed**, or the app died during an import (power cut, `pm2 restart`), the database may be half-imported. Restore the safety copy by hand with the app stopped, using the file name from the message or the newest `sebelum-impor-*` file:
+
+```bash
+pm2 stop sianok-parking
+gunzip -c storage/backup-database/sebelum-impor-<db>-<YYYYMMDD-HHMMSS>.sql.gz | mariadb -u root -p <db>
+pm2 start sianok-parking
+```
+
+The app recreates its triggers and rebuilds the summary tables when it starts.
+
+### Summary tables (filled by triggers)
+
+`tbl_pendapatan_harian`, `tbl_parkir_masuk_harian` and `tbl_parkir_keluar_harian` are derived from the transaction tables by triggers. Reports (Okupansi, Rekap Bulanan, dashboard revenue) read them instead of scanning a year of transactions. Never edit them by hand. At startup the app compares them with the transaction tables and rebuilds them when they differ; the full per-day comparison of the parkir tables runs 2 minutes after startup and logs `Rekap transaksi parkir dibangun ulang` when it had to fix something. The first start after the 1.1.1 update fills the parkir tables once (about 4 s for 365,000 transactions).
+
 
 ## Pages in a release (views.pak)
 

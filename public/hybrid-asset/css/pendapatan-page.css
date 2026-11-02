@@ -13,7 +13,7 @@
 .pd-select select { min-width: 160px; }
 .pd-period input:focus, .pd-select select:focus { outline: 2px solid var(--up-accent); outline-offset: 1px; }
 .pd-presets { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; border: 1px solid var(--up-line); border-radius: 12px; background: #f6f8fb; }
-.pd-presets button { height: 32px; padding: 0 12px; border: 1px solid transparent; border-radius: 9px; background: transparent; color: var(--up-ink-2); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.pd-presets button { height: 32px; padding: 0 12px; border: 1px solid transparent; border-radius: 9px; background: transparent; color: var(--up-ink-2); font-size: 12.5px; font-weight: 600; white-space: nowrap; cursor: pointer; }
 .pd-presets button:hover { background: #fff; color: var(--up-accent-deep); }
 .pd-presets button.is-active { background: #fff; border-color: var(--up-accent); color: var(--up-accent-deep); }
 .pd-search { flex: 1; min-width: 220px; }
@@ -70,10 +70,19 @@
   .pd-period label, .pd-select { flex: 1 1 140px; }
   .pd-period input, .pd-select select { width: 100%; min-width: 0; }
   .pd-presets { width: 100%; }
-  .pd-presets button { flex: 1; padding: 0 6px; }
+  /* Tombol selebar isinya lalu mengisi baris; yang tidak muat pindah ke baris berikut (mis. "Motorcycle · 120"). */
+  .pd-presets button { flex: 1 1 auto; padding: 0 10px; }
   .pd-filters-fill .pd-period .pd-search { flex-basis: 100%; min-width: 0; }
   .pd-card { padding: 16px; }
   .pd-list-head { padding: 16px 16px 0; }
+}
+/* Kartu ringkasan di HP: ikon di atas, nilai & label selebar kartu. Nilai berupa teks ("Motorcycle", "Rp 12.345.000",
+   "1 day 5 hours") tidak muat di samping ikon dan keluar dari kartu, terutama dalam bahasa Inggris. */
+@media (max-width: 575px) {
+  .pd-stats .up-stat { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .pd-stats .up-stat > div { min-width: 0; max-width: 100%; }
+  .pd-stats .up-stat strong { font-size: 19px; overflow-wrap: anywhere; }
+  .pd-stats .up-stat-icon { width: 34px; height: 34px; font-size: 17px; }
 }
 
 /* Pengeluaran (memakai komponen halaman pendapatan) */
@@ -149,7 +158,7 @@
 .tp-lightbox img { display: block; max-width: 100%; max-height: 82vh; margin: 0 auto; border-radius: 10px; background: #000; }
 .tp-lightbox figcaption { margin-top: 10px; color: #fff; font-size: 13px; text-align: center; }
 .tp-lightbox-close { position: absolute; top: 14px; right: 18px; width: 40px; height: 40px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .16); color: #fff; font-size: 26px; line-height: 1; cursor: pointer; }
-@media (max-width: 1279px) { .pd-table td[data-label="Foto"] .tp-fotos { justify-content: flex-end; } }
+@media (max-width: 1279px) { .pd-table td > .tp-fotos { justify-content: flex-end; } }
 
 .tp-foto.is-missing { display: grid; place-items: center; color: var(--up-ink-3); font-size: 18px; cursor: default; background: repeating-linear-gradient(45deg, #f2f4f7, #f2f4f7 6px, #eaecf0 6px, #eaecf0 12px); }
 

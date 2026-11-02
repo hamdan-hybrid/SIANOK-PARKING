@@ -309,7 +309,6 @@ CREATE TABLE IF NOT EXISTS tbl_transaksi_pendapatan (
   json_transaksi JSON NULL COMMENT 'Snapshot data saat transaksi (pelanggan, kendaraan, metode, kasir)',
   tgl_input TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id_trx),
-  KEY idx_pendapatan_tanggal (tanggal_buku),
   KEY idx_pendapatan_urut (tanggal_buku, jam, id_trx),
   KEY idx_pendapatan_ringkas (tanggal_buku, jenis_pendapatan, id_metode, total_bayar),
   KEY idx_pendapatan_jenis (jenis_pendapatan, tanggal_buku),

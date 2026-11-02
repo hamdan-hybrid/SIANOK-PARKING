@@ -1,0 +1,51 @@
+/* Modal tambah / edit (.user-modal: pengguna, metode bayar, tarif, perangkat, area parkir, langganan, dll.) di HP.
+   Tampil sebagai lembar dari bawah selebar layar: judul + tombol tutup menempel di atas, Batal/Simpan menempel di bawah,
+   isi form di-scroll di antaranya. Dimuat setelah CSS halaman agar aturan lebar/padding lama per modal tertimpa. */
+@media (max-width: 575px) {
+  .user-modal-backdrop { place-items: end center !important; padding: 12px 0 0 !important; }
+  .user-modal-backdrop > .user-modal {
+    width: 100% !important; max-width: none !important; max-height: calc(100dvh - 12px) !important;
+    margin: 0; padding: 0 16px !important;
+    border-width: 1px 0 0 !important; border-radius: 20px 20px 0 0 !important;
+    overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain;
+    animation: um-sheet-up .24s cubic-bezier(.2, .8, .2, 1);
+  }
+  .user-modal-backdrop > .user-modal:not(:has(.user-form-actions)) { padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important; }
+
+  .user-modal-backdrop > .user-modal > .user-modal-header {
+    position: sticky; top: 0; z-index: 6;
+    align-items: center;
+    margin: 0 -16px 16px !important; padding: 16px 16px 12px !important;
+    background: #fff;
+  }
+  .user-modal-header .eyebrow { margin: 0 0 2px !important; font-size: 10.5px !important; }
+  .user-modal-header h3 { font-size: 19px !important; line-height: 1.25; }
+  .user-modal-header .user-modal-close { flex: none; width: 36px; height: 36px; }
+
+  /* Isi form: semua grid satu kolom yang tidak boleh lebih lebar dari layar. */
+  .user-modal .user-form-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 14px !important; }
+  .user-modal .user-form-grid > * { grid-column: auto !important; min-width: 0; }
+  /* 16px: Safari iPhone memperbesar halaman bila input < 16px saat disentuh. */
+  .user-modal-backdrop > .user-modal input:not([type=radio]):not([type=file]):not([type=checkbox]), .user-modal-backdrop > .user-modal select, .user-modal-backdrop > .user-modal textarea { font-size: 16px !important; }
+  /* Input form ringkas (tf-modal: tarif, perangkat, area parkir, langganan, ...) setinggi input form lain agar mudah disentuh. */
+  .user-modal-backdrop > .user-modal.tf-modal input:not([type=radio]):not([type=file]):not([type=checkbox]) { height: 44px !important; }
+  .user-modal-backdrop > .user-modal.tf-modal .tf-input input:not([type=radio]):not([type=file]):not([type=checkbox]) { height: 42px !important; }
+  .user-modal .tf-dd-btn { min-height: 44px; }
+  /* Teks penjelasan di samping switch boleh turun baris (bawaannya nowrap → keluar kartu). */
+  .user-modal .pm-switch { min-width: 0; }
+  .user-modal .pm-switch em { min-width: 0; white-space: normal; }
+
+  .user-modal-backdrop > .user-modal .user-form-actions {
+    position: sticky; bottom: 0; z-index: 6;
+    display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px;
+    margin: 20px -16px 0 !important; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)) !important;
+    border-top: 1px solid var(--up-cream-line, #e1e9f3) !important;
+    background: #fff;
+    box-shadow: 0 -12px 24px -20px rgba(7, 15, 46, .45);
+  }
+  .user-form-actions > span:first-child { flex: 1 0 100%; order: -1; margin: 0 !important; max-width: none !important; }
+  .user-form-actions > span:first-child:empty { display: none; }
+  .user-form-actions > button { flex: 1 1 0; min-width: 0; min-height: 46px !important; justify-content: center; }
+}
+@keyframes um-sheet-up { from { transform: translateY(32px); opacity: .5; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .user-modal-backdrop > .user-modal { animation: none; } }

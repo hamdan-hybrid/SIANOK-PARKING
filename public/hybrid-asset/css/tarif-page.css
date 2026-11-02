@@ -287,10 +287,9 @@
 @media (max-width: 575px) {
   .tf-table .pm-actions .up-btn { width: 34px; min-width: 34px; height: 34px; min-height: 34px; }
   .tf-page .up-filter { flex: 1 1 auto; justify-content: center; }
-  /* Modal: latar memberi jarak 24px/sisi, jadi lebar modal ikut ruang yang tersedia (sebelumnya 100vw-32px → terpotong kanan) */
-  .user-modal-backdrop:has(.tf-modal, .tf-sim-modal) { padding: 12px; }
-  .user-modal.tf-modal, .user-modal.tf-sim-modal { width: 100% !important; max-height: calc(100dvh - 24px); padding-left: 16px !important; padding-right: 16px !important; }
-  .tf-modal .tf-choices { grid-template-columns: 1fr; }
+  /* Lebar & padding modal di HP diatur modal-mobile.css (lembar dari bawah). Kolom grid memakai minmax(0, 1fr): dengan 1fr
+     biasa, kolom ikut melebar ke lebar minimum isinya sehingga form tarif melebihi layar dan bisa digeser ke samping. */
+  .tf-modal .tf-body, .tf-modal .tf-fields, .tf-modal .tf-row, .tf-modal .tf-row-2, .tf-modal .tf-row-vehicle, .tf-modal .tf-choices, .tf-modal .tf-choices-2, .tf-modal .tf-tiers, .tf-modal .tf-progresif, .tf-modal .tf-field { grid-template-columns: minmax(0, 1fr); }
   .tf-modal .tf-tier { grid-template-columns: 112px minmax(0, 1fr) 38px; }
   .tf-modal .tf-tier .tf-input em { padding: 0 8px; }
   .user-modal.tf-modal .tf-tier .tf-input:first-child input:not([type=radio]):not([type=file]) { padding: 0 4px !important; text-align: center; }

@@ -119,9 +119,9 @@
   .lr-table tr.lr-net { border-top: 2px solid var(--up-ink); }
   .lr-table td { padding: 0; border: 0; background: none !important; }
   .lr-table .lr-name { grid-column: 1; }
-  .lr-table td[data-label="Periode ini"] { grid-column: 2; grid-row: 1; }
-  .lr-table td.lr-prev, .lr-table td[data-label="Perubahan"] { display: flex; justify-content: space-between; gap: 12px; grid-column: 1 / -1; font-size: 12px; }
-  .lr-table td.lr-prev::before, .lr-table td[data-label="Perubahan"]::before { content: attr(data-label); color: var(--up-ink-3); }
+  .lr-table td.lr-now { grid-column: 2; grid-row: 1; }
+  .lr-table td.lr-prev, .lr-table td.lr-delta { display: flex; justify-content: space-between; gap: 12px; grid-column: 1 / -1; font-size: 12px; }
+  .lr-table td.lr-prev::before, .lr-table td.lr-delta::before { content: attr(data-label); color: var(--up-ink-3); }
   .lr-table .lr-delta { display: inline-flex; align-items: baseline; gap: 6px; }
   .lr-section-title th { padding: 16px 16px 4px; }
   .lr-empty td { grid-column: 1 / -1; }
