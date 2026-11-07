@@ -55,6 +55,18 @@ The API also applies request timeouts, security headers, and a per-IP rate limit
 
 The gate API (`/api/gate/*`) and the cashier pages (`/kasir`, `/kasir/*`, `/api/kasir/*`) only answer requests made to the server's IP from the same local subnet. Requests through a domain or from outside get `403 Access denied`. Disable with `GATE_LOCAL_ONLY=off` or `KASIR_LOCAL_ONLY=off` in `.env`.
 
+## One kasir account on several screens
+
+One kasir account serves one gate and may be logged in on several devices at once. The screens stay in sync: a ticket scanned on one device appears on the others, and when one device settles it, the others show it as paid and clear.
+
+- **Only one device executes a payment.** While a QRIS or card popup is open, the other devices of that account are locked and show a banner. `/api/kasir/bayar`, `qris/buat`, `emoney/mulai`, and `emoney/tap` enforce this on the server, and a ticket being paid is also locked against other kasir accounts.
+- **Lock expiry.** A device keeps its lock with a heartbeat every 8 seconds. If it disappears (closed tab, lost network), the lock expires after about 30 seconds and the other devices unlock.
+- **Last guard.** `UPDATE ... WHERE status = 'in'` still allows a ticket to be settled only once. A payment already proven paid by the QRIS or card SDK is not held back by the lock.
+- **Not mirrored.** The Tiket Manual, Tiket Hilang, and Member popups stay on the device that opened them. A receipt, the gate command, and the exit photo come only from the device that executes.
+- **Shift close.** It is refused while another device of the account is paying. Afterwards the other devices return to the PIN page.
+
+Sync state and locks live in process memory (see `instances: 1`), so a restart clears them. Screens reconnect by themselves and keep the ticket on display.
+
 ## Monitor Server (Owner only)
 
 Profile menu → **Monitor Server** shows disk, RAM, CPU, and database size, and offers a database backup download plus server restart/shutdown. Only Owner accounts can open it. Every action needs the CSRF token and the Owner's password again (5 wrong passwords lock actions for 5 minutes). Restart/shutdown also need the word `RESTART` / `SHUTDOWN` typed in, and run 5 seconds after confirmation. Each action is written to the server log with user ID and IP.
