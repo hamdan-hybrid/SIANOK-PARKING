@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS tbl_perusahaan (
   wa_api_key VARCHAR(255) NULL COMMENT 'API key gateway WhatsApp (notifikasi login & tutup kasir)',
   thermal_footer VARCHAR(500) NULL,
   cetak_otomatis TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Kasir mencetak struk parkir keluar otomatis',
+  struk_gratis_tutup TINYINT UNSIGNED NOT NULL DEFAULT 3 COMMENT 'Kasir: struk tarif Rp 0 ditutup otomatis setelah N detik (0 = tidak)',
   tiket_tampil_jenis TINYINT(1) NOT NULL DEFAULT 1 COMMENT 'Cetak jenis kendaraan di tiket masuk',
   metode_closing ENUM('global', 'auto') NOT NULL DEFAULT 'global',
   tanggal DATE NULL,
