@@ -1808,7 +1808,26 @@
   "Ketik": "拍",
   "untuk konfirmasi": "來確認",
   "Satu baris file terlalu panjang (file rusak?)": "檔案有一逝傷長（檔案敢是歹去？）",
-  "Upload": "上傳"
+  "Upload": "上傳",
+  "Tanggal buku berganti saat Tutup Harian di kasir (password SPV), satu kali untuk seluruh area dan kasir.": "帳簿日期佇收銀台做日結（SPV 密碼）的時陣換，全部區域佮收銀員做一擺就好。",
+  "Tanggal buku berganti sendiri setiap pergantian tanggal (pukul 00:00). Kasir cukup Tutup Shift.": "帳簿日期逐擺換日（00:00）家己換。收銀員干焦愛交班結帳。",
+  "Tutup harian otomatis aktif: tanggal buku berganti sendiri setiap pergantian tanggal. Cukup Tutup Shift.": "自動日結已經開：帳簿日期逐擺換日家己換。交班結帳就好。",
+  "Lainnya": "其他",
+  "Laporan Harian Kasir": "收銀員日報",
+  "No": "No",
+  "Per tanggal & kasir: kendaraan, pendapatan per metode, uang tunai seharusnya vs diterima, lebih/kurang.": "逐日、逐收銀員：車輛、逐付款方式的收入、應收佮實收現金、加抑是欠。",
+  "Per tanggal dan kasir: kendaraan, pendapatan per metode bayar, uang tunai seharusnya vs diterima, lebih atau kurang.": "逐日佮逐收銀員：車輛、逐付款方式的收入、應收佮實收現金、加抑是欠。",
+  "Rekap harian kasir": "收銀員日結總表",
+  "Rekonsiliasi tunai": "現金對帳",
+  "Selisih bersih": "淨差額",
+  "Shift / jam kerja": "班別／上班時間",
+  "Total keseluruhan": "總計",
+  "Transaksi kendaraan": "車輛交易",
+  "Tunai menurut sistem": "系統算的現金",
+  "Uang fisik (diterima)": "實收現金",
+  "Uang seharusnya": "應收現金",
+  "Uang tunai diterima": "實收現金",
+  "Uang tunai seharusnya": "應收現金"
  },
  "patterns": {
   "· {0} terpotong": "· {0} 扣去矣",
@@ -2109,6 +2128,9 @@
   "Baris {0}: pernyataan tidak dikenal untuk backup Sianok Parking ({1}…)": "第 {0} 逝：Sianok Parking 備份袂使有的指令（{1}…）",
   "File berakhir di tengah pernyataan (baris {0}): backup tidak utuh": "檔案佇指令中央結束（第 {0} 逝）：備份無完整",
   "Backup sebelum import gagal ({0}). Database tidak diubah.": "匯入進前的備份失敗（{0}）。資料庫無改。",
-  "Pernyataan di baris {0} terlalu besar (file rusak?)": "第 {0} 逝的指令傷大（檔案敢是歹去？）"
+  "Pernyataan di baris {0} terlalu besar (file rusak?)": "第 {0} 逝的指令傷大（檔案敢是歹去？）",
+  "{0} dari {1} tutup kasir sesuai": "{1} 擺結帳內底 {0} 擺有合",
+  "{0} tutup kasir · {1} transaksi": "{0} 擺結帳 · {1} 筆交易",
+  "Lebih Rp {0} · Kurang Rp {1}": "加 Rp {0} · 欠 Rp {1}"
  }
 }

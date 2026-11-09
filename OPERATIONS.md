@@ -55,6 +55,15 @@ The API also applies request timeouts, security headers, and a per-IP rate limit
 
 The gate API (`/api/gate/*`) and the cashier pages (`/kasir`, `/kasir/*`, `/api/kasir/*`) only answer requests made to the server's IP from the same local subnet. Requests through a domain or from outside get `403 Access denied`. Disable with `GATE_LOCAL_ONLY=off` or `KASIR_LOCAL_ONLY=off` in `.env`.
 
+## Daily closing (tanggal buku)
+
+Company menu → *Metode tutup harian*:
+
+- **Manual** (default). The book date moves one day when a cashier presses **Tutup Harian** with an SPV password, once for all areas and cashiers. That press also unlocks every cashier account.
+- **Otomatis.** The app checks every minute, and 15 seconds after start. Once the calendar date has passed the book date, it sets the book date to today and unlocks every cashier account. A server that was off for several days jumps straight to today. It then sends WhatsApp *Tutup Harian Otomatis* with the closed day's revenue, and open cashier pages update their book date. The log line is `Tutup harian otomatis: tanggal buku <old> -> <new>`.
+  - Cashiers only use **Tutup Shift**. The **Tutup Harian** button is hidden, and the server refuses it, because it would push the book date one day past today.
+  - **Night shifts.** A night-shift cashier who closes after 00:00 gets every transaction since their last closing, including those of the previous book date (one day back at most), so the drawer matches the system. Revenue stays on each transaction's own book date.
+
 ## One kasir account on several screens
 
 One kasir account serves one gate and may be logged in on several devices at once. The screens stay in sync: a ticket scanned on one device appears on the others, and when one device settles it, the others show it as paid and clear.

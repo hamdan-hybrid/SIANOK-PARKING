@@ -1808,7 +1808,26 @@
   "Ketik": "Type",
   "untuk konfirmasi": "to confirm",
   "Satu baris file terlalu panjang (file rusak?)": "A line in the file is too long (damaged file?)",
-  "Upload": "Upload"
+  "Upload": "Upload",
+  "Tanggal buku berganti saat Tutup Harian di kasir (password SPV), satu kali untuk seluruh area dan kasir.": "The book date changes when Daily Closing is done at the cashier (SPV password), once for all areas and cashiers.",
+  "Tanggal buku berganti sendiri setiap pergantian tanggal (pukul 00:00). Kasir cukup Tutup Shift.": "The book date changes by itself at every date change (00:00). Cashiers only need Shift Closing.",
+  "Tutup harian otomatis aktif: tanggal buku berganti sendiri setiap pergantian tanggal. Cukup Tutup Shift.": "Automatic daily closing is on: the book date changes by itself at every date change. Shift Closing is enough.",
+  "Lainnya": "Others",
+  "Laporan Harian Kasir": "Daily Cashier Report",
+  "No": "No",
+  "Per tanggal & kasir: kendaraan, pendapatan per metode, uang tunai seharusnya vs diterima, lebih/kurang.": "Per date & cashier: vehicles, revenue per method, expected vs received cash, over/short.",
+  "Per tanggal dan kasir: kendaraan, pendapatan per metode bayar, uang tunai seharusnya vs diterima, lebih atau kurang.": "Per date and cashier: vehicles, revenue per payment method, expected vs received cash, over or short.",
+  "Rekap harian kasir": "Daily cashier summary",
+  "Rekonsiliasi tunai": "Cash reconciliation",
+  "Selisih bersih": "Net difference",
+  "Shift / jam kerja": "Shift / working hours",
+  "Total keseluruhan": "Grand total",
+  "Transaksi kendaraan": "Vehicle transactions",
+  "Tunai menurut sistem": "Cash according to the system",
+  "Uang fisik (diterima)": "Physical cash (received)",
+  "Uang seharusnya": "Expected cash",
+  "Uang tunai diterima": "Cash received",
+  "Uang tunai seharusnya": "Expected cash"
  },
  "patterns": {
   "· {0} terpotong": "· {0} deducted",
@@ -2109,6 +2128,9 @@
   "Baris {0}: pernyataan tidak dikenal untuk backup Sianok Parking ({1}…)": "Line {0}: statement not allowed in a Sianok Parking backup ({1}…)",
   "File berakhir di tengah pernyataan (baris {0}): backup tidak utuh": "The file ends in the middle of a statement (line {0}): the backup is incomplete",
   "Backup sebelum import gagal ({0}). Database tidak diubah.": "Backup before the import failed ({0}). The database was not changed.",
-  "Pernyataan di baris {0} terlalu besar (file rusak?)": "The statement at line {0} is too large (damaged file?)"
+  "Pernyataan di baris {0} terlalu besar (file rusak?)": "The statement at line {0} is too large (damaged file?)",
+  "{0} dari {1} tutup kasir sesuai": "{0} of {1} cashier closings matched",
+  "{0} tutup kasir · {1} transaksi": "{0} cashier closings · {1} transactions",
+  "Lebih Rp {0} · Kurang Rp {1}": "Over Rp {0} · Short Rp {1}"
  }
 }

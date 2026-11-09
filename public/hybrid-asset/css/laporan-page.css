@@ -223,10 +223,33 @@
 /* Baris kelompok (mis. jenis transaksi) dan rinciannya (metode bayar) */
 .rp-table tr.rp-row-group td { background: #f5f8fb; font-weight: 700; }
 .rp-table tr.rp-row-sub td.rp-first { padding-left: 34px; color: var(--up-ink-2); }
+.rp-table tr.rp-row-label td { color: var(--up-navy-700, #0b2cc0); font-size: 13.5px; }
+.rp-table tr.rp-row-subtotal td { background: #eef3fb; font-weight: 700; }
+.rp-table thead tr.rp-head-groups th { padding-top: 8px; padding-bottom: 8px; text-align: center; }
+.rp-table thead tr.rp-head-groups th.rp-head-group { background: #eef3fb; color: var(--up-navy-700, #0b2cc0); border-left: 1px solid var(--up-line); border-right: 1px solid var(--up-line); }
+.rp-table td.rp-tone-good { color: #137a4c; font-weight: 700; }
+.rp-table td.rp-tone-bad { color: #b42f2f; font-weight: 700; }
+.rp-status { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.rp-status i { font-size: 13px; }
+.rp-status.is-ok { background: #e7f6ee; color: #137a4c; }
+.rp-status.is-up { background: #e8efff; color: #1d4ed8; }
+.rp-status.is-down { background: #fdecec; color: #b42f2f; }
+.rp-net { display: inline-grid; gap: 1px; font-weight: 800; white-space: nowrap; }
+.rp-net small { color: var(--up-ink-3); font-size: 10.5px; font-weight: 600; }
+/* Tabel lebar (> 10 kolom): bisa digeser ke samping, jarak sel lebih rapat. */
+.rp-table-scroll { overflow-x: auto; }
+@media (min-width: 1280px) {
+  .rp-table.is-wide { font-size: 12.5px; }
+  .rp-table.is-wide th, .rp-table.is-wide td { padding: 8px 10px; }
+}
 .rp-table tr.rp-row-sub td.rp-first::after { content: none; }
 @media (max-width: 1279px) {
   .rp-table tr.rp-row-group { background: #f5f8fb; }
   .rp-table tr.rp-row-group td { background: none; }
+  .rp-table tr.rp-row-subtotal { background: #eef3fb; }
+  .rp-table tr.rp-row-subtotal td { background: none; }
+  .rp-table tr.rp-row-subtotal td.rp-first { justify-content: flex-start; }
+  .rp-table tr.rp-row-subtotal td.rp-first::before { content: none; }
   .rp-table tr.rp-row-sub { padding-left: 32px; }
   .rp-table tr.rp-row-sub td.rp-first { padding-left: 0; }
 }
