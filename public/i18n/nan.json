@@ -1603,7 +1603,7 @@
   "Endpoint layanan pembayaran non-tunai. Payment link wajib HTTPS; SDK boleh http:// (termasuk localhost) atau https://.": "非現金付款服務端點。付款連結愛用 HTTPS；SDK 會當用 http://（包含 localhost）抑是 https://。",
   "semua kasir langsung mencetak struk parkir keluar setelah bayar; cetak ulang lewat tombol Cetak Lagi": "全部收銀員付款了隨印出場收據；欲閣印就揤「閣印」",
   "Tutup otomatis struk tarif Rp 0 (detik)": "自動關 Rp 0 收據（秒）",
-  "Struk pembayaran gratis di kasir tertutup sendiri lalu kursor kembali ke kotak scan. 0 = tidak ditutup otomatis.": "收銀台免費付款的收據會家己關起來，游標轉去掃描框。0 = 毋自動關。",
+  "Struk pembayaran gratis dan member di kasir tertutup sendiri lalu kursor kembali ke kotak scan. 0 = tidak ditutup otomatis.": "收銀台免費付款佮會員的收據會家己關起來，游標轉去掃描框。0 = 毋自動關。",
   "Tutup otomatis struk Rp 0 harus 0-60 detik": "Rp 0 收據自動關愛 0-60 秒",
   "Sistem menutup buku otomatis setiap pergantian hari.": "系統逐擺換日自動結帳。",
   "Tanggal pembukuan": "記帳日期",
