@@ -16,7 +16,9 @@ module.exports = {
     min_uptime: '10s',
     max_restarts: 1000,
     watch: false,
-    max_memory_restart: '300M',
+    // Batas pengaman bila memori bocor. Pemakaian normal 150–250 MB (saat ramai: foto, laporan, CCTV); 300M terlalu dekat
+    // sehingga restart (kasir & gate terputus sebentar) bisa terjadi di jam sibuk. Dicek PM2 tiap 30 detik.
+    max_memory_restart: '500M',
     kill_timeout: 10000,
     listen_timeout: 10000,
     env: { NODE_ENV: 'production' },
