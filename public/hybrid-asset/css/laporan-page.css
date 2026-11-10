@@ -236,6 +236,15 @@
 .rp-status.is-down { background: #fdecec; color: #b42f2f; }
 .rp-net { display: inline-grid; gap: 1px; font-weight: 800; white-space: nowrap; }
 .rp-net small { color: var(--up-ink-3); font-size: 10.5px; font-weight: 600; }
+/* Warna latar per kolom (mis. Rekonsiliasi tunai di Laporan Harian Kasir); subtotal, total, dan judul kolom lebih pekat. */
+.rp-table tbody tr td.rp-tint-biru { background: #f2f6ff; }
+.rp-table tbody tr td.rp-tint-ungu { background: #f6f3ff; }
+.rp-table tbody tr td.rp-tint-hijau { background: #effaf4; }
+.rp-table tbody tr td.rp-tint-merah { background: #fff2f2; }
+.rp-table thead tr th.rp-tint-biru, .rp-table tbody tr.rp-row-subtotal td.rp-tint-biru, .rp-table tfoot tr td.rp-tint-biru { background: #e3ecff; }
+.rp-table thead tr th.rp-tint-ungu, .rp-table tbody tr.rp-row-subtotal td.rp-tint-ungu, .rp-table tfoot tr td.rp-tint-ungu { background: #ebe4ff; }
+.rp-table thead tr th.rp-tint-hijau, .rp-table tbody tr.rp-row-subtotal td.rp-tint-hijau, .rp-table tfoot tr td.rp-tint-hijau { background: #dcf3e6; }
+.rp-table thead tr th.rp-tint-merah, .rp-table tbody tr.rp-row-subtotal td.rp-tint-merah, .rp-table tfoot tr td.rp-tint-merah { background: #fde0e0; }
 /* Tabel lebar (> 10 kolom): bisa digeser ke samping, jarak sel lebih rapat. */
 .rp-table-scroll { overflow-x: auto; }
 @media (min-width: 1280px) {

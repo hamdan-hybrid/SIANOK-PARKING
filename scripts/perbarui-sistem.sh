@@ -104,7 +104,7 @@ main() {
 
   status pasang "Memasang file versi baru..."
   local stamp; stamp="$(date +%Y%m%d-%H%M%S)"
-  tar -czf "$STATE/sebelum-$stamp.tar.gz" -C "$APP" --exclude=./node_modules --exclude=./storage --exclude=./_backup \
+  tar -czf "$STATE/sebelum-$stamp.tar.gz" -C "$APP" --exclude=./.git --exclude=./node_modules --exclude=./storage --exclude=./_backup \
     --exclude=./public/uploads --exclude=./public/img --exclude=./.env . \
     || { gagal "Snapshot kode lama gagal (disk penuh?), tidak ada yang diubah"; rm -f "$STATE/sebelum-$stamp.tar.gz"; return 1; }
   ls -1t "$STATE"/sebelum-*.tar.gz 2>/dev/null | tail -n +3 | xargs -r rm -f

@@ -102,6 +102,22 @@ The **Perbarui sistem** card installs the latest release from GitHub (`package.j
 - `SERVER_UPDATE=local` limits the button to the local network through the server IP, `SERVER_UPDATE=off` disables it.
 - Installs from before this feature need one manual `sudo bash scripts/update.sh <package.tar.gz>`; afterwards the button works.
 
+## Storage disk (photos on the largest disk)
+
+`setup.sh` (step "Disk penyimpanan", `scripts/disk-data.sh`) puts `storage/` on the largest disk. `storage/` holds vehicle photos, daily database backups and the SSL certificate. The disk is chosen in this order:
+
+1. A disk already mounted from `/etc/fstab` with more free space than the app disk.
+2. An unmounted partition that already has a filesystem. It is mounted at `/mnt/data` without formatting.
+3. A blank disk. It is formatted only after the operator types `YA` in the wizard.
+
+`/mnt/data/sianok-parking` is then bind-mounted onto `storage/` through `/etc/fstab`, with `nofail`. The old fstab is kept as `/etc/fstab.bak-sianok-parking-<time>`.
+
+- **`--yes` and Perbarui sistem** never format a disk and never move existing photos. They report NEEDS ATTENTION instead.
+- **Moving existing photos:** run `sudo bash setup.sh` at a quiet hour. rsync copies while the app keeps running, then the app stops for a few seconds for the final pass. The old copy stays in `_backup/storage-lama-<time>`.
+- **Checking:** run `findmnt <app>/storage`. The health check warns when the fstab bind exists but the disk is not mounted, because photos then land on the system disk.
+- **Opting out:** `--tanpa-disk-data` keeps `storage/` on the system disk, and the choice is remembered. `--disk-data DIR` uses a folder of your choice.
+- **Details and undo:** see INSTALL.md → "Disk penyimpanan".
+
 ## Backup & restore
 
 Monitor Server → **Backup database** downloads `backup-<db>-<YYYYMMDD-HHMMSS>.sql.gz`. It contains every table, all data, triggers and routines, in one consistent snapshot (`--single-transaction`). Since 2026-10-23 the file has no `CREATE DATABASE` / `USE` line, so a restore always goes into the database you name. Older files still contain `USE <original db>` and will overwrite that database.
@@ -117,7 +133,7 @@ That download is not kept on the server. Store each downloaded file away from th
   - The failure goes to the PM2 log and to the WhatsApp contacts.
   - Successful backups are only logged (`Backup database otomatis: …`).
 - **Limitation:** the job runs inside the app, so no backup is made on a night when the app is not running at 02:00.
-- **Offsite copy:** these files sit on the same disk as the database. Still copy a backup off the machine regularly.
+- **Offsite copy:** these files sit on the same machine as the database (on the data disk when there is one, see "Storage disk"). Still copy a backup off the machine regularly.
 
 `storage/` must never be committed to a git repository, because the backups contain the full database.
 

@@ -86,6 +86,11 @@ for dir in storage storage/parkir public/uploads public/img; do
   [ -d "$APP_DIR/$dir" ] && as_user "$APP_USER" test -w "$APP_DIR/$dir" || tidak_bisa="$tidak_bisa $dir"
 done
 [ -z "$tidak_bisa" ] && pass "Folder data (storage, public/uploads, public/img) bisa ditulis $APP_USER" || fail "Folder tidak ada / tidak bisa ditulis $APP_USER:$tidak_bisa"
+# storage di-bind dari disk data lewat /etc/fstab (setup.sh) tetapi tidak terpasang: disk lepas / gagal saat boot.
+if findmnt -s -n -M "$APP_DIR/storage" >/dev/null 2>&1; then
+  if mountpoint -q "$APP_DIR/storage"; then pass "storage di disk data $(findmnt -n -o SOURCE --target "$APP_DIR/storage/"), sisa $(df -h --output=avail "$APP_DIR/storage/" | tail -n1 | tr -d ' ')"
+  else note "storage tercatat di /etc/fstab tetapi disk datanya tidak terpasang: foto baru tersimpan di disk sistem dan foto lama tidak terlihat (cek disk, lalu sudo mount -a)"; fi
+fi
 
 # --- Aplikasi ---
 if [ -z "$PROC_JSON" ]; then fail "Proses PM2 $HP_PM2_NAME tidak ditemukan untuk user $APP_USER"

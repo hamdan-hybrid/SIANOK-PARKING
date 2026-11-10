@@ -10,6 +10,8 @@
 #       --izinkan-restart-server  (aturan sudoers agar tombol Restart/Shutdown di Monitor Server aktif)
 #       --tanpa-kunci             (file kode tidak dikunci & akses kode tidak dicatat, lihat scripts/kunci-kode.sh)
 #       --tanpa-perbarui-web      (tombol "Perbarui sistem" di Monitor Server tidak dipasang)
+#       --disk-data DIR           (folder storage di disk lain pilihan sendiri; bawaan: hardisk terbesar dipilih otomatis)
+#       --tanpa-disk-data         (storage tetap di disk sistem, diingat untuk update berikutnya)
 #
 # Update ke versi baru: tombol "Perbarui sistem" di Monitor Server, sudo bash scripts/perbarui-sistem.sh (dari GitHub),
 # atau sudo bash scripts/update.sh <paket-rilis.tar.gz>
@@ -28,7 +30,7 @@ SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ---------- Argumen ----------
 APP_DIR="$SELF_DIR"; OPT_PORT=""; OPT_HTTPS=""; OPT_DB=""; OPT_DOMAIN=""; OPT_USER=""; ADMIN_DEFAULTS=""
-YES=0; RESET_DB_PW=0; POWER_RULE=""; KUNCI=1; KUNCI_DIBUKA=0; PERBARUI=1
+YES=0; RESET_DB_PW=0; POWER_RULE=""; KUNCI=1; KUNCI_DIBUKA=0; PERBARUI=1; DISK_DATA=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --yes|-y) YES=1 ;;
@@ -43,7 +45,9 @@ while [ $# -gt 0 ]; do
     --izinkan-restart-server) POWER_RULE=yes ;;
     --tanpa-kunci) KUNCI=0 ;;
     --tanpa-perbarui-web) PERBARUI=0 ;;
-    -h|--help) sed -n '2,18p' "$0"; exit 0 ;;
+    --disk-data) DISK_DATA="$2"; [ "$DISK_DATA" = off ] && { echo "--disk-data butuh folder (untuk mematikan: --tanpa-disk-data)"; exit 1; }; shift ;;
+    --tanpa-disk-data) DISK_DATA=off ;;
+    -h|--help) sed -n '2,20p' "$0"; exit 0 ;;
     *) echo "Opsi tidak dikenal: $1 (lihat --help)"; exit 1 ;;
   esac
   shift
@@ -87,7 +91,7 @@ summary() {
   printf '\n'
   printf '  %-22s %s\n' "Ubuntu" "${PRETTY_NAME:-?}" "Node.js" "${NODE_VERSION:--}" "npm" "${NPM_VERSION:--}" "PM2" "${PM2_VERSION:--}" \
     "MariaDB" "${DB_SERVER_VERSION:--}" "FFmpeg" "${FFMPEG_VERSION:--}" "FFprobe" "${FFPROBE_VERSION:--}" \
-    "Folder aplikasi" "$APP_DIR" "User layanan" "${APP_USER:--}" "Port aplikasi" "${APP_PORT:--}${HTTPS_PORT:+ (HTTPS ${HTTPS_PORT})}" \
+    "Folder aplikasi" "$APP_DIR" "Folder storage" "${DD_INFO:--}" "User layanan" "${APP_USER:--}" "Port aplikasi" "${APP_PORT:--}${HTTPS_PORT:+ (HTTPS ${HTTPS_PORT})}" \
     "Database" "${DB_NAME:--}" "User database" "${DB_USER:--}" "Koneksi database" "${DB_CONN_STATUS:-belum diuji}" \
     "Proses PM2" "${PM2_STATUS:--}" "Health check" "${HEALTH_STATUS:-belum dijalankan}" \
     "Konfigurasi" "$ENV_FILE (600)" "Log aplikasi" "${APP_LOG_DIR:--}" "Log installer" "$HP_LOG_FILE"
@@ -413,6 +417,11 @@ else step_end SUCCESS "$env_note; diisi/diperbarui: ${CHANGED[*]:-DB_*} (nilai r
 if lsattr -d "$APP_DIR/server.js" 2>/dev/null | cut -d' ' -f1 | grep i >/dev/null; then
   run_logged env HP_KODE_APP="$APP_DIR" bash "$SELF_DIR/scripts/kunci-kode.sh" buka && KUNCI_DIBUKA=1
 fi
+# storage/ (foto kendaraan, backup database) di hardisk terbesar: disk lain yang sudah terpasang, atau yang belum
+# dipasang tetapi sudah berisi filesystem (dipasang tanpa format). Disk kosong hanya diformat bila operator mengetik YA.
+step_begin "Disk penyimpanan"
+. "$SELF_DIR/scripts/disk-data.sh"
+disk_data_step
 step_begin "Folder data"
 dir_owner="$(stat -c %U "$APP_DIR")"
 if [ "$dir_owner" != "$APP_USER" ]; then
@@ -421,14 +430,15 @@ if [ "$dir_owner" != "$APP_USER" ]; then
   else step_end FAILED "folder aplikasi milik $dir_owner, bukan $APP_USER"; summary; exit 1; fi
 fi
 for d in storage storage/parkir storage/pengeluaran public/uploads public/img _backup; do
-  [ -d "$APP_DIR/$d" ] || { mkdir -p "$APP_DIR/$d"; chown "$APP_USER:" "$APP_DIR/$d"; }
+  # 2>/dev/null: storage di NTFS/exFAT (pemilik dari opsi mount) menolak chown/chmod, itu wajar.
+  [ -d "$APP_DIR/$d" ] || { mkdir -p "$APP_DIR/$d"; chown "$APP_USER:" "$APP_DIR/$d" 2>/dev/null; }
 done
 chown -R "$APP_USER:" "$APP_DIR/_backup" "$APP_DIR/.env"
 # chmod mengikuti symlink: lewati bila folder data berupa symlink (mis. storage dipindah ke disk lain) agar root tidak
 # mengubah izin folder lain yang ditunjuk symlink buatan user aplikasi.
-[ -L "$APP_DIR/storage" ] || chmod 750 "$APP_DIR/storage"; [ -L "$APP_DIR/_backup" ] || chmod 700 "$APP_DIR/_backup"
+[ -L "$APP_DIR/storage" ] || chmod 750 "$APP_DIR/storage" 2>/dev/null; [ -L "$APP_DIR/_backup" ] || chmod 700 "$APP_DIR/_backup"
 files="$(find "$APP_DIR/storage" -type f 2>/dev/null | wc -l)"
-step_end SUCCESS "${owner_note:+$owner_note; }storage ($files file foto/data, tidak dipindah), public/uploads, public/img, _backup; sisa disk $(df -Ph "$APP_DIR" | awk 'NR==2 {print $4}')"
+step_end SUCCESS "${owner_note:+$owner_note; }storage ($files file foto/data, sisa $(df -Ph "$APP_DIR/storage/" | awk 'NR==2 {print $4}')), public/uploads, public/img, _backup; sisa disk sistem $(df -Ph "$APP_DIR" | awk 'NR==2 {print $4}')"
 
 # ---------- 12. FFmpeg & FFprobe ----------
 step_begin "FFmpeg / FFprobe"

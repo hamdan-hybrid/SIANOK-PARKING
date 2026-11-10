@@ -2,6 +2,18 @@
 
 ## Instalasi satu perintah
 
+Node.js, MariaDB, PM2, dan paket lain dipasang oleh `setup.sh`, jadi tidak perlu nvm atau `npm start`.
+
+Dari GitHub:
+
+```bash
+sudo git clone --depth 1 https://github.com/hamdan-hybrid/SIANOK-PARKING.git /var/www/SIANOK-PARKING
+cd /var/www/SIANOK-PARKING
+sudo bash setup.sh
+```
+
+Atau dari paket rilis:
+
 ```bash
 tar -xzf sianok-parking-<versi>-<tanggal>.tar.gz
 cd sianok-parking
@@ -41,7 +53,8 @@ Selebihnya otomatis. Setiap tahap tampil dengan status **SUCCESS / FAILED / SKIP
 8. **`.env`**:
    - File lama dibackup dulu ke `_backup/.env.bak-<waktu>`.
    - Hanya kunci yang kurang yang ditambahkan. API key, link SDK, dan nilai lain dipertahankan.
-9. **Folder data**: `storage/` (foto kendaraan), `public/uploads`, `public/img`, dan `_backup` milik user layanan. Data lama tidak dipindah atau dihapus.
+9. **Disk penyimpanan**: `storage/` (foto kendaraan, backup database) ditaruh di hardisk terbesar bila server punya lebih dari satu disk. Disk kosong hanya diformat setelah operator mengetik `YA`. Lihat "Disk penyimpanan" di bawah.
+   - **Folder data**: `storage/`, `public/uploads`, `public/img`, dan `_backup` milik user layanan. Data lama tidak dihapus.
 10. **FFmpeg/FFprobe** diuji sebagai user layanan: demuxer RTSP tersedia, snapshot JPEG berhasil dibuat lalu dibaca ulang dengan ffprobe. Ini sama dengan cara `gate.js` mengambil foto kamera.
 11. **Dependency aplikasi**: modul native diuji dengan cara dimuat. Bila gagal atau tidak ada, dijalankan `npm ci --omit=dev` sesuai `package-lock.json`.
 12. **Migrasi**:
@@ -62,6 +75,60 @@ Installer aman dijalankan ulang. Tahap yang sudah benar ditandai SKIPPED.
 Exit code: `0` berhasil, `1` gagal, `2` berhasil dengan hal yang perlu diperhatikan.
 
 Log installer: `/var/log/sianok-parking/setup-<waktu>.log` (mode 600, tanpa password).
+
+## Disk penyimpanan (foto di hardisk terbesar)
+
+`storage/` berisi foto kendaraan, backup database harian, dan sertifikat HTTPS. Isinya bisa puluhan GB, jadi `setup.sh` menaruhnya di hardisk terbesar (langkah **Disk penyimpanan**, `scripts/disk-data.sh`). Urutannya:
+
+1. **`storage/` sudah berupa mount atau symlink ke disk lain:** tidak diubah. Mount yang tidak tercatat di `/etc/fstab` ditandai *perlu diperhatikan*, karena hilang setelah reboot.
+2. **Disk lain sudah terpasang permanen** (`/etc/fstab`) dan ruang kosongnya lebih besar dari disk aplikasi (minimal 20 GB): dipakai. Folder sistem (`/var`, `/usr`, `/opt`, …) dan automount desktop (`/media`) tidak dipakai.
+3. **Partisi atau disk belum terpasang tetapi sudah berisi filesystem** (ext4, xfs, btrfs, NTFS, exFAT; minimal 20 GB): dipasang di `/mnt/data` **tanpa format**, dan isi lamanya tetap ada.
+   - Bila ada beberapa, dicoba dari yang terbesar.
+   - Disk berikut dilepas lagi dan baris fstab-nya dihapus: yang gagal dipasang, yang hanya bisa dibaca (NTFS dari Windows yang di-hibernate atau memakai Fast Startup), dan yang ruang kosongnya lebih kecil dari disk sistem.
+4. **Disk kosong total** (tanpa partisi dan filesystem): wizard menampilkan nama, ukuran, dan model disk itu. Disk hanya diformat (ext4, satu partisi GPT) bila operator mengetik `YA`. Mode `--yes` dan *Perbarui sistem* tidak pernah memformat; ringkasan menandai *perlu diperhatikan*.
+
+Flashdisk dan hardisk USB tidak dipakai otomatis. Untuk memakainya, gunakan `--disk-data DIR`.
+
+Hasilnya dua baris baru di `/etc/fstab`. File lamanya dibackup dulu ke `/etc/fstab.bak-sianok-parking-<waktu>`, dan baris baru diuji dengan `findmnt --verify` sebelum ditulis:
+
+```
+UUID=<uuid>  /mnt/data  ext4  defaults,noatime,nofail,x-systemd.device-timeout=10s  0 2
+/mnt/data/sianok-parking  /var/www/SIANOK-PARKING/storage  none  bind,nofail,x-systemd.requires-mounts-for=/mnt/data/sianok-parking  0 0
+```
+
+- **NTFS dan exFAT** tidak menyimpan izin Unix. NTFS dipasang dengan `ntfs-3g`, yang dipasang otomatis bila belum ada; exFAT dengan driver kernel. Keduanya memakai `uid`/`gid` user layanan, dengan izin folder 750 dan file 640.
+- **`nofail`:** server tetap bisa boot walau disk data lepas.
+  - Saat boot, PM2 menunggu `storage` terpasang (drop-in `/etc/systemd/system/pm2-<user>.service.d/sianok-parking-storage.conf`), tetapi tetap jalan bila disk gagal.
+  - Health check memberi peringatan bila `storage` tercatat di fstab tetapi tidak terpasang.
+- Aplikasi tetap memakai `storage/` seperti biasa. Monitor Server menampilkan sisa ruang disk data.
+
+**Data lama**
+
+- **Instalasi baru:** `storage/` masih kosong, jadi langsung disambungkan. Bila `/mnt/data/sianok-parking` sudah berisi foto dari instalasi sebelumnya (mis. OS diinstal ulang), foto itu dipakai lagi.
+- **Server yang sudah berjalan dengan foto di disk sistem:**
+  - `setup.sh --yes` dan *Perbarui sistem* tidak memindahkan apa pun. Ringkasan menandai *perlu diperhatikan* dan menyebut disk tujuannya.
+  - `sudo bash setup.sh` (wizard) menawarkan pemindahan:
+    1. `rsync` menyalin semua file selagi aplikasi tetap jalan.
+    2. Aplikasi dihentikan beberapa detik untuk salinan terakhir.
+    3. Jumlah dan ukuran file dicocokkan. Bila tidak sama, `storage/` tidak diubah.
+    4. `storage/` lama dipindah ke `_backup/storage-lama-<waktu>`, disk data disambungkan, lalu aplikasi jalan lagi.
+  - Hapus salinan lama setelah dicek: `sudo rm -rf _backup/storage-lama-<waktu>`.
+- **`storage/` dan folder di disk data sama-sama berisi file:** tidak digabung otomatis (*perlu diperhatikan*).
+
+**Opsi**
+
+- `--tanpa-disk-data`: storage tetap di disk sistem. Pilihan ini diingat, jadi *Perbarui sistem* juga tidak mengingatkan lagi.
+- `--disk-data DIR`: folder pilihan sendiri di disk lain yang sudah terpasang permanen. Foto lama ikut dipindah, juga dengan `--yes`. Opsi ini membatalkan `--tanpa-disk-data`.
+
+**Cek dan batalkan**
+
+- Cek: `findmnt /var/www/SIANOK-PARKING/storage` dan `df -h /var/www/SIANOK-PARKING/storage/`.
+- Kembali ke disk sistem:
+  1. Hentikan aplikasi: `sudo -u <user> pm2 stop sianok-parking`.
+  2. `sudo umount /var/www/SIANOK-PARKING/storage`.
+  3. Hapus baris bertanda `# sianok-parking:` beserta baris di bawahnya dari `/etc/fstab`.
+  4. Salin isi `/mnt/data/sianok-parking` ke `/var/www/SIANOK-PARKING/storage`.
+  5. Jalankan `sudo bash setup.sh --tanpa-disk-data`.
 
 ## Perintah harian
 
