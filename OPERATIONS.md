@@ -15,7 +15,10 @@ pm2 startup
 
 - **System fonts.** `@napi-rs/canvas` (ticket and receipt images) loads every system font when it is imported. A server with a full font package such as `fonts-noto` (~1,800 files) adds about 200 MB of RSS. On one client server that alone pushed the app over 300 MB and caused 590 restarts in 5 hours. `start.js` sets `DISABLE_SYSTEM_FONTS_LOAD=1` before loading the server, and tickets use their own fonts in `fonts/` (DejaVu). Setting the variable empty in `.env` loads system fonts again.
 - **Memory log.** While RSS is above 220 MB the app logs `Memori: rss …, heap …, external … (arrayBuffers …)` every 10 minutes (pm2 out log). A growing `heap` points at JavaScript objects; growing `external`/`arrayBuffers` at buffers (photos, video, reports).
+- **Photo thumbnails (since 2026-11-10).** The Transaksi page loads dozens of thumbnails at once (HTTP/2 through Cloudflare), and each camera photo is decoded in full (8–15 MB). Before the limit, 40 new thumbnails at once took about 780 MB of RSS (above `max_memory_restart`) and held the event loop for about 55 ms. Now at most 2 are made at the same time, each file only once even when requested together, and WebP encoding runs off the main thread: about 220 MB and 7 ms. Thumbnails are saved in `storage/parkir/.thumb/`, so each photo costs this only once.
 - **Check the real usage.** In `/proc/<pid>/status`, `RssAnon` is the app's own memory. `RssFile` is mapped files (Node binary, native modules, fonts) that the kernel can drop.
+
+**HTTPS through the domain.** Requests that come through Cloudflare / a reverse proxy with `X-Forwarded-Proto: https` get `Strict-Transport-Security: max-age=15552000` (180 days, without subdomains), so browsers stop trying plain HTTP for that domain. LAN access (`http://<ip>:<port>`) and the app's own self-signed HTTPS port never get the header.
 
 ## Zero-downtime reload
 
