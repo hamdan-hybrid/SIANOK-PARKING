@@ -208,53 +208,62 @@ SELECT 'PT Azka Maju Bersama', 'operasional@hybridsys.id', '0822-7354-9791', JSO
 -- Hanya bila belum ada data perusahaan (serial_number diganti kode instalasi saat dipasang lewat halaman Instalasi).
 WHERE NOT EXISTS (SELECT 1 FROM tbl_perusahaan);
 
-INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
-SELECT id_perusahaan, 'Tunai', 1, 'CASH', 'debit'
+-- Metode bayar awal. Instalasi baru hanya mengaktifkan Tunai dan Member; QRIS dan kartu uang elektronik sudah
+-- terdaftar tetapi nonaktif, diaktifkan Owner di menu Metode Bayar setelah link SDK-nya diisi (menu Perusahaan).
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance, aktif)
+SELECT id_perusahaan, 'Tunai', 1, 'CASH', 'debit', 1
 FROM tbl_perusahaan
 WHERE serial_number = 'HSS-001'
   AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'CASH');
 
-INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
-SELECT id_perusahaan, 'QRIS', 1, 'QRIS', 'debit'
+-- Member (langganan): tidak tampil di kasir, saldo normal kredit; dipilih di menu Langganan.
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance, aktif)
+SELECT id_perusahaan, 'Member', 0, 'MEMBER', 'kredit', 1
+FROM tbl_perusahaan
+WHERE serial_number = 'HSS-001'
+  AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'MEMBER' OR (normal_balance = 'kredit' AND tampil_kasir = 0));
+
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance, aktif)
+SELECT id_perusahaan, 'QRIS', 1, 'QRIS', 'debit', 0
 FROM tbl_perusahaan
 WHERE serial_number = 'HSS-001'
   AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'QRIS');
 
 -- Kasir memilih "Kartu Uang Elektronik" (popup tempel kartu, SDK Uang Elektronik); pendapatan dicatat sesuai jenis kartu
 -- (awalan nomor kartu) dengan metode di bawahnya, yang tidak tampil di kasir.
-INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
-SELECT id_perusahaan, 'Kartu Uang Elektronik', 1, 'KARTU', 'debit'
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance, aktif)
+SELECT id_perusahaan, 'Kartu Uang Elektronik', 1, 'KARTU', 'debit', 0
 FROM tbl_perusahaan
 WHERE serial_number = 'HSS-001'
   AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'KARTU');
 
 -- Metode gabungan: satu popup kasir menampilkan QRIS sekaligus menunggu kartu ditempel (kedua link SDK diisi);
 -- pendapatan dicatat sesuai channel yang dipakai (QRIS, atau jenis kartu).
-INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
-SELECT id_perusahaan, 'QRIS + Uang Elektronik', 1, 'QRIS_EMONEY', 'debit'
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance, aktif)
+SELECT id_perusahaan, 'QRIS + Uang Elektronik', 1, 'QRIS_EMONEY', 'debit', 0
 FROM tbl_perusahaan
 WHERE serial_number = 'HSS-001'
   AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'QRIS_EMONEY');
-INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
-SELECT id_perusahaan, 'E-money Mandiri', 0, 'EMONEY', 'debit'
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance, aktif)
+SELECT id_perusahaan, 'E-money Mandiri', 0, 'EMONEY', 'debit', 0
 FROM tbl_perusahaan
 WHERE serial_number = 'HSS-001'
   AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE REPLACE(metode_code, '-', '') = 'EMONEY');
 
-INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
-SELECT id_perusahaan, 'BRIZZI BRI', 0, 'BRIZZI', 'debit'
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance, aktif)
+SELECT id_perusahaan, 'BRIZZI BRI', 0, 'BRIZZI', 'debit', 0
 FROM tbl_perusahaan
 WHERE serial_number = 'HSS-001'
   AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'BRIZZI');
 
-INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
-SELECT id_perusahaan, 'TapCash BNI', 0, 'TAPCASH', 'debit'
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance, aktif)
+SELECT id_perusahaan, 'TapCash BNI', 0, 'TAPCASH', 'debit', 0
 FROM tbl_perusahaan
 WHERE serial_number = 'HSS-001'
   AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'TAPCASH');
 
-INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance)
-SELECT id_perusahaan, 'Flazz BCA', 0, 'FLAZZ', 'debit'
+INSERT INTO tbl_metode_bayar (id_perusahaan, metode, tampil_kasir, metode_code, normal_balance, aktif)
+SELECT id_perusahaan, 'Flazz BCA', 0, 'FLAZZ', 'debit', 0
 FROM tbl_perusahaan
 WHERE serial_number = 'HSS-001'
   AND NOT EXISTS (SELECT 1 FROM tbl_metode_bayar WHERE metode_code = 'FLAZZ');

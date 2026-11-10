@@ -81,3 +81,7 @@
 }
 .user-modal .pm-switch-field { display: flex !important; flex-direction: row; align-items: center; gap: 12px; }
 .user-modal .pm-switch-field em { color: var(--up-ink) !important; font-size: 14px; font-weight: 600; }
+/* Saklar "Metode aktif" di modal: catatan kecil di bawah label, merah saat nonaktif. */
+.user-modal .pm-status-switch em { display: grid; gap: 2px; }
+.user-modal .pm-status-switch em small { color: var(--up-ink-3); font-size: 12px; font-weight: 500; }
+.user-modal .pm-status-switch input:not(:checked) ~ em small { color: #c0392b; }

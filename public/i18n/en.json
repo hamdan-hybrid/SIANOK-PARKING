@@ -1827,7 +1827,12 @@
   "Uang fisik (diterima)": "Physical cash (received)",
   "Uang seharusnya": "Expected cash",
   "Uang tunai diterima": "Cash received",
-  "Uang tunai seharusnya": "Expected cash"
+  "Uang tunai seharusnya": "Expected cash",
+  "Metode aktif": "Method active",
+  "Bisa dipakai transaksi": "Can be used for transactions",
+  "Nonaktif · tidak bisa dipakai transaksi baru, riwayat & laporan tetap": "Inactive · cannot be used for new transactions; history & reports stay",
+  "Tidak tampil (nonaktif)": "Not shown (inactive)",
+  "Masih ada pembayaran berjalan di perangkat lain. Tunggu sampai selesai.": "A payment is still in progress on another device. Wait until it finishes."
  },
  "patterns": {
   "· {0} terpotong": "· {0} deducted",
@@ -2131,6 +2136,7 @@
   "Pernyataan di baris {0} terlalu besar (file rusak?)": "The statement at line {0} is too large (damaged file?)",
   "{0} dari {1} tutup kasir sesuai": "{0} of {1} cashier closings matched",
   "{0} tutup kasir · {1} transaksi": "{0} cashier closings · {1} transactions",
-  "Lebih Rp {0} · Kurang Rp {1}": "Over Rp {0} · Short Rp {1}"
+  "Lebih Rp {0} · Kurang Rp {1}": "Over Rp {0} · Short Rp {1}",
+  "Langganan {0} baru saja diperpanjang (berlaku s/d {1}). Cari ulang bila memang perlu diperpanjang lagi.": "Subscription {0} was just renewed (valid until {1}). Search again if it really needs another renewal."
  }
 }

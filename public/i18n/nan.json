@@ -1827,7 +1827,12 @@
   "Uang fisik (diterima)": "實收現金",
   "Uang seharusnya": "應收現金",
   "Uang tunai diterima": "實收現金",
-  "Uang tunai seharusnya": "應收現金"
+  "Uang tunai seharusnya": "應收現金",
+  "Metode aktif": "方式啟用",
+  "Bisa dipakai transaksi": "會當用來交易",
+  "Nonaktif · tidak bisa dipakai transaksi baru, riwayat & laporan tetap": "停用 · 袂當用佇新交易，記錄佮報表照原在",
+  "Tidak tampil (nonaktif)": "無顯示（停用）",
+  "Masih ada pembayaran berjalan di perangkat lain. Tunggu sampai selesai.": "別台設備猶有付款當咧進行，請等伊完成。"
  },
  "patterns": {
   "· {0} terpotong": "· {0} 扣去矣",
@@ -2131,6 +2136,7 @@
   "Pernyataan di baris {0} terlalu besar (file rusak?)": "第 {0} 逝的指令傷大（檔案敢是歹去？）",
   "{0} dari {1} tutup kasir sesuai": "{1} 擺結帳內底 {0} 擺有合",
   "{0} tutup kasir · {1} transaksi": "{0} 擺結帳 · {1} 筆交易",
-  "Lebih Rp {0} · Kurang Rp {1}": "加 Rp {0} · 欠 Rp {1}"
+  "Lebih Rp {0} · Kurang Rp {1}": "加 Rp {0} · 欠 Rp {1}",
+  "Langganan {0} baru saja diperpanjang (berlaku s/d {1}). Cari ulang bila memang perlu diperpanjang lagi.": "會員 {0} 拄才續約（有效到 {1}）。若確實愛閣續約，請重新揣。"
  }
 }
