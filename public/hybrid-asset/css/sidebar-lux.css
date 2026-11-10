@@ -15,6 +15,11 @@
   box-shadow: 6px 0 28px -16px rgba(20, 38, 61,.18) !important;
 }
 .pc-sidebar .navbar-wrapper { position: relative; }
+/* Kolom setinggi layar yang terlihat (dvh: di HP tidak termasuk bilah alamat browser); logo setinggi aslinya, daftar menu
+   mengisi sisanya dan bisa di-scroll sampai item terakhir. Dulu tinggi menu calc(100vh - 77px): logo sebenarnya ±94 px
+   dan 100vh di HP termasuk bilah alamat, sehingga menu terbawah (Laporan) tidak bisa di-scroll sampai terlihat. */
+.pc-sidebar .navbar-wrapper { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+.pc-sidebar .navbar-wrapper > .m-header { flex: none; }
 
 /* Brand */
 .pc-sidebar .m-header {
@@ -32,8 +37,10 @@
 .pc-sidebar .m-header .b-brand { display: flex; justify-content: center; width: 100%; }
 .pc-sidebar .m-header .logo-lg { margin-top: 0 !important; height: 42px !important; }
 .pc-sidebar .navbar-content {
-  height: calc(100vh - 77px) !important;
-  padding: 6px 0 18px !important;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto !important;
+  padding: 6px 0 calc(18px + env(safe-area-inset-bottom, 0px)) !important;
   scrollbar-color: #d5dee9 transparent !important;
 }
 .pc-sidebar .navbar-content::-webkit-scrollbar-thumb { background: #d5dee9 !important; }

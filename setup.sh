@@ -554,7 +554,8 @@ fi
 
 # ---------- 17. Health check ----------
 step_begin "Health Check"
-if HP_HEALTH_WAIT=15 bash "$SELF_DIR/scripts/health-check.sh" "$APP_DIR"; then
+# 35 detik: lebih lama dari interval cek memori PM2 (30 dtk), agar restart berulang karena max_memory_restart terdeteksi.
+if HP_HEALTH_WAIT=35 bash "$SELF_DIR/scripts/health-check.sh" "$APP_DIR"; then
   HEALTH_STATUS=LULUS; step_end SUCCESS "semua pemeriksaan wajib lulus"
 else HEALTH_STATUS=GAGAL; step_end FAILED "ada pemeriksaan yang gagal (lihat di atas)"; fi
 PM2_STATUS="$(as_user "$APP_USER" pm2 jlist 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const p=JSON.parse(s.slice(s.indexOf("["))).find(x=>x.name===process.argv[1]);console.log(p?`${p.pm2_env.status} (pid ${p.pid}, restart ${p.pm2_env.restart_time})`:"tidak ada")})' "$HP_PM2_NAME")"

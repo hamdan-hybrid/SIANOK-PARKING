@@ -11,6 +11,12 @@ pm2 save
 pm2 startup
 ```
 
+`ecosystem.config.cjs` sets `max_memory_restart: '500M'` (300M until 2026-11-10: normal busy-hour usage of 150–250 MB came too close). PM2 checks memory every 30 seconds and counts the whole RSS, file-backed pages included. If the app restarts every ~30 seconds, check `~/.pm2/pm2.log` of the app user (`/var/lib/<user>/.pm2/pm2.log` on a `setup.sh` install) for `exceeds --max-memory-restart value`. `pm2 describe sianok-parking` shows the restart count.
+
+- **System fonts.** `@napi-rs/canvas` (ticket and receipt images) loads every system font when it is imported. A server with a full font package such as `fonts-noto` (~1,800 files) adds about 200 MB of RSS. On one client server that alone pushed the app over 300 MB and caused 590 restarts in 5 hours. `start.js` sets `DISABLE_SYSTEM_FONTS_LOAD=1` before loading the server, and tickets use their own fonts in `fonts/` (DejaVu). Setting the variable empty in `.env` loads system fonts again.
+- **Memory log.** While RSS is above 220 MB the app logs `Memori: rss …, heap …, external … (arrayBuffers …)` every 10 minutes (pm2 out log). A growing `heap` points at JavaScript objects; growing `external`/`arrayBuffers` at buffers (photos, video, reports).
+- **Check the real usage.** In `/proc/<pid>/status`, `RssAnon` is the app's own memory. `RssFile` is mapped files (Node binary, native modules, fonts) that the kernel can drop.
+
 ## Zero-downtime reload
 
 After deploying new code:
@@ -136,7 +142,8 @@ That download is not kept on the server. Store each downloaded file away from th
   - The old backups are kept.
   - The failure goes to the PM2 log and to the WhatsApp contacts.
   - Successful backups are only logged (`Backup database otomatis: …`).
-- **Limitation:** the job runs inside the app, so no backup is made on a night when the app is not running at 02:00.
+- **Missed schedule (catch-up, since 2026-11-10):** the job runs inside the app, so it cannot fire while the machine is off at 02:00. One minute after the app starts, if the newest backup is older than the last scheduled time (or there is none), it makes one straight away. That is at most one extra backup per schedule, so repeated restarts cannot push older backups out of the rotation. `BACKUP_DB_WAKTU=off` turns this off too.
+- **Limitation:** the check runs only when the app starts. A machine that sleeps through 02:00 and wakes without restarting the app gets no catch-up.
 - **Offsite copy:** these files sit on the same machine as the database (on the data disk when there is one, see "Storage disk"). Still copy a backup off the machine regularly.
 
 `storage/` must never be committed to a git repository, because the backups contain the full database.
