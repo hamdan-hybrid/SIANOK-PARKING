@@ -76,6 +76,10 @@ One kasir account serves one gate and may be logged in on several devices at onc
 
 Sync state and locks live in process memory (see `instances: 1`), so a restart clears them. Screens reconnect by themselves and keep the ticket on display.
 
+## Role authorization (Users → Otorisasi)
+
+The **Otorisasi** button on the Users page, and the (i) button next to *Hak akses* in the user form, open a read-only overview of what each role (Owner, Admin, Svp, Kasir, Audit) can do: a table of all roles plus one tab per role. The rules themselves are fixed in the server code. The overview is `otorisasiGrup` in `public/spa-router.js`, so update it whenever a role check in `server.js` changes. Rows tied to a menu that this app does not have (CCTV Monitor) are hidden automatically.
+
 ## Monitor Server (Owner only)
 
 Profile menu → **Monitor Server** shows disk, RAM, CPU, and database size, and offers a database backup download plus server restart/shutdown. Only Owner accounts can open it. Every action needs the CSRF token and the Owner's password again (5 wrong passwords lock actions for 5 minutes). Restart/shutdown also need the word `RESTART` / `SHUTDOWN` typed in, and run 5 seconds after confirmation. Each action is written to the server log with user ID and IP.

@@ -183,6 +183,60 @@
 .user-modal .user-cancel { min-height: 44px !important; padding: 0 20px !important; font-size: 14px !important; }
 .user-modal .module-primary { min-height: 44px !important; }
 
+/* Tombol di hero: Otorisasi + Tambah pengguna */
+.up-hero-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px; }
+.up-hero-actions .up-btn { flex: none; min-height: 44px; padding: 0 18px; border-radius: 12px; font-size: 14px; }
+
+/* Modal Otorisasi peran (info) */
+.ot-modal { width: min(940px, calc(100vw - 32px)) !important; }
+.ot-sub { margin: 6px 0 0; color: var(--up-ink-2); font-size: 13px; line-height: 1.5; }
+.ot-label { display: inline-flex; align-items: center; gap: 4px; }
+.ot-info { display: inline-grid; place-items: center; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--up-accent-deep); font-size: 16px; line-height: 1; cursor: pointer; }
+.ot-info:hover { background: var(--up-accent-tint); }
+.ot-info:focus-visible, .ot-tab:focus-visible { outline: 3px solid rgba(11,44,192,.35); outline-offset: 2px; }
+.ot-tabs { display: flex; gap: 6px; margin: 18px 0 14px; padding-bottom: 2px; overflow-x: auto; }
+.ot-tab { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 0 14px; border: 1px solid var(--up-line); border-radius: 10px; background: #fff; color: var(--up-ink-2); font-size: 13px; font-weight: 600; cursor: pointer; }
+.ot-tab:hover { border-color: var(--up-accent); color: var(--up-accent-deep); }
+.ot-tab[aria-selected="true"] { border-color: var(--up-accent); background: var(--up-accent-tint); color: var(--up-accent-deep); }
+.ot-table-wrap { overflow: auto; border: 1px solid var(--up-line); border-radius: 14px; }
+.ot-table { width: 100%; min-width: 640px; border-collapse: collapse; font-size: 13px; }
+.ot-table th, .ot-table td { padding: 10px 12px; border-top: 1px solid var(--up-line); vertical-align: middle; }
+.ot-table thead th { border-top: 0; background: #f5f8fd; color: var(--up-ink-2); font-size: 12px; font-weight: 700; text-align: center; white-space: nowrap; }
+.ot-table thead th:first-child { text-align: left; }
+.ot-table thead th i { margin-right: 4px; color: var(--up-navy-700); }
+.ot-table tbody th { min-width: 240px; color: var(--up-ink); font-weight: 500; text-align: left; }
+.ot-table td { text-align: center; }
+.ot-table .ot-group th { padding-top: 12px; padding-bottom: 6px; background: #fafbfe; color: var(--up-accent-deep); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.ot-cell { display: inline-grid; justify-items: center; gap: 3px; vertical-align: middle; }
+.ot-cell i { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 8px; font-size: 14px; }
+.ot-cell.is-yes i { background: #eaf7f0; color: #1a8a58; }
+.ot-cell.is-no i { background: #f2f4f7; color: #a0a9b8; }
+.ot-cell small { max-width: 130px; color: var(--up-ink-3); font-size: 10.5px; line-height: 1.25; }
+.ot-legend { display: flex; align-items: center; gap: 6px; margin: 10px 2px 0; color: var(--up-ink-3); font-size: 12px; }
+.ot-legend .ot-cell + .ot-cell, .ot-legend .ot-cell:not(:first-child) { margin-left: 10px; }
+.ot-role-head { display: flex; align-items: flex-start; gap: 14px; padding: 16px; border: 1px solid var(--up-line); border-radius: 14px; background: linear-gradient(135deg, #ffffff, #f5f9ff); }
+.ot-role-icon { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 13px; background: var(--up-accent-tint); color: var(--up-accent-deep); font-size: 22px; }
+.ot-role-head h4 { margin: 0 0 4px; color: var(--up-navy-800); font-size: 17px; font-weight: 700; }
+.ot-role-head p { margin: 0 0 8px; color: var(--up-ink-2); font-size: 13.5px; line-height: 1.5; }
+.ot-login { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: #eef3fb; color: var(--up-navy-700); font-size: 12px; font-weight: 600; }
+.ot-lists { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+.ot-list { padding: 14px 16px; border: 1px solid var(--up-line); border-radius: 14px; background: #fff; }
+.ot-list h5 { display: flex; align-items: center; gap: 6px; margin: 0 0 10px; font-size: 13px; font-weight: 700; }
+.ot-list.is-yes h5 { color: #1a8a58; }
+.ot-list.is-no h5 { color: #8a95a8; }
+.ot-list ul { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.ot-list li { position: relative; display: grid; gap: 1px; padding-left: 16px; color: var(--up-ink); font-size: 13px; line-height: 1.4; }
+.ot-list li:before { content: ''; position: absolute; top: 7px; left: 2px; width: 6px; height: 6px; border-radius: 50%; background: #1a8a58; }
+.ot-list.is-no li { color: var(--up-ink-2); }
+.ot-list.is-no li:before { background: #c3cad6; }
+.ot-list li small { color: var(--up-ink-3); font-size: 11.5px; }
+@media (max-width: 767px) {
+  .up-hero-actions { width: 100%; }
+  .up-hero-actions > * { flex: 1 1 auto; }
+  .ot-lists { grid-template-columns: 1fr; }
+  .ot-role-head { padding: 14px; }
+}
+
 @media (max-width: 991px) {
   .up-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
