@@ -1884,7 +1884,19 @@
   "Tutup shift & tutup harian kasir": "Cashier shift close & daily close",
   "Ubah profil & password sendiri": "Edit own profile & password",
   "Supervisor. Melihat dashboard dan laporan, dan menyetujui tutup kasir dengan password.": "Supervisor. Views the dashboard and reports, and approves cashier closing with a password.",
-  "CCTV Monitor": "CCTV Monitor"
+  "CCTV Monitor": "CCTV Monitor",
+  "Belum ada kamera tersambung. Kamera tersambung otomatis saat nopol pertama kali dibaca.": "No camera connected yet. A camera connects automatically the first time a plate is read.",
+  "Hybrid ANPR": "Hybrid ANPR",
+  "Isi Link Hybrid ANPR dulu (http:// atau https://)": "Enter the Hybrid ANPR link first (http:// or https://)",
+  "Layanan pembaca nopol dari kamera gate. Kosongkan link bila tidak dipakai.": "License plate reader service for the gate cameras. Leave the link empty if not used.",
+  "Link Hybrid ANPR": "Hybrid ANPR link",
+  "Link Hybrid ANPR harus diawali http:// atau https://": "Hybrid ANPR link must start with http:// or https://",
+  "Menghubungi Hybrid ANPR...": "Contacting Hybrid ANPR...",
+  "Opsional · isi bila ANPR memakai API key": "Optional · fill in if ANPR uses an API key",
+  "Terhubung ke Hybrid ANPR": "Connected to Hybrid ANPR",
+  "Tes koneksi Hybrid ANPR gagal": "Hybrid ANPR connection test failed",
+  "Test koneksi": "Test connection",
+  "Nopol terakhir dari Hybrid ANPR": "Last plate from Hybrid ANPR"
  },
  "patterns": {
   "· {0} terpotong": "· {0} deducted",
@@ -2190,6 +2202,9 @@
   "{0} tutup kasir · {1} transaksi": "{0} cashier closings · {1} transactions",
   "Lebih Rp {0} · Kurang Rp {1}": "Over Rp {0} · Short Rp {1}",
   "Langganan {0} baru saja diperpanjang (berlaku s/d {1}). Cari ulang bila memang perlu diperpanjang lagi.": "Subscription {0} was just renewed (valid until {1}). Search again if it really needs another renewal.",
-  "Masuk ke: {0}": "Signs in to: {0}"
+  "Masuk ke: {0}": "Signs in to: {0}",
+  "Alamat menjawab HTTP {0}, tetapi bukan layanan Hybrid ANPR (cek port)": "The address answered HTTP {0}, but it is not a Hybrid ANPR service (check the port)",
+  "Daftar kamera Hybrid ANPR gagal dibaca (HTTP {0})": "Could not read the Hybrid ANPR camera list (HTTP {0})",
+  "Tersimpan (••••{0}) · kosongkan bila tidak diubah": "Saved (••••{0}) · leave empty to keep it"
  }
 }

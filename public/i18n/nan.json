@@ -1884,7 +1884,19 @@
   "Tutup shift & tutup harian kasir": "收銀交班佮日結",
   "Ubah profil & password sendiri": "改家己的個人資料佮密碼",
   "Supervisor. Melihat dashboard dan laporan, dan menyetujui tutup kasir dengan password.": "主管。看儀表板佮報表，閣用密碼核准收銀結帳。",
-  "CCTV Monitor": "CCTV 監看"
+  "CCTV Monitor": "CCTV 監看",
+  "Belum ada kamera tersambung. Kamera tersambung otomatis saat nopol pertama kali dibaca.": "猶未有攝影機連線。頭擺讀車牌的時陣，攝影機會自動連線。",
+  "Hybrid ANPR": "Hybrid ANPR",
+  "Isi Link Hybrid ANPR dulu (http:// atau https://)": "先填 Hybrid ANPR 連結（http:// 抑是 https://）",
+  "Layanan pembaca nopol dari kamera gate. Kosongkan link bila tidak dipakai.": "對閘門攝影機讀車牌的服務。若無用，連結留空就好。",
+  "Link Hybrid ANPR": "Hybrid ANPR 連結",
+  "Link Hybrid ANPR harus diawali http:// atau https://": "Hybrid ANPR 連結愛用 http:// 抑是 https:// 開頭",
+  "Menghubungi Hybrid ANPR...": "當咧連 Hybrid ANPR...",
+  "Opsional · isi bila ANPR memakai API key": "無一定愛填 · ANPR 有用 API key 才填",
+  "Terhubung ke Hybrid ANPR": "已經連著 Hybrid ANPR",
+  "Tes koneksi Hybrid ANPR gagal": "Hybrid ANPR 連線測試失敗",
+  "Test koneksi": "測試連線",
+  "Nopol terakhir dari Hybrid ANPR": "Hybrid ANPR 上尾讀著的車牌"
  },
  "patterns": {
   "· {0} terpotong": "· {0} 扣去矣",
@@ -2190,6 +2202,9 @@
   "{0} tutup kasir · {1} transaksi": "{0} 擺結帳 · {1} 筆交易",
   "Lebih Rp {0} · Kurang Rp {1}": "加 Rp {0} · 欠 Rp {1}",
   "Langganan {0} baru saja diperpanjang (berlaku s/d {1}). Cari ulang bila memang perlu diperpanjang lagi.": "會員 {0} 拄才續約（有效到 {1}）。若確實愛閣續約，請重新揣。",
-  "Masuk ke: {0}": "登入：{0}"
+  "Masuk ke: {0}": "登入：{0}",
+  "Alamat menjawab HTTP {0}, tetapi bukan layanan Hybrid ANPR (cek port)": "地址有回應 HTTP {0}，毋過毋是 Hybrid ANPR 服務（檢查 port）",
+  "Daftar kamera Hybrid ANPR gagal dibaca (HTTP {0})": "Hybrid ANPR 攝影機清單讀袂出來（HTTP {0}）",
+  "Tersimpan (••••{0}) · kosongkan bila tidak diubah": "儲存矣（••••{0}）· 無欲改就留空"
  }
 }

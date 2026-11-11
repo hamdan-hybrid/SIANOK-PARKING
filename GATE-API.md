@@ -12,6 +12,7 @@ GET http://SERVER:3003/api/gate/masuk?id_gate=KEY&jenis_kendaraan=motor&rfid_mem
 - `metode_masuk`: `tiket` (default), `member`, `qr`, `anpr`, `manual`. Bila `rfid_member` diisi, otomatis `member`.
 - Member: satu kartu boleh dipakai sebanyak kendaraan terdaftarnya (2 kendaraan = 2 di area bersamaan). No. tiket kendaraan pertama = nomor kartu RFID, berikutnya nomor kartu + `-2`, `-3`, …. Kendaraan dicocokkan lewat `jenis_kendaraan` ke kendaraan terdaftar yang belum di area. Kartu yang terbaca ulang dalam 10 detik ditolak (dianggap kendaraan yang sama).
 - Proses: simpan (no. tiket 10 digit acak; member: lihat di atas) → cetak struk (tiket) + server buka gate (`GET http://<IP Interface>/open-gate/?sn=<serial number>`); foto camera diambil di latar belakang (±2 detik).
+- **Nopol dari Hybrid ANPR**: bila perangkat gate punya nopol hasil `/api/gate/capture` (bukan `ANPR`), tiket mencatatnya di `nopol` **dan** `anpr_masuk`; member (tempel kartu) hanya di `anpr_masuk` (`nopol` tetap kendaraan member). Setelah tercatat di transaksi, nopol perangkat dikosongkan agar tidak terbawa ke kendaraan berikutnya; capture baru juga mengosongkannya saat mulai membaca.
 - Berhasil: `{"status":true,"no_tiket":"6943224415","gate_dibuka":true,...}`
 - Gagal: `{"status":false,"pesan":"..."}`. Member: 409 `NAMA masih tercatat di area` (1 kendaraan) / `NAMA masih tercatat di area (2 dari 2 kendaraan)` / `Kartu NAMA baru saja dipakai masuk` / `NAMA sedang diproses masuk`.
 
@@ -57,8 +58,11 @@ GET http://SERVER:3003/api/gate/capture?id_gate=KEY
 ```
 
 - Dibalas segera `{"status":true}`; foto diambil di latar belakang dari camera pertama yang terhubung ke Interface.
-- Foto disimpan di `storage/GateAnpr/<id perangkat>-<YYYYMMDDHHmmss>.jpg`; path (`GateAnpr/...`) ditulis ke `tbl_pengaturan_perangkat.anpr_foto` dan `nopol` diisi `ANPR`.
-- Gagal (id_gate salah / IP tidak cocok): `{"status":false,"pesan":"..."}`. Gagal ambil foto hanya dicatat di log server.
+- Nopol dibaca dari camera pertama Interface lewat `POST /baca` **Hybrid ANPR** (Link Hybrid ANPR & API key diisi di menu Perusahaan) dan ditulis ke `tbl_pengaturan_perangkat.nopol`, mis. `BK1626WV`. **Foto tidak disimpan** (`anpr_foto` dikosongkan).
+- IP, username, password, dan kanal diambil dari URL RTSP camera (ANPR memakai sambungan ONVIF yang sudah hidup; gagal menyambung → dicoba sekali dengan URL RTSP camera). Belum yakin → dibaca ulang, maks. 3 kali (jeda 0,3 detik).
+- Tidak terbaca / Hybrid ANPR tidak terhubung → `nopol` = `ANPR`. Link Hybrid ANPR kosong → `nopol` tidak diubah. Log server: `[hybrid-anpr] GATE MASUK: BK1626WV (…)`.
+- Nopol terbaca (Hybrid ANPR `status: true`) → langsung diproses seperti `akses_member_anpr?id_gate=<gate ini>&nopol=<nopol>` (lihat di atas): kendaraan member masuk dan gate dibuka; bukan member / langganan tidak aktif / sudah di area → tidak ada yang dicatat. Hasilnya dicatat di log server: `[hybrid-anpr] GATE MASUK: akses member BK1234AB → 200 Selamat datang, NAMA (…)` atau `→ 404 Nopol BK1234AB bukan kendaraan member`.
+- Gagal (id_gate salah / IP tidak cocok): `{"status":false,"pesan":"..."}`. Gagal ambil foto / baca nopol hanya dicatat di log server.
 
 ## Update IP (DHCP)
 

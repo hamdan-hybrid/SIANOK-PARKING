@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS tbl_perusahaan (
   payment_link VARCHAR(500) NULL,
   link_sdk_qris VARCHAR(500) NULL,
   link_sdk_uang_elektronik VARCHAR(500) NULL,
+  link_hybrid_anpr VARCHAR(500) NULL COMMENT 'Alamat layanan Hybrid ANPR (pembaca nopol kamera gate)',
+  anpr_api_key VARCHAR(255) NULL COMMENT 'X-API-Key Hybrid ANPR (opsional, bila ANPR_API_KEY diisi di server ANPR)',
   wa_notif JSON NULL COMMENT 'Format: [{"nama":"Nama","nomor":"0822..."}]',
   wa_api_key VARCHAR(255) NULL COMMENT 'API key gateway WhatsApp (notifikasi login & tutup kasir)',
   thermal_footer VARCHAR(500) NULL,
