@@ -370,6 +370,15 @@ CREATE TABLE IF NOT EXISTS tbl_pendapatan_harian (
   PRIMARY KEY (tanggal_buku, jenis_pendapatan, id_metode)
 ) ENGINE=InnoDB COMMENT='Rekap harian tbl_transaksi_pendapatan, diperbarui oleh trigger';
 
+-- Database lama (setup.sh mengimpor ulang file ini; CREATE TABLE IF NOT EXISTS di atas dilewati): kolom transaksi unik
+-- ditambahkan dulu, dan trigger rekap versi lama dihapus, sebelum trigger baru dibuat (trigger baru memakai NEW.kepala;
+-- dua versi trigger bersamaan = rekap ganda). Isi kolom (kepala, transaksi) disamakan dengan data saat aplikasi start.
+ALTER TABLE tbl_transaksi_pendapatan ADD COLUMN IF NOT EXISTS kepala TINYINT(1) NOT NULL DEFAULT 1 COMMENT 'Baris pertama transaksi (transaksi unik), diisi trigger' AFTER total_bayar;
+ALTER TABLE tbl_pendapatan_harian ADD COLUMN IF NOT EXISTS transaksi INT NOT NULL DEFAULT 0 COMMENT 'Transaksi unik: baris pertama tiap transaksi parkir, pendapatan lain per baris' AFTER total;
+DROP TRIGGER IF EXISTS trg_pendapatan_harian_ins;
+DROP TRIGGER IF EXISTS trg_pendapatan_harian_del;
+DROP TRIGGER IF EXISTS trg_pendapatan_harian_upd;
+
 DELIMITER $$
 -- transaksi = transaksi unik: SUM(kepala); kepala = 1 untuk baris pertama tiap transaksi (lihat server.js, sama persis).
 CREATE TRIGGER IF NOT EXISTS trg_pendapatan_kepala BEFORE INSERT ON tbl_transaksi_pendapatan FOR EACH ROW SET NEW.kepala = (NEW.id_transaksi_parkir IS NULL OR NOT EXISTS (SELECT 1 FROM tbl_transaksi_pendapatan x WHERE x.id_transaksi_parkir = NEW.id_transaksi_parkir))$$
