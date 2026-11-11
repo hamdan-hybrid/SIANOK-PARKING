@@ -314,6 +314,7 @@ CREATE TABLE IF NOT EXISTS tbl_transaksi_pendapatan (
   jenis_kendaraan VARCHAR(120) NULL COMMENT 'Parkir: satu jenis; Langganan: dipisah koma jika lebih dari satu',
   nopol VARCHAR(255) NULL COMMENT 'Parkir: satu nopol; Langganan: dipisah koma jika lebih dari satu',
   total_bayar DECIMAL(15,2) NOT NULL,
+  kepala TINYINT(1) NOT NULL DEFAULT 1 COMMENT 'Baris pertama transaksi (transaksi unik), diisi trigger',
   id_metode BIGINT UNSIGNED NULL COMMENT 'Metode bayar (tbl_metode_bayar)',
   metode VARCHAR(40) NULL COMMENT 'tbl_metode_bayar.metode_code saat transaksi',
   no_referensi VARCHAR(64) NULL,
@@ -328,10 +329,10 @@ CREATE TABLE IF NOT EXISTS tbl_transaksi_pendapatan (
   KEY idx_pendapatan_kasir (id_kasir),
   KEY idx_pendapatan_metode (id_metode),
   KEY idx_pendapatan_kode_metode (metode, tanggal_buku),
-  KEY idx_pendapatan_kendaraan (jenis_kendaraan, tanggal_buku),
+  KEY idx_pendapatan_kendaraan (jenis_kendaraan, tanggal_buku, kepala),
   KEY idx_pendapatan_nopol (nopol),
   KEY idx_pendapatan_referensi (no_referensi),
-  KEY idx_pendapatan_parkir (id_transaksi_parkir),
+  KEY idx_pendapatan_parkir (id_transaksi_parkir, kepala),
   CONSTRAINT fk_pendapatan_kasir FOREIGN KEY (id_kasir) REFERENCES tbl_pengguna (id_user) ON DELETE SET NULL,
   CONSTRAINT fk_pendapatan_member FOREIGN KEY (id_member) REFERENCES tbl_member (id_member) ON DELETE SET NULL,
   CONSTRAINT fk_pendapatan_metode FOREIGN KEY (id_metode) REFERENCES tbl_metode_bayar (id_metode) ON DELETE SET NULL
@@ -365,22 +366,25 @@ CREATE TABLE IF NOT EXISTS tbl_pendapatan_harian (
   id_metode BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0 = tanpa metode',
   jumlah INT NOT NULL DEFAULT 0,
   total DECIMAL(18,2) NOT NULL DEFAULT 0,
+  transaksi INT NOT NULL DEFAULT 0 COMMENT 'Transaksi unik: baris pertama tiap transaksi parkir, pendapatan lain per baris',
   PRIMARY KEY (tanggal_buku, jenis_pendapatan, id_metode)
 ) ENGINE=InnoDB COMMENT='Rekap harian tbl_transaksi_pendapatan, diperbarui oleh trigger';
 
 DELIMITER $$
-CREATE TRIGGER IF NOT EXISTS trg_pendapatan_harian_ins AFTER INSERT ON tbl_transaksi_pendapatan FOR EACH ROW INSERT INTO tbl_pendapatan_harian (tanggal_buku, jenis_pendapatan, id_metode, jumlah, total)
-    VALUES (NEW.tanggal_buku, NEW.jenis_pendapatan, COALESCE(NEW.id_metode, 0), 1, NEW.total_bayar)
-    ON DUPLICATE KEY UPDATE jumlah = jumlah + 1, total = total + NEW.total_bayar;$$
-CREATE TRIGGER IF NOT EXISTS trg_pendapatan_harian_del AFTER DELETE ON tbl_transaksi_pendapatan FOR EACH ROW UPDATE tbl_pendapatan_harian SET jumlah = jumlah - 1, total = total - OLD.total_bayar
-    WHERE tanggal_buku = OLD.tanggal_buku AND jenis_pendapatan = OLD.jenis_pendapatan AND id_metode = COALESCE(OLD.id_metode, 0);$$
-CREATE TRIGGER IF NOT EXISTS trg_pendapatan_harian_upd AFTER UPDATE ON tbl_transaksi_pendapatan FOR EACH ROW BEGIN
-    IF NOT (OLD.tanggal_buku <=> NEW.tanggal_buku AND OLD.jenis_pendapatan <=> NEW.jenis_pendapatan AND OLD.id_metode <=> NEW.id_metode AND OLD.total_bayar <=> NEW.total_bayar) THEN
-      UPDATE tbl_pendapatan_harian SET jumlah = jumlah - 1, total = total - OLD.total_bayar
+-- transaksi = transaksi unik: SUM(kepala); kepala = 1 untuk baris pertama tiap transaksi (lihat server.js, sama persis).
+CREATE TRIGGER IF NOT EXISTS trg_pendapatan_kepala BEFORE INSERT ON tbl_transaksi_pendapatan FOR EACH ROW SET NEW.kepala = (NEW.id_transaksi_parkir IS NULL OR NOT EXISTS (SELECT 1 FROM tbl_transaksi_pendapatan x WHERE x.id_transaksi_parkir = NEW.id_transaksi_parkir))$$
+CREATE TRIGGER IF NOT EXISTS trg_pendapatan_rekap_ins AFTER INSERT ON tbl_transaksi_pendapatan FOR EACH ROW INSERT INTO tbl_pendapatan_harian (tanggal_buku, jenis_pendapatan, id_metode, jumlah, total, transaksi)
+    VALUES (NEW.tanggal_buku, NEW.jenis_pendapatan, COALESCE(NEW.id_metode, 0), 1, NEW.total_bayar, NEW.kepala)
+    ON DUPLICATE KEY UPDATE jumlah = jumlah + 1, total = total + NEW.total_bayar, transaksi = transaksi + NEW.kepala$$
+CREATE TRIGGER IF NOT EXISTS trg_pendapatan_rekap_del AFTER DELETE ON tbl_transaksi_pendapatan FOR EACH ROW UPDATE tbl_pendapatan_harian SET jumlah = jumlah - 1, total = total - OLD.total_bayar, transaksi = transaksi - OLD.kepala
+    WHERE tanggal_buku = OLD.tanggal_buku AND jenis_pendapatan = OLD.jenis_pendapatan AND id_metode = COALESCE(OLD.id_metode, 0)$$
+CREATE TRIGGER IF NOT EXISTS trg_pendapatan_rekap_upd AFTER UPDATE ON tbl_transaksi_pendapatan FOR EACH ROW BEGIN
+    IF NOT (OLD.tanggal_buku <=> NEW.tanggal_buku AND OLD.jenis_pendapatan <=> NEW.jenis_pendapatan AND OLD.id_metode <=> NEW.id_metode AND OLD.total_bayar <=> NEW.total_bayar AND OLD.kepala <=> NEW.kepala) THEN
+      UPDATE tbl_pendapatan_harian SET jumlah = jumlah - 1, total = total - OLD.total_bayar, transaksi = transaksi - OLD.kepala
         WHERE tanggal_buku = OLD.tanggal_buku AND jenis_pendapatan = OLD.jenis_pendapatan AND id_metode = COALESCE(OLD.id_metode, 0);
-      INSERT INTO tbl_pendapatan_harian (tanggal_buku, jenis_pendapatan, id_metode, jumlah, total)
-        VALUES (NEW.tanggal_buku, NEW.jenis_pendapatan, COALESCE(NEW.id_metode, 0), 1, NEW.total_bayar)
-        ON DUPLICATE KEY UPDATE jumlah = jumlah + 1, total = total + NEW.total_bayar;
+      INSERT INTO tbl_pendapatan_harian (tanggal_buku, jenis_pendapatan, id_metode, jumlah, total, transaksi)
+        VALUES (NEW.tanggal_buku, NEW.jenis_pendapatan, COALESCE(NEW.id_metode, 0), 1, NEW.total_bayar, NEW.kepala)
+        ON DUPLICATE KEY UPDATE jumlah = jumlah + 1, total = total + NEW.total_bayar, transaksi = transaksi + NEW.kepala;
     END IF;
   END$$
 DELIMITER ;

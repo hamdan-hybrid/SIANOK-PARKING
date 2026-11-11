@@ -1896,7 +1896,11 @@
   "Terhubung ke Hybrid ANPR": "Connected to Hybrid ANPR",
   "Tes koneksi Hybrid ANPR gagal": "Hybrid ANPR connection test failed",
   "Test koneksi": "Test connection",
-  "Nopol terakhir dari Hybrid ANPR": "Last plate from Hybrid ANPR"
+  "Nopol terakhir dari Hybrid ANPR": "Last plate from Hybrid ANPR",
+  "Jumlah transaksi = transaksi unik (sama dengan Tutup Kasir). Tiket hilang/manual berdenda dihitung satu transaksi, walau tercatat di jenisnya dan di Denda.": "Transactions = unique transactions (same as Cashier Closing). A lost/manual ticket with a fine counts as one transaction, even though it is recorded under its type and under Fine.",
+  "Masuk/Keluar = jumlah kendaraan masuk dan keluar gate (tanggal kalender). Pendapatan & pengeluaran menurut tanggal buku. Bulan pertama dan terakhir hanya dihitung di dalam periode yang dipilih.": "In/Out = vehicles entering and leaving the gates (calendar date). Revenue & expenses by book date. The first and last months only count days inside the selected period.",
+  "Keluar metode kredit": "Exit via credit method",
+  "Tanpa kendaraan": "No vehicle"
  },
  "patterns": {
   "· {0} terpotong": "· {0} deducted",
@@ -2205,6 +2209,11 @@
   "Masuk ke: {0}": "Signs in to: {0}",
   "Alamat menjawab HTTP {0}, tetapi bukan layanan Hybrid ANPR (cek port)": "The address answered HTTP {0}, but it is not a Hybrid ANPR service (check the port)",
   "Daftar kamera Hybrid ANPR gagal dibaca (HTTP {0})": "Could not read the Hybrid ANPR camera list (HTTP {0})",
-  "Tersimpan (••••{0}) · kosongkan bila tidak diubah": "Saved (••••{0}) · leave empty to keep it"
+  "Tersimpan (••••{0}) · kosongkan bila tidak diubah": "Saved (••••{0}) · leave empty to keep it",
+  "{0} baris pendapatan": "{0} revenue rows",
+  "Keluar Rp 0 (non-member): {0} · metode kredit: {1}": "Exit Rp 0 (non-member): {0} · credit method: {1}",
+  "Rincian per hari tersedia di laporan Rincian Setoran Kasir. {0}": "Daily breakdown is available in the Cashier Deposit Details report. {0}",
+  "Masuk/Keluar = jumlah kendaraan masuk dan keluar gate (tanggal kalender). Pendapatan & pengeluaran menurut tanggal buku. Bulan pertama dan terakhir hanya dihitung di dalam periode yang dipilih. {0}": "In/Out = vehicles entering and leaving the gates (calendar date). Revenue & expenses by book date. The first and last months only count days inside the selected period. {0}",
+  "\"Tanpa kendaraan\" = pendapatan yang diinput manual tanpa jenis kendaraan (penggantian kartu, lainnya). {0}": "\"No vehicle\" = revenue entered manually without a vehicle type (card replacement, others). {0}"
  }
 }

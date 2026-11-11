@@ -1896,7 +1896,11 @@
   "Terhubung ke Hybrid ANPR": "已經連著 Hybrid ANPR",
   "Tes koneksi Hybrid ANPR gagal": "Hybrid ANPR 連線測試失敗",
   "Test koneksi": "測試連線",
-  "Nopol terakhir dari Hybrid ANPR": "Hybrid ANPR 上尾讀著的車牌"
+  "Nopol terakhir dari Hybrid ANPR": "Hybrid ANPR 上尾讀著的車牌",
+  "Jumlah transaksi = transaksi unik (sama dengan Tutup Kasir). Tiket hilang/manual berdenda dihitung satu transaksi, walau tercatat di jenisnya dan di Denda.": "交易數 = 無重複的交易（佮收銀結帳仝款）。拍無去票／手寫票有罰款算一筆交易，雖然佇伊的類別佮罰款攏有記錄。",
+  "Masuk/Keluar = jumlah kendaraan masuk dan keluar gate (tanggal kalender). Pendapatan & pengeluaran menurut tanggal buku. Bulan pertama dan terakhir hanya dihitung di dalam periode yang dipilih.": "入／出 = 車入閘佮出閘的數量（日曆日期）。收入佮開銷照帳簿日期。頭一個月佮尾一個月干焦算所揀期間內底的日子。",
+  "Keluar metode kredit": "賒數方式出場",
+  "Tanpa kendaraan": "無車"
  },
  "patterns": {
   "· {0} terpotong": "· {0} 扣去矣",
@@ -2205,6 +2209,11 @@
   "Masuk ke: {0}": "登入：{0}",
   "Alamat menjawab HTTP {0}, tetapi bukan layanan Hybrid ANPR (cek port)": "地址有回應 HTTP {0}，毋過毋是 Hybrid ANPR 服務（檢查 port）",
   "Daftar kamera Hybrid ANPR gagal dibaca (HTTP {0})": "Hybrid ANPR 攝影機清單讀袂出來（HTTP {0}）",
-  "Tersimpan (••••{0}) · kosongkan bila tidak diubah": "儲存矣（••••{0}）· 無欲改就留空"
+  "Tersimpan (••••{0}) · kosongkan bila tidak diubah": "儲存矣（••••{0}）· 無欲改就留空",
+  "{0} baris pendapatan": "{0} 逝收入",
+  "Keluar Rp 0 (non-member): {0} · metode kredit: {1}": "Rp 0 出場（非會員）：{0} · 賒數方式：{1}",
+  "Rincian per hari tersedia di laporan Rincian Setoran Kasir. {0}": "逐工明細佇收銀繳款明細報表。{0}",
+  "Masuk/Keluar = jumlah kendaraan masuk dan keluar gate (tanggal kalender). Pendapatan & pengeluaran menurut tanggal buku. Bulan pertama dan terakhir hanya dihitung di dalam periode yang dipilih. {0}": "入／出 = 車入閘佮出閘的數量（日曆日期）。收入佮開銷照帳簿日期。頭一個月佮尾一個月干焦算所揀期間內底的日子。{0}",
+  "\"Tanpa kendaraan\" = pendapatan yang diinput manual tanpa jenis kendaraan (penggantian kartu, lainnya). {0}": "「無車」= 手動輸入、無車種的收入（換卡、其他）。{0}"
  }
 }
