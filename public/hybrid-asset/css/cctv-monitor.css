@@ -1,0 +1,106 @@
+/* CCTV Monitor (menu profil Owner, di bawah Monitor Server). Hero mengikuti pola Monitor Server/Perangkat (up-hero),
+   lalu grid camera 16:9. Layar video (.cctv-screen dan isinya) tetap gelap di kedua tema: selector itu dilewati
+   build-dark-theme.mjs. */
+.cctv-hero .up-hero-copy p { max-width: 560px; }
+/* Kolom minmax(0, ...): isi panjang (mis. fakta "Berhenti otomatis ...") tidak melebarkan hero melewati layar HP. */
+.up-hero.cctv-hero { grid-template-columns: minmax(0, 1fr) auto; }
+.cctv-hero > * { min-width: 0; }
+.cctv-facts li > span { white-space: normal; }
+.cctv-hero-side { display: grid; justify-items: end; align-content: start; gap: 10px; }
+.cctv-mode { display: inline-flex; gap: 2px; padding: 3px; border-radius: 12px; background: rgba(255,255,255,.85); border: 1px solid var(--up-cream-line); }
+.cctv-mode button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px; padding: 0 12px; border: 0; border-radius: 9px; background: transparent; color: var(--up-ink-2); font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: background .15s, color .15s; }
+.cctv-mode button:hover { color: var(--up-navy-700); }
+.cctv-mode button[aria-pressed="true"] { background: var(--up-navy-700); color: #fff; }
+.cctv-mode button i { font-size: 16px; }
+.cctv-mode button:focus-visible, .cctv-chip:focus-visible, .cctv-icon-btn:focus-visible { outline: 2px solid var(--up-accent); outline-offset: 2px; }
+
+.cctv-note { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 0; padding: 10px 14px; border-radius: 12px; background: #fff7e8; border: 1px solid #f1ddb2; color: #7a4d00; font-size: 13px; line-height: 1.5; }
+.cctv-note i { flex: none; font-size: 17px; }
+.cctv-note span { flex: 1 1 260px; min-width: 0; }
+.cctv-note a { color: var(--up-navy-700); font-weight: 600; white-space: nowrap; }
+
+/* Mode "Satu camera": pilihan camera */
+.cctv-chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 4px; scrollbar-width: thin; }
+.cctv-chips[hidden] { display: none; }
+.cctv-chip { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; max-width: 240px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--up-line); background: #fff; color: var(--up-ink-2); font-size: 13px; font-weight: 600; cursor: pointer; }
+.cctv-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cctv-chip:hover { border-color: var(--up-navy-700); color: var(--up-navy-700); }
+.cctv-chip[aria-pressed="true"] { background: var(--up-accent-tint); border-color: var(--up-navy-700); color: var(--up-navy-700); }
+
+/* Grid camera: kolom menyesuaikan jumlah camera yang tampil */
+.cctv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; transition: opacity .2s; }
+.cctv-grid[data-count="1"] { grid-template-columns: minmax(0, 1100px); justify-content: center; }
+.cctv-grid[data-count="5"], .cctv-grid[data-count="6"], .cctv-grid[data-count="7"], .cctv-grid[data-count="8"], .cctv-grid[data-count="9"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cctv-grid[data-count="10"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.cctv-grid.is-paused { opacity: .5; }
+
+.cctv-tile { display: grid; grid-template-rows: auto auto; min-width: 0; border-radius: 16px; overflow: hidden; background: #fff; border: 1px solid var(--up-line); box-shadow: 0 1px 2px rgba(20,33,61,.04); }
+.cctv-tile[hidden] { display: none; }
+.cctv-screen { position: relative; aspect-ratio: 16 / 9; background: #0b1220; }
+.cctv-screen video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #0b1220; }
+.cctv-overlay { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 6px; padding: 16px; text-align: center; background: rgba(11,18,32,.78); color: #d5deee; }
+.cctv-overlay > i { font-size: 28px; color: #9fb4d8; }
+.cctv-overlay p { max-width: 440px; margin: 0; color: #eef3fb; font-size: 13.5px; font-weight: 600; line-height: 1.45; }
+.cctv-overlay small { color: #a3b3cf; font-size: 12px; }
+.cctv-overlay p:empty, .cctv-overlay small:empty { display: none; }
+.cctv-retry { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; margin-top: 6px; padding: 0 14px; border: 1px solid rgba(255,255,255,.28); border-radius: 9px; background: rgba(255,255,255,.08); color: #ffffff; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.cctv-retry:hover { background: rgba(255,255,255,.16); }
+.cctv-retry:focus-visible { outline: 2px solid #7fb2ff; outline-offset: 2px; }
+.cctv-retry[hidden] { display: none; }
+.cctv-tile[data-state="live"] .cctv-overlay { display: none; }
+.cctv-tile[data-state="menyambung"] .cctv-overlay > i { animation: cctv-putar 1s linear infinite; }
+.cctv-tile[data-state="galat"] .cctv-overlay > i { color: #ff9f9f; }
+.cctv-live { position: absolute; top: 10px; left: 10px; display: none; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; background: rgba(11,18,32,.66); color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: .8px; pointer-events: none; }
+.cctv-live i { width: 7px; height: 7px; border-radius: 50%; background: #ff4d4f; animation: cctv-kedip 1.6s ease-in-out infinite; }
+.cctv-tile[data-state="live"] .cctv-live { display: inline-flex; }
+
+.cctv-bar { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 9px 10px 9px 14px; }
+.cctv-name { flex: 1; display: inline-flex; align-items: center; gap: 8px; min-width: 0; color: var(--up-ink); font-size: 14px; font-weight: 600; }
+.cctv-name > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cctv-name i { flex: none; color: var(--up-navy-700); font-size: 17px; }
+.cctv-tag { flex: none; padding: 3px 9px; border-radius: 999px; background: #fff4e0; color: #9a5b00; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.cctv-icon-btn { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--up-line); border-radius: 10px; background: #fff; color: var(--up-ink-2); font-size: 17px; cursor: pointer; transition: color .15s, border-color .15s; }
+.cctv-icon-btn:hover { border-color: var(--up-navy-700); color: var(--up-navy-700); }
+
+/* Layar penuh: video memenuhi layar, nama camera di bawah */
+.cctv-tile:fullscreen { display: flex; flex-direction: column; border: 0; border-radius: 0; background: #000000; }
+.cctv-tile:fullscreen .cctv-screen { flex: 1; aspect-ratio: auto; background: #000000; }
+.cctv-tile:fullscreen .cctv-screen video { background: #000000; }
+.cctv-tile:fullscreen .cctv-bar { background: #0b1220; }
+.cctv-tile:fullscreen .cctv-name { color: #ffffff; }
+.cctv-tile:fullscreen .cctv-icon-btn { border-color: rgba(255,255,255,.25); background: transparent; color: #ffffff; }
+.cctv-tile:fullscreen .cctv-icon-btn i:before { content: "\eaf1"; } /* ti-minimize */
+
+/* Panel video dijeda (10 menit tanpa aktivitas) & belum ada camera */
+.cctv-paused { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; padding: 18px 20px; border-radius: 18px; background: #fff; border: 1px solid var(--up-line); box-shadow: 0 1px 2px rgba(20,33,61,.04); }
+.cctv-paused[hidden] { display: none; }
+.cctv-paused > div { flex: 1 1 260px; min-width: 0; }
+.cctv-paused h3 { margin: 0; color: var(--up-ink); font-size: 15.5px; font-weight: 700; }
+.cctv-paused p { margin: 2px 0 0; color: var(--up-ink-3); font-size: 13px; }
+.cctv-paused-icon { display: grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 12px; background: #eef3fb; color: var(--up-navy-700); font-size: 21px; }
+
+@keyframes cctv-putar { to { transform: rotate(360deg); } }
+@keyframes cctv-kedip { 50% { opacity: .35; } }
+
+@media (max-width: 1199px) {
+  .cctv-grid[data-count="10"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 991px) {
+  .cctv-grid[data-count] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cctv-grid[data-count="1"] { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 767px) {
+  .up-hero.cctv-hero { grid-template-columns: minmax(0, 1fr); }
+  .cctv-facts li { border-radius: 14px; }
+  .cctv-hero-side { justify-items: stretch; }
+  .cctv-mode { display: flex; }
+  .cctv-mode button { flex: 1; }
+}
+@media (max-width: 575px) {
+  .cctv-grid, .cctv-grid[data-count] { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .cctv-tile { border-radius: 14px; }
+  .cctv-paused { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cctv-tile[data-state="menyambung"] .cctv-overlay > i, .cctv-live i { animation: none; }
+}

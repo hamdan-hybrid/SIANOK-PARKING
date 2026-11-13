@@ -87,7 +87,7 @@ Sync state and locks live in process memory (see `instances: 1`), so a restart c
 
 ## Role authorization (Users → Otorisasi)
 
-The **Otorisasi** button on the Users page, and the (i) button next to *Hak akses* in the user form, open a read-only overview of what each role (Owner, Admin, Svp, Kasir, Audit) can do: a table of all roles plus one tab per role. The rules themselves are fixed in the server code. The overview is `otorisasiGrup` in `public/spa-router.js`, so update it whenever a role check in `server.js` changes. Rows tied to a menu that this app does not have (CCTV Monitor) are hidden automatically.
+The **Otorisasi** button on the Users page, and the (i) button next to *Hak akses* in the user form, open a read-only overview of what each role (Owner, Admin, Svp, Kasir, Audit) can do: a table of all roles plus one tab per role. The rules themselves are fixed in the server code. The overview is `otorisasiGrup` in `public/spa-router.js`, so update it whenever a role check in `server.js` changes. Rows tied to a menu that this app does not have are hidden automatically.
 
 ## Monitor Server (Owner only)
 
@@ -114,6 +114,19 @@ The **Perbarui sistem** card installs the latest release from GitHub (`package.j
 - WhatsApp is sent when an update starts and when it finishes or fails (`storage/perbarui-sistem-wa.json` prevents duplicates).
 - `SERVER_UPDATE=local` limits the button to the local network through the server IP, `SERVER_UPDATE=off` disables it.
 - Installs from before this feature need one manual `sudo bash scripts/update.sh <package.tar.gz>`; afterwards the button works.
+
+## CCTV Monitor (Owner, Admin, Svp)
+
+Profile menu → **CCTV Monitor** (below Monitor Server) shows the cameras from the Devices menu as live video. Owner, Admin and Svp accounts can open it (`CCTV_PERAN` in `cctv.js`, checked on `/api/cctv` and again on the video WebSocket). It works through the domain / Cloudflare Tunnel too, so they can watch from anywhere. Camera and RTSP ports are never exposed to the internet.
+
+- **go2rtc, not the app, carries the video.** `setup.sh` installs [go2rtc](https://github.com/AlexxIT/go2rtc) (one MIT binary, version and SHA-256 pinned in `setup.sh`) at `/usr/local/bin/go2rtc`. "Perbarui sistem" installs it too, because the updater runs `setup.sh`. `cctv.js` starts go2rtc when CCTV Monitor opens and stops it 10 minutes after the last viewer leaves. go2rtc keeps one RTSP connection per camera for every viewer, with no re-encoding, and sends fragmented MP4 over a WebSocket. The browser plays it with Media Source Extensions (ManagedMediaSource on iPhone, iOS 17.1+).
+- **Why a separate process.** In 1.1.3–1.1.4 the video went through the app's own memory. PM2 then restarted the whole app every ~30 seconds while CCTV was open (`max_memory_restart: '300M'`, checked every 30 s), and the cashier and gates went down with it. Now the app only checks login, the Owner role and the viewer limit, then pipes the WebSocket to go2rtc without reading the video.
+- **Closed to the outside.** go2rtc's API is reachable only through a unix socket in `storage/go2rtc/` (folder 0700). When `storage/` sits on a filesystem without Unix permissions (NTFS or exFAT through `fuseblk`, where every file shows as root 777), the app deletes `storage/go2rtc/` and uses `/tmp/hp-go2rtc-<uid>/` instead, so the camera passwords stay private. No TCP port is opened, and go2rtc's built-in RTSP, WebRTC and HomeKit servers are off. The generated config `storage/go2rtc/go2rtc.yaml` (mode 0600, rewritten on every start) holds the camera URLs. A camera URL changed in the Devices menu reaches go2rtc on the next view, without a restart. `GO2RTC_BIN` in `.env` overrides the binary path.
+- **Sub-stream.** Devices → Camera → *URL sub-stream (opsional)* (column `rtsp_live`) is used for live view when filled. Gate photos keep using the main *URL RTSP*. Set the sub-stream on the camera to H.264, about 640×360, 10–15 fps, 384–512 kbps. Browsers cannot reliably play H.265, and a camera without a sub-stream is shown as **Stream utama**, which uses more of the site's upload. A sub-stream at 3–4 Mbps is a main-stream setting and costs the same upload.
+- **Upload limit.** Each viewer from the internet pulls video through the site's upload, which QRIS payments also use. Open CCTV Monitor tabs from the internet are limited to `CCTV_MAKS_PENONTON` in `.env` (default `3`, `0` = no limit). A tab counts once, whatever the number of cameras. Dashboards opened through the server IP on the local network are not counted.
+- **Auto stop.** Video stops when the Owner leaves the page, hides the tab, or is inactive for 10 minutes. The "Satu camera" mode streams only the selected camera. A dropped camera or connection reconnects on its own after 2, 4, 8, then every 15 seconds.
+- **Log.** Each viewer is written to the server log once per camera with user ID and IP (`CCTV Monitor: user #… menonton "…"`). go2rtc warnings and errors, for example a camera closing RTSP, appear as `CCTV Monitor (go2rtc): …`, at most 10 lines a minute, with RTSP user and password masked. `CCTV Monitor: go2rtc berhenti (…)` means go2rtc exited on its own.
+- **Check.** `/usr/local/bin/go2rtc -version` shows the installed version. A tile showing `dial tcp <ip>:554: i/o timeout` means the server cannot reach the camera. Test from the server with `timeout 4 bash -c '</dev/tcp/<ip>/554'`. `ip neigh` showing `FAILED` or `INCOMPLETE` for the camera IP means the camera is off or unplugged. A tile showing *go2rtc belum terpasang di server* means the binary is missing: run "Perbarui sistem" or `sudo bash setup.sh --yes`.
 
 ## Storage disk (photos on the largest disk)
 

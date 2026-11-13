@@ -1,8 +1,8 @@
 # Sianok Parking
 
-Sistem parkir: gate masuk & keluar, kasir, member, dan laporan.
+Sistem parkir: gate masuk & keluar, kasir, member, laporan, dan CCTV Monitor.
 
-Instalasi cukup dengan **satu perintah: `sudo bash setup.sh`**. Node.js, MariaDB, PM2, dan FFmpeg dipasang otomatis. Anda **tidak perlu** memasang nvm atau Node.js sendiri, dan tidak perlu menjalankan `npm start`.
+Instalasi cukup dengan **satu perintah: `sudo bash setup.sh`**. Node.js, MariaDB, PM2, FFmpeg, dan go2rtc dipasang otomatis. Anda **tidak perlu** memasang nvm atau Node.js sendiri, dan tidak perlu menjalankan `npm start`.
 
 ## Kebutuhan server
 
@@ -45,7 +45,7 @@ Setup aman dijalankan ulang kapan saja. Langkah yang sudah benar dilewati, dan d
 ## Yang dikerjakan setup.sh
 
 1. Memeriksa server: versi Ubuntu, RAM, disk, internet, dan port.
-2. Memasang Node.js 26, PM2, MariaDB, dan FFmpeg. Yang sudah terpasang dilewati.
+2. Memasang Node.js 26, PM2, MariaDB, FFmpeg, dan go2rtc (CCTV Monitor). Yang sudah terpasang dilewati.
 3. Membuat database dan user database dengan password acak, lalu menulis `.env`.
 4. Menaruh folder foto dan backup (`storage/`) di hardisk terbesar (lihat bagian berikut).
 5. Menjalankan aplikasi dengan PM2, dan menyalakannya lagi otomatis setiap server restart.
@@ -95,5 +95,5 @@ sudo bash scripts/backup-database.sh          # backup database sekarang
 ## Dokumentasi
 
 - [INSTALL.md](INSTALL.md): rincian setiap langkah instalasi, pemulihan database, dan rollback.
-- [OPERATIONS.md](OPERATIONS.md): operasional harian (PM2, backup, tutup harian).
+- [OPERATIONS.md](OPERATIONS.md): operasional harian (PM2, backup, tutup harian, CCTV Monitor).
 - [GATE-API.md](GATE-API.md): API untuk perangkat gate.

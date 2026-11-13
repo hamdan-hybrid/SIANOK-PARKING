@@ -455,6 +455,41 @@ else
 fi
 rm -rf "$TMPF"
 
+# ---------- 12b. go2rtc (CCTV Monitor) ----------
+# Server streaming kecil (satu file, MIT) yang meneruskan video camera ke browser tanpa encode ulang. Dijalankan aplikasi
+# hanya saat CCTV Monitor dibuka, API lewat unix socket privat (tidak membuka port). Versi & SHA-256 dipatok di sini;
+# dipasang / diganti bila belum ada atau versinya beda (juga saat "Perbarui sistem", karena updater menjalankan setup.sh).
+# Gagal unduh tidak menggagalkan instalasi: parkir tetap jalan, hanya CCTV Monitor yang belum aktif.
+step_begin "go2rtc (CCTV Monitor)"
+GO2RTC_VERSION=1.9.15
+GO2RTC_BIN=/usr/local/bin/go2rtc
+case "$ARCH" in
+  x86_64)  G2_ASSET=go2rtc_linux_amd64; G2_SHA=20b46c6910734cb05ecefb234066f36868ff19b42ba1418a7a32e13a3e035712 ;;
+  aarch64) G2_ASSET=go2rtc_linux_arm64; G2_SHA=af416f22b21a24ab83b8d78642190b4932ae695b4e386853f11d1b0319781763 ;;
+  *)       G2_ASSET= ;;
+esac
+g2_versi() { as_user "$APP_USER" "$GO2RTC_BIN" -version 2>/dev/null | awk '{print $3}'; }
+G2_NOW="$( [ -x "$GO2RTC_BIN" ] && g2_versi )"
+if [ "$G2_NOW" = "$GO2RTC_VERSION" ]; then
+  step_end SKIPPED "go2rtc $G2_NOW sudah terpasang ($GO2RTC_BIN)"
+elif [ -z "$G2_ASSET" ]; then
+  step_end "NEEDS ATTENTION" "arsitektur $ARCH tidak didukung; CCTV Monitor tidak aktif"
+else
+  info "Mengunduh go2rtc v$GO2RTC_VERSION dari GitHub dan memverifikasi SHA-256..."
+  TMPG="$(mktemp -d)"
+  if run_logged curl -fsSL --retry 3 -o "$TMPG/go2rtc" "https://github.com/AlexxIT/go2rtc/releases/download/v$GO2RTC_VERSION/$G2_ASSET" \
+     && (cd "$TMPG" && echo "$G2_SHA  go2rtc" | sha256sum -c - >>"$HP_LOG_FILE" 2>&1) \
+     && run_logged install -m 755 -o root -g root "$TMPG/go2rtc" "$GO2RTC_BIN" \
+     && [ "$(g2_versi)" = "$GO2RTC_VERSION" ]; then
+    step_end SUCCESS "go2rtc v$GO2RTC_VERSION dipasang ($GO2RTC_BIN${G2_NOW:+, sebelumnya $G2_NOW}); diuji sebagai $APP_USER"
+  elif [ -n "$G2_NOW" ]; then
+    step_end "NEEDS ATTENTION" "go2rtc v$GO2RTC_VERSION gagal diunduh / diverifikasi; tetap memakai $G2_NOW (lihat log)"
+  else
+    step_end "NEEDS ATTENTION" "go2rtc gagal diunduh / diverifikasi (lihat log); CCTV Monitor belum aktif, ulangi: sudo bash setup.sh --yes"
+  fi
+  rm -rf "$TMPG"
+fi
+
 # ---------- 13. Dependency aplikasi ----------
 step_begin "Application Dependencies"
 native_ok() {
