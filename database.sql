@@ -463,6 +463,23 @@ CREATE TABLE IF NOT EXISTS tbl_bantuan_gate (
   KEY idx_bantuan_gate (id_gate)
 ) ENGINE=InnoDB COMMENT='Riwayat permintaan bantuan dari tombol gate';
 
+CREATE TABLE IF NOT EXISTS tbl_tarif_riwayat (
+  id_riwayat BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id_tarif BIGINT UNSIGNED NULL COMMENT 'tbl_tarif.id_tarif (tetap tercatat walau tarif dihapus)',
+  jenis_kendaraan VARCHAR(60) NULL COMMENT 'Jenis kendaraan saat diubah',
+  aksi ENUM('tambah', 'ubah', 'hapus') NOT NULL,
+  id_user BIGINT UNSIGNED NULL COMMENT 'Pengguna dashboard yang mengubah',
+  nama_user VARCHAR(100) NULL COMMENT 'Nama pengguna saat mengubah',
+  hak_akses VARCHAR(20) NULL,
+  ip VARCHAR(45) NULL,
+  data_lama JSON NULL COMMENT 'Tarif sebelum diubah',
+  data_baru JSON NULL COMMENT 'Tarif sesudah diubah',
+  waktu DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id_riwayat),
+  KEY idx_tarif_riwayat_waktu (waktu),
+  KEY idx_tarif_riwayat_tarif (id_tarif, waktu)
+) ENGINE=InnoDB COMMENT='Riwayat perubahan tarif';
+
 CREATE TABLE IF NOT EXISTS tbl_closing (
   id_closing BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   jenis ENUM('shift', 'global') NOT NULL,

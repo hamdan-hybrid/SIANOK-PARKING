@@ -296,3 +296,28 @@
   .tf-modal .tf-label-row { align-items: flex-start; }
   .tf-modal .tf-label-row .tf-label small { display: block; margin: 2px 0 0; }
 }
+
+/* Riwayat perubahan tarif (tombol "Riwayat perubahan" di halaman Tarif) */
+.user-modal.tf-rw-modal { width: min(640px, calc(100vw - 32px)) !important; max-width: none !important; max-height: calc(100vh - 40px); overflow-y: auto; }
+.tf-rw-modal h3 { display: flex; align-items: center; gap: 8px; }
+.tf-rw-modal h3 i { color: var(--up-accent-deep); font-size: 22px; }
+.tf-rw-body { display: grid; gap: 12px; }
+.tf-rw-note { margin: 0; color: var(--up-ink-3); font-size: 12.5px; line-height: 1.5; }
+.tf-rw-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.tf-rw-item { display: grid; gap: 8px; min-width: 0; padding: 12px 14px; border: 1px solid #e1e8f3; border-radius: 14px; background: #fff; }
+.tf-rw-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.tf-rw-head strong { color: var(--up-navy-800); font-size: 14.5px; }
+.tf-rw-aksi { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 999px; background: #eaf2ff; color: var(--up-accent-deep); font-size: 11.5px; font-weight: 700; }
+.tf-rw-aksi.is-tambah { background: #e7f6ed; color: #1d7a45; }
+.tf-rw-aksi.is-hapus { background: #fdeeee; color: #b0372b; }
+.tf-rw-time { margin-left: auto; color: var(--up-ink-3); font-size: 12px; font-variant-numeric: tabular-nums; }
+.tf-rw-by { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--up-ink-3); font-size: 12px; }
+.tf-rw-by span { display: inline-flex; align-items: center; gap: 4px; min-width: 0; overflow-wrap: anywhere; }
+.tf-rw-changes { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: 13px; }
+.tf-rw-changes li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; padding: 6px 10px; border-radius: 10px; background: #f5f8fd; color: var(--up-ink-2); overflow-wrap: anywhere; }
+.tf-rw-label { flex-basis: 100%; color: var(--up-ink-3); font-size: 11.5px; font-weight: 700; }
+.tf-rw-old { color: var(--up-ink-3); text-decoration: line-through; }
+.tf-rw-arrow { color: var(--up-ink-3); font-size: 12px; }
+.tf-rw-new { color: var(--up-navy-800); font-weight: 700; }
+.tf-rw-empty { margin: 0; padding: 28px 12px; color: var(--up-ink-3); text-align: center; }
+@media (max-width: 560px) { .tf-rw-time { flex-basis: 100%; margin-left: 0; } }

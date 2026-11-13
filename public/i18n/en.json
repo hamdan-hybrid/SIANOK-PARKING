@@ -1955,7 +1955,25 @@
   "Setiap tutup kasir hanya mencakup transaksi kasir itu sejak tutup kasir terakhirnya. Tutup harian otomatis dibuat sistem per kasir pada jam tutup, tunai tidak dihitung fisik. Tutup harian sebelum 22/10/2026 masih mencakup semua kasir.": "Every cashier closing only covers that cashier's transactions since their last closing. Automatic daily closings are made by the system per cashier at the closing time; cash is not physically counted. Daily closings before 22/10/2026 still cover all cashiers.",
   "Menit": "Minute",
   "Format 24 jam (JJ:MM), mis. 03:00 atau 15:30": "24-hour format (HH:MM), e.g. 03:00 or 15:30",
-  "Pilih jam tutup harian": "Choose daily closing time"
+  "Pilih jam tutup harian": "Choose daily closing time",
+  "Belum ada perubahan tarif yang tercatat.": "No tariff changes recorded yet.",
+  "Blok awal": "First block",
+  "Dihapus": "Deleted",
+  "Ditambahkan": "Added",
+  "Diubah": "Changed",
+  "Gagal mengambil riwayat tarif": "Failed to load tariff history",
+  "Gratis": "Free",
+  "Jam ganti hari": "Day change time",
+  "Maks. harian": "Daily max.",
+  "Memuat riwayat…": "Loading history…",
+  "Mode tarif": "Tariff mode",
+  "Per jam berikutnya": "Each following hour",
+  "Riwayat perubahan": "Change history",
+  "Riwayat perubahan tarif": "Tariff change history",
+  "Setiap tarif yang ditambah, diubah, atau dihapus dicatat beserta pengguna, waktu, dan alamat IP. Perubahan sebelum fitur ini dipasang tidak tercatat.": "Every tariff that is added, changed, or deleted is recorded with the user, time, and IP address. Changes made before this feature was installed are not recorded.",
+  "Tanpa batas": "No limit",
+  "Tidak ada": "None",
+  "Toleransi": "Tolerance"
  },
  "patterns": {
   "· {0} terpotong": "· {0} deducted",
@@ -2276,6 +2294,7 @@
   "Penonton CCTV dari internet sudah {0} (batas). Tutup CCTV Monitor di perangkat lain atau coba lagi nanti.": "CCTV viewers from the internet already at {0} (the limit). Close CCTV Monitor on another device or try again later.",
   "Transaksi sampai pukul {0} esok harinya masih masuk tanggal buku hari ini. Pukul {1} semua kasir ditutup dan keluar otomatis.": "Transactions until {0} the next day still count for today's book date. At {1} all cashiers are closed and logged out automatically.",
   "Tutup harian otomatis · {0}": "Automatic daily close · {0}",
-  "Transaksi mulai pukul {0} sudah masuk tanggal buku esok hari. Pukul {1} semua kasir ditutup dan keluar otomatis.": "Transactions from {0} onward already count for tomorrow's book date. At {1} all cashiers are closed and logged out automatically."
+  "Transaksi mulai pukul {0} sudah masuk tanggal buku esok hari. Pukul {1} semua kasir ditutup dan keluar otomatis.": "Transactions from {0} onward already count for tomorrow's book date. At {1} all cashiers are closed and logged out automatically.",
+  "Nominal maksimal {0}": "Maximum amount {0}"
  }
 }
