@@ -69,9 +69,26 @@ The gate API (`/api/gate/*`) and the cashier pages (`/kasir`, `/kasir/*`, `/api/
 Company menu → *Metode tutup harian*:
 
 - **Manual** (default). The book date moves one day when a cashier presses **Tutup Harian** with an SPV password, once for all areas and cashiers. That press also unlocks every cashier account.
-- **Otomatis.** The app checks every minute, and 15 seconds after start. Once the calendar date has passed the book date, it sets the book date to today and unlocks every cashier account. A server that was off for several days jumps straight to today. It then sends WhatsApp *Tutup Harian Otomatis* with the closed day's revenue, and open cashier pages update their book date. The log line is `Tutup harian otomatis: tanggal buku <old> -> <new>`.
-  - Cashiers only use **Tutup Shift**. The **Tutup Harian** button is hidden, and the server refuses it, because it would push the book date one day past today.
-  - **Night shifts.** A night-shift cashier who closes after 00:00 gets every transaction since their last closing, including those of the previous book date (one day back at most), so the drawer matches the system. Revenue stays on each transaction's own book date.
+- **Otomatis** + *Jam tutup harian otomatis* (24-hour picker, default 00:00). The current book date follows the closing time:
+  - **00:00–11:59** (e.g. 03:00): after-midnight payments still belong to yesterday. A payment at 02/01 02:59 is book date 01/01; at 03:00 the book date becomes 02/01.
+  - **12:00–23:59** (e.g. 23:00): payments after the closing time already belong to tomorrow. A payment at 01/01 23:00 is book date 02/01.
+  - The rule is `TANGGAL_BUKU_SQL` in server.js and `closingTimeHint` in spa-router.js; keep them the same.
+  - The app checks every 30 seconds, and 15 seconds after start. Once the closing time has passed, one transaction does all of this:
+    - It writes one *tutup harian otomatis* row in `tbl_closing` for each cashier who still has transactions not yet closed (`jenis = 'global'`, `otomatis = 1`, no SPV). A cashier without transactions gets no row but is still logged out. Cash is not counted, so `tunai_input = tunai_sistem` and `selisih = 0`.
+    - It sets the book date to the current one. A server that was off for several days jumps straight there.
+    - It unlocks every cashier account and deletes every cashier session.
+  - Open cashier pages then go back to the PIN page ("Tutup harian otomatis selesai").
+  - WhatsApp *Tutup Harian Otomatis* sends the closed day's revenue:
+    - per user who recorded it (cashiers, dashboard input, *Tanpa kasir*), split by payment method;
+    - the total per payment method;
+    - the grand total.
+  - Log line: `Tutup harian otomatis (jam HH:MM): tanggal buku <old> -> <new>, N tutup kasir, semua kasir keluar`.
+  - **Payment in progress.** While any cashier holds a payment lock (pay / QRIS / card popup open), the close waits, for 10 minutes at most. That payment still lands on the old book date and is included.
+  - **Cashier closing is locked.** The cashier's *Tutup Kasir* button shows a lock and "Otomatis HH:MM". The server refuses both Tutup Shift and Tutup Harian (409). Changing the method or the time in the Company menu updates open cashier pages immediately.
+
+Saving the Company form changes the book date only when its field was edited. A form opened before the closing time therefore does not move the date back.
+
+New installs get today's date as the book date (`database.sql` seed). An existing company row with an empty book date is filled with today on the next `database.sql` import.
 
 ## One kasir account on several screens
 

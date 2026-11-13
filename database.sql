@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS tbl_perusahaan (
   struk_gratis_tutup TINYINT UNSIGNED NOT NULL DEFAULT 3 COMMENT 'Kasir: struk tarif Rp 0 ditutup otomatis setelah N detik (0 = tidak)',
   tiket_tampil_jenis TINYINT(1) NOT NULL DEFAULT 1 COMMENT 'Cetak jenis kendaraan di tiket masuk',
   metode_closing ENUM('global', 'auto') NOT NULL DEFAULT 'global',
+  jam_tutup TIME NOT NULL DEFAULT '00:00:00' COMMENT 'Tutup harian otomatis: jam tanggal buku berganti & semua kasir keluar',
   tanggal DATE NULL,
   logo VARCHAR(500) NULL,
   serial_number VARCHAR(100) NOT NULL,
@@ -205,11 +206,16 @@ CREATE TABLE IF NOT EXISTS tbl_member_kendaraan (
   CONSTRAINT fk_member_kendaraan_tarif FOREIGN KEY (id_tarif) REFERENCES tbl_tarif (id_tarif) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- Seed minimal untuk instalasi baru.
-INSERT INTO tbl_perusahaan (nama, email, phone, wa_notif, thermal_footer, metode_closing, serial_number)
-SELECT 'PT Azka Maju Bersama', 'operasional@hybridsys.id', '0822-7354-9791', JSON_ARRAY(JSON_OBJECT('nama', 'Sianok Parking', 'nomor', '0822-7354-9791')), 'Terima kasih telah menggunakan layanan kami.', 'global', 'HSS-001'
+-- Database lama (tabel sudah ada, CREATE TABLE di atas dilewati).
+ALTER TABLE tbl_perusahaan ADD COLUMN IF NOT EXISTS jam_tutup TIME NOT NULL DEFAULT '00:00:00' COMMENT 'Tutup harian otomatis: jam tanggal buku berganti & semua kasir keluar';
+
+-- Seed minimal untuk instalasi baru. Tanggal pembukuan awal = tanggal hari ini.
+INSERT INTO tbl_perusahaan (nama, email, phone, wa_notif, thermal_footer, metode_closing, tanggal, serial_number)
+SELECT 'PT Azka Maju Bersama', 'operasional@hybridsys.id', '0822-7354-9791', JSON_ARRAY(JSON_OBJECT('nama', 'Sianok Parking', 'nomor', '0822-7354-9791')), 'Terima kasih telah menggunakan layanan kami.', 'global', CURDATE(), 'HSS-001'
 -- Hanya bila belum ada data perusahaan (serial_number diganti kode instalasi saat dipasang lewat halaman Instalasi).
 WHERE NOT EXISTS (SELECT 1 FROM tbl_perusahaan);
+-- Tanggal pembukuan kosong (kasir tidak bisa bertransaksi) diisi tanggal hari ini. Tanggal yang sudah diisi tidak diubah.
+UPDATE tbl_perusahaan SET tanggal = CURDATE() WHERE tanggal IS NULL;
 
 -- Metode bayar awal. Instalasi baru hanya mengaktifkan Tunai dan Member; QRIS dan kartu uang elektronik sudah
 -- terdaftar tetapi nonaktif, diaktifkan Owner di menu Metode Bayar setelah link SDK-nya diisi (menu Perusahaan).
@@ -473,9 +479,11 @@ CREATE TABLE IF NOT EXISTS tbl_closing (
   in_area INT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Kendaraan di area saat closing',
   rincian JSON NULL COMMENT 'Per metode bayar: nama, kode, jumlah, total',
   rincian_kendaraan JSON NULL COMMENT 'Per jenis kendaraan: nama, jumlah',
+  otomatis TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1 = tutup harian otomatis oleh sistem (tanpa hitung tunai & password SPV)',
   waktu DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id_closing),
   KEY idx_closing_buku (tanggal_buku, jenis),
   KEY idx_closing_kasir (id_kasir, tanggal_buku),
   CONSTRAINT fk_closing_kasir FOREIGN KEY (id_kasir) REFERENCES tbl_pengguna (id_user) ON DELETE SET NULL
 ) ENGINE=InnoDB COMMENT='Closing shift (per kasir) dan closing global (tutup tanggal buku)';
+ALTER TABLE tbl_closing ADD COLUMN IF NOT EXISTS otomatis TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1 = tutup harian otomatis oleh sistem (tanpa hitung tunai & password SPV)';

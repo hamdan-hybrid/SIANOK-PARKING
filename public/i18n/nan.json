@@ -1947,7 +1947,15 @@
   "Username atau password camera salah (401 Unauthorized).": "攝影機的帳號抑是密碼毋著（401 Unauthorized）。",
   "Video dijeda": "影片暫停",
   "Video tersendat": "影片頓頓",
-  "Video tidak dapat diputar": "影片袂當播"
+  "Video tidak dapat diputar": "影片袂當播",
+  "Jam tutup harian harus format JJ:MM (00:00-23:59)": "日結時間愛用 HH:MM 格式（00:00-23:59）",
+  "Otomatis": "自動",
+  "Tutup harian otomatis aktif: Tutup Shift dan Tutup Harian dilakukan sistem pada jam tutup harian. Semua kasir keluar otomatis.": "自動日結已經開：交班結帳佮日結攏由系統佇日結時間做。所有收銀員自動登出。",
+  "Tidak dihitung (otomatis)": "無算（自動）",
+  "Setiap tutup kasir hanya mencakup transaksi kasir itu sejak tutup kasir terakhirnya. Tutup harian otomatis dibuat sistem per kasir pada jam tutup, tunai tidak dihitung fisik. Tutup harian sebelum 22/10/2026 masih mencakup semua kasir.": "逐擺結帳干焦包含彼个收銀員對頂一擺結帳以來的交易。自動日結是系統佇日結時間逐个收銀員做，現金無實際點算。22/10/2026 進前的日結猶包含所有收銀員。",
+  "Menit": "分",
+  "Format 24 jam (JJ:MM), mis. 03:00 atau 15:30": "24 點鐘制（HH:MM），親像 03:00 抑是 15:30",
+  "Pilih jam tutup harian": "揀日結時間"
  },
  "patterns": {
   "· {0} terpotong": "· {0} 扣去矣",
@@ -2265,6 +2273,9 @@
   "go2rtc {0}: {1}": "go2rtc {0}: {1}",
   "go2rtc berhenti saat dinyalakan{0}": "go2rtc 啟動的時停去{0}",
   "go2rtc tidak bisa dijalankan: {0}": "go2rtc 袂當執行：{0}",
-  "Penonton CCTV dari internet sudah {0} (batas). Tutup CCTV Monitor di perangkat lain atau coba lagi nanti.": "對網路來看 CCTV 的人已經 {0} 个（上限）。請關掉別台設備的 CCTV 監看，抑是等一下才閣試。"
+  "Penonton CCTV dari internet sudah {0} (batas). Tutup CCTV Monitor di perangkat lain atau coba lagi nanti.": "對網路來看 CCTV 的人已經 {0} 个（上限）。請關掉別台設備的 CCTV 監看，抑是等一下才閣試。",
+  "Transaksi sampai pukul {0} esok harinya masih masuk tanggal buku hari ini. Pukul {1} semua kasir ditutup dan keluar otomatis.": "到隔工 {0} 進前的交易猶算今仔日的帳簿日期。{1} 所有收銀員自動結帳登出。",
+  "Tutup harian otomatis · {0}": "自動日結 · {0}",
+  "Transaksi mulai pukul {0} sudah masuk tanggal buku esok hari. Pukul {1} semua kasir ditutup dan keluar otomatis.": "{0} 以後的交易算明仔載的帳簿日期。{1} 所有收銀員自動結帳登出。"
  }
 }

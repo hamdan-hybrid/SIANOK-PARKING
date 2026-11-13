@@ -1947,7 +1947,15 @@
   "Username atau password camera salah (401 Unauthorized).": "Wrong camera username or password (401 Unauthorized).",
   "Video dijeda": "Video paused",
   "Video tersendat": "Video is stalling",
-  "Video tidak dapat diputar": "The video cannot be played"
+  "Video tidak dapat diputar": "The video cannot be played",
+  "Jam tutup harian harus format JJ:MM (00:00-23:59)": "Daily closing time must be HH:MM (00:00-23:59)",
+  "Otomatis": "Automatic",
+  "Tutup harian otomatis aktif: Tutup Shift dan Tutup Harian dilakukan sistem pada jam tutup harian. Semua kasir keluar otomatis.": "Automatic daily closing is on: the system does Shift Closing and Daily Closing at the daily closing time. All cashiers are logged out automatically.",
+  "Tidak dihitung (otomatis)": "Not counted (automatic)",
+  "Setiap tutup kasir hanya mencakup transaksi kasir itu sejak tutup kasir terakhirnya. Tutup harian otomatis dibuat sistem per kasir pada jam tutup, tunai tidak dihitung fisik. Tutup harian sebelum 22/10/2026 masih mencakup semua kasir.": "Every cashier closing only covers that cashier's transactions since their last closing. Automatic daily closings are made by the system per cashier at the closing time; cash is not physically counted. Daily closings before 22/10/2026 still cover all cashiers.",
+  "Menit": "Minute",
+  "Format 24 jam (JJ:MM), mis. 03:00 atau 15:30": "24-hour format (HH:MM), e.g. 03:00 or 15:30",
+  "Pilih jam tutup harian": "Choose daily closing time"
  },
  "patterns": {
   "· {0} terpotong": "· {0} deducted",
@@ -2265,6 +2273,9 @@
   "go2rtc {0}: {1}": "go2rtc {0}: {1}",
   "go2rtc berhenti saat dinyalakan{0}": "go2rtc stopped while starting{0}",
   "go2rtc tidak bisa dijalankan: {0}": "go2rtc cannot be started: {0}",
-  "Penonton CCTV dari internet sudah {0} (batas). Tutup CCTV Monitor di perangkat lain atau coba lagi nanti.": "CCTV viewers from the internet already at {0} (the limit). Close CCTV Monitor on another device or try again later."
+  "Penonton CCTV dari internet sudah {0} (batas). Tutup CCTV Monitor di perangkat lain atau coba lagi nanti.": "CCTV viewers from the internet already at {0} (the limit). Close CCTV Monitor on another device or try again later.",
+  "Transaksi sampai pukul {0} esok harinya masih masuk tanggal buku hari ini. Pukul {1} semua kasir ditutup dan keluar otomatis.": "Transactions until {0} the next day still count for today's book date. At {1} all cashiers are closed and logged out automatically.",
+  "Tutup harian otomatis · {0}": "Automatic daily close · {0}",
+  "Transaksi mulai pukul {0} sudah masuk tanggal buku esok hari. Pukul {1} semua kasir ditutup dan keluar otomatis.": "Transactions from {0} onward already count for tomorrow's book date. At {1} all cashiers are closed and logged out automatically."
  }
 }
