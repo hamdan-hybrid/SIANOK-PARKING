@@ -64,6 +64,8 @@ The API also applies request timeouts, security headers, and a per-IP rate limit
 
 The gate API (`/api/gate/*`) and the cashier pages (`/kasir`, `/kasir/*`, `/api/kasir/*`) only answer requests made to the server's IP from the same local subnet. Requests through a domain or from outside get `403 Access denied`. Disable with `GATE_LOCAL_ONLY=off` or `KASIR_LOCAL_ONLY=off` in `.env`.
 
+Cashier and customer-display requests that change data (POST/PUT/DELETE on `/kasir/*`, `/api/kasir/*`, `/display/*`) are also refused with `403` when the browser's `Origin` is not the address that was opened (`Host`, or `X-Forwarded-Host` from a proxy). Another page on the same server IP but a different port (SDK, ANPR, go2rtc) therefore cannot act on a logged-in cashier. A reverse proxy in front of the cashier must pass the original `Host` or set `X-Forwarded-Host`.
+
 ## Daily closing (tanggal buku)
 
 Company menu → *Metode tutup harian*:
