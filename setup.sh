@@ -26,6 +26,8 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# `pm2 pid` juga mencetak peringatan (mis. "In memory PM2 version: 7.1.1" bila versi daemon beda): hanya baris berisi angka PID yang dihitung.
+PID_BARIS='^[[:space:]]*[1-9][0-9]*[[:space:]]*$'
 . "$SELF_DIR/scripts/lib.sh"
 
 # ---------- Argumen ----------
@@ -309,9 +311,9 @@ else step_end SUCCESS "$DB_SERVER_VERSION ($note), aktif & otomatis start, hanya
 # ---------- 8. Port (sebelum ada perubahan database) ----------
 step_begin "Port"
 own_pids=""
-if as_user "$APP_USER" pm2 pid "$HP_PM2_NAME" 2>/dev/null | grep '[1-9]' >/dev/null; then
+if as_user "$APP_USER" pm2 pid "$HP_PM2_NAME" 2>/dev/null | grep -E "$PID_BARIS" >/dev/null; then
   # Proses Sianok Parking yang sedang jalan + daemon PM2 user ini (mode cluster: daemon yang memegang socket port).
-  own_pids="$(as_user "$APP_USER" pm2 pid "$HP_PM2_NAME" 2>/dev/null | tr -d ' '; cat "$APP_HOME/.pm2/pm2.pid" 2>/dev/null)"
+  own_pids="$(as_user "$APP_USER" pm2 pid "$HP_PM2_NAME" 2>/dev/null | grep -E "$PID_BARIS" | tr -d ' '; cat "$APP_HOME/.pm2/pm2.pid" 2>/dev/null)"
 fi
 port_free_for_us() { # port → 0 bila kosong atau dipakai proses Sianok Parking ini
   local pids p; pids="$(port_pids "$1")"; [ -z "$pids" ] && ! port_in_use "$1" && return 0
@@ -546,7 +548,7 @@ APP_LOG_DIR="$APP_HOME/.pm2/logs"
 # Proses sianok-parking milik root (bila ada) tidak disentuh, hanya dilaporkan.
 root_dup=""
 if [ "$APP_USER" != root ] && [ -f /root/.pm2/pm2.pid ] && kill -0 "$(cat /root/.pm2/pm2.pid)" 2>/dev/null \
-   && env "PATH=$PATH" HOME=/root pm2 pid "$HP_PM2_NAME" 2>/dev/null | grep '[1-9]' >/dev/null; then root_dup=1; fi
+   && env "PATH=$PATH" HOME=/root pm2 pid "$HP_PM2_NAME" 2>/dev/null | grep -E "$PID_BARIS" >/dev/null; then root_dup=1; fi
 existing_cwd="$(as_user "$APP_USER" pm2 jlist 2>/dev/null | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{const p=JSON.parse(s.slice(s.indexOf("["))).find(x=>x.name===process.argv[1]);console.log(p?p.pm2_env.pm_cwd:"")}catch{console.log("")}})' "$HP_PM2_NAME")"
 existing_cwd="${existing_cwd%/}"
 if [ -n "$existing_cwd" ] && [ "$existing_cwd" != "$APP_DIR" ]; then
