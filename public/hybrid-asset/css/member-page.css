@@ -79,8 +79,11 @@
   .mb-table tbody tr:last-child { border-bottom: 0; }
   .mb-table td { padding: 0 !important; border: 0; min-width: 0 !important; }
   .mb-table td.mb-member-cell, .mb-table td.pm-actions { grid-column: 1 / -1; }
-  .mb-table td.pm-actions { display: flex; text-align: left; }
+  .mb-table td.pm-actions { display: flex; gap: 8px; width: 100%; text-align: left; } /* width: .pm-table td.pm-actions = 1% */
+  .mb-table td.pm-actions .up-btn { min-height: 44px; }
+  .mb-table td.pm-actions .up-btn + .up-btn { margin-left: 0; }
   .mb-table td.pm-actions .mb-pay-btn { flex: 1; justify-content: center; }
+  .mb-table td.pm-actions .up-btn-icon, .mb-table td.pm-actions .up-btn-danger { flex: 0 0 44px; width: 44px; }
 }
 @media (max-width: 575px) {
   .mb-table tr { grid-template-columns: minmax(0, 1fr); }
@@ -127,6 +130,7 @@
 .mb-import-table tr.is-error { background: #fffafa; }
 .mb-import-table .mb-vehicle { flex-direction: column; align-items: flex-start; gap: 2px; }
 @media (max-width: 767px) { .mb-hero-actions { justify-content: stretch; } .mb-hero-actions > * { flex: 1; } }
+@media (max-width: 399px) { .mb-hero-actions > * { flex-basis: 100%; } }
 
 /* Input pendapatan langganan */
 .mb-pay-btn { color: #2d7a13 !important; }

@@ -239,14 +239,20 @@
 
 @media (max-width: 991px) {
   .up-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .up-hero { grid-template-columns: minmax(0, 1fr); }
+  .up-hero-actions, .up-hero .pd-hero-meta, .up-hero .mb-hero-actions { justify-content: flex-start; }
+}
+/* Tablet: tombol hero di baris sendiri, ukuran wajar (.up-btn:first-child { flex: 1 } hanya untuk baris tombol di kartu). */
+@media (min-width: 768px) and (max-width: 991px) {
+  .up-hero .up-btn:first-child { flex: none; }
 }
 @media (max-width: 767px) {
   .up-hero { grid-template-columns: 1fr; padding: 22px 18px; border-radius: 18px; }
   .up-primary { width: 100%; }
   .up-stat { padding: 12px; }
   .up-stat strong { font-size: 19px; }
-  .up-filters { width: 100%; overflow-x: auto; flex-wrap: nowrap; }
-  .up-filter { flex: none; }
+  .up-filters { width: 100%; }
+  .up-filter { flex: 1 1 auto; justify-content: center; min-height: 38px; }
   .up-search { flex-basis: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -273,3 +279,8 @@
 .uc-option.is-closed:has(input:checked) > i { background: #fbe1e1; color: #b42323; }
 .uc-option:has(input:focus-visible) { outline: 2px solid #75a2dd; outline-offset: 2px; }
 @media (max-width: 575px) { .uc-options { grid-template-columns: 1fr; } }
+@media (max-width: 575px) {
+  .up-stats .up-stat { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .up-stats .up-stat > div { min-width: 0; max-width: 100%; }
+  .ot-info { width: 32px; height: 32px; }
+}

@@ -218,6 +218,7 @@
 .lr-page .pd-stats .up-stat strong { overflow-wrap: anywhere; }
 @media (max-width: 575px) {
   .lr-page .pd-stats { grid-template-columns: minmax(0, 1fr); }
+  .lr-page .pd-stats .up-stat { flex-direction: row; align-items: center; gap: 12px; }
 }
 
 /* Baris kelompok (mis. jenis transaksi) dan rinciannya (metode bayar) */

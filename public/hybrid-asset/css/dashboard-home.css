@@ -118,6 +118,7 @@
 .hp-card-head p { margin: 4px 0 0; color: var(--hp-ink-3); font-size: 12.5px; }
 .hp-link { display: inline-flex; align-items: center; gap: 4px; flex: none; color: var(--hp-navy-700); font-size: 12.5px; font-weight: 600; text-decoration: none; }
 .hp-link:hover { color: #0d4fa8; }
+@media (max-width: 991px) { .hp-link { min-height: 36px; padding: 0 6px; margin: -8px -6px; } }
 .hp-legend { display: flex; gap: 16px; color: var(--hp-ink-2); font-size: 12.5px; font-weight: 500; }
 .hp-legend span { display: inline-flex; align-items: center; gap: 7px; }
 .hp-swatch { width: 10px; height: 10px; border-radius: 3px; }

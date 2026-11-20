@@ -158,6 +158,7 @@
 .hp-footer a { display: inline-flex; align-items: center; gap: 6px; color: #5a6780; font-weight: 500; text-decoration: none; }
 .hp-footer a i { color: #0d4fa8; font-size: 15px; }
 .hp-footer a:hover { color: #0d4fa8; }
+@media (max-width: 991px) { .hp-footer a { min-height: 40px; } }
 @media (max-width: 1024px) { .hp-footer { margin: 8px 28px 0; } }
 @media (max-width: 575px) { .hp-footer { justify-content: center; text-align: center; } }
 
